@@ -426,7 +426,7 @@
    * @return {string} 返回转换后的日期
    */
   Method.fn.dateTurn = function (tamp, div, hour) {
-    let date = new Date(tamp.toString().length === 13 ? tamp : (tamp * 1000))
+    let date = new Date((tamp.toString().length === 13) ? tamp : (tamp * 1000))
     let dateDiv = div ? String(div) : '-'
     let isHour = ((typeof hour === 'boolean') ? hour : true)
     let Y = date.getFullYear()
@@ -446,7 +446,7 @@
    * @return {string} 返回转换后的中文日期
    */
   Method.fn.dateChina = function (tamp) {
-    let tampLength = String(tamp).length === 13 ? 0 : 1
+    let tampLength = ((String(tamp).length === 13) ? 0 : 1)
     let m = 60 * 1000
     let h = m * 60
     let d = h * 24

@@ -54,7 +54,7 @@
     },
 
     /**
-     * 判断加载方法（使用传统方法还是imports方法）
+     * 判断加载方法（使用传统方法还是使用require方法引入模块）
      * @method mode
      * @for isModule
      */
@@ -166,7 +166,7 @@
     },
 
     /**
-     * 路由环
+     * 环路
      * @method loop
      * @for shunt/wait/register/loop
      * @param {boolean} shunt 分流，true:对象、false：字符串
@@ -272,7 +272,7 @@
     }
   }
 
-  win.kxui = win.kxui = new kxui()
+  win.kxui = new kxui()
   if (isExports) {
     module.exports = new kxui()
   }
