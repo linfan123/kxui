@@ -1,9 +1,10 @@
 /**
  * method kxui
- * version 1.0.0
+ * version 1.1.0
  * author Lkx
  * create time 2018.05.31
- * update time 2018.05.31
+ * update time 2018.06.02
+ * website http://www.kxui.org
  */
 
 @charset "UTF-8";
@@ -275,13 +276,13 @@ body {
 .kxui-Popup-diy .kxui-Popup-close:hover,
 .kxui-Popup-diy .kxui-Popup-btn:hover,
 .kxui-Popup-diy .kxui-Popup-btn-mobile:hover {
-  background: transparent !important; }
+  opacity: .5 !important; }
 
 .kxui-Popup-diy .kxui-Popup-shrink:active,
 .kxui-Popup-diy .kxui-Popup-close:active,
 .kxui-Popup-diy .kxui-Popup-btn:active,
 .kxui-Popup-diy .kxui-Popup-btn-mobile:active {
-  background: transparent !important;
+  opacity: .35 !important;
   box-shadow: none !important; }
 
 .kxui-Popup-event {

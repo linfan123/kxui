@@ -19,7 +19,7 @@
   let zIndexNum = 199202
   let path = win.kxui.info().path
   let offset = ['top', 'right', 'bottom', 'left', 'center']
-  let isExports = typeof module !== 'undefined' && (module instanceof Object) && (module.exports instanceof Object)
+  let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object')
   let native = {
     doc: function (topPage) {
       return topPage ? win.top.document : document
@@ -51,13 +51,12 @@
   Skeleton.prototype = {
 
     /**
-     * 初始化
+     * 初始化判断是否存在method
      * @method init
      * @for Skeleton
      */
     init: function () {
       let that = this
-      that.method = win.kxui.method ? win.kxui.method : false
       if (!win.kxui.method) {
         win.kxui.use('method', function () {
           that.method = win.kxui.method
@@ -121,7 +120,7 @@
           if (type === 0) {
             that.btn1 = that.method.addDome('<div class="' + (win.kxui.info().device === 'mobile' ? 'kxui-Popup-btn-mobile' : 'kxui-Popup-btn') + '">确定</div>')
             that.eventBulk.appendChild(that.btn1)
-          } else if (that.alone.btn instanceof Object && type === 1) {
+          } else if ((typeof that.alone.btn === 'object') && type === 1) {
             for (let i = 1; i <= that.alone.btn.length; i++) {
               that['btn' + i] = that.method.addDome('<div class="' + (win.kxui.info().device === 'mobile' ? 'kxui-Popup-btn-mobile' : 'kxui-Popup-btn') + '">' + that.alone.btn[i - 1] + '</div>')
               that.eventBulk.appendChild(that['btn' + i])
@@ -191,7 +190,7 @@
           that.bulk.appendChild(that.resize)
           that.bulk.appendChild(that.title)
           that.bulk.appendChild(that.content)
-          if (that.parameter.text instanceof Object && !that.parameter.text[1]) {
+          if ((typeof that.parameter.text === 'object') && !that.parameter.text[1]) {
             that.content.innerHTML = that.parameter.text[0]
           } else {
             that.iframe = that.method.addDome('<iframe src="' + that.parameter.text + '" frameborder="0" name="' + this.parameter.index + '" id="' + this.parameter.index + '"></iframe>')
@@ -406,7 +405,7 @@
       }
 
       // 询问层创建多按钮回调
-      if (that.alone.btn instanceof Object && that.parameter.type === 1) {
+      if ((typeof that.alone.btn === 'object') && that.parameter.type === 1) {
         for (let i = 1; i <= that.alone.btn.length; i++) {
           that['btn' + i].index = i
           that['btn' + i].onclick = function () {
@@ -415,8 +414,10 @@
         }
 
         // 提醒层确定回调
-      } else if (typeof that.alone.btn === 'function' && that.parameter.type === 0) {
+      } else if ((typeof that.alone.btn === 'function') && that.parameter.type === 0) {
         that.btn1.onclick = function () {
+          clearTimeout(that.timer)
+          closeAnimation(that.bulk, that.parameter.topPage, that.shade, that.parameter.type)
           that.alone.btn(that.parameter.index)
         }
       }
@@ -680,13 +681,13 @@
    * @param {object} parameter 配置参数
    */
   Popup.fn.alert = function (text, parameter) {
-    let parameters = parameter instanceof Object ? parameter : {}
+    let parameters = (typeof parameter === 'object') ? parameter : {}
     return this.open(0, parameters, {
       text: text,
-      closeBtn: typeof parameters.closeBtn === 'boolean' ? parameters.closeBtn : true,
-      closeCall: typeof parameters.closeCall === 'function' ? parameters.closeCall : function () {},
+      closeBtn: (typeof parameters.closeBtn === 'boolean') ? parameters.closeBtn : true,
+      closeCall: (typeof parameters.closeCall === 'function') ? parameters.closeCall : function () {},
       title: parameters.title,
-      btn: typeof parameters.btn === 'function' ? parameters.btn : function () {}
+      btn: (typeof parameters.btn === 'function') ? parameters.btn : function () {}
     })
   }
 
@@ -697,15 +698,15 @@
    * @param {object} parameter 配置参数
    */
   Popup.fn.ask = function (parameter) {
-    let parameters = parameter instanceof Object ? parameter : {}
-    let btn = parameters.btn instanceof Object ? parameters.btn : []
+    let parameters = (typeof parameter === 'object') ? parameter : {}
+    let btn = (typeof parameters.btn === 'object') ? parameters.btn : []
     let event = []
     for (let i = 1; i <= btn.length; i++) {
-      event['btn' + i] = typeof parameters['btn' + i] === 'function' ? parameters['btn' + i] : function () {}
+      event['btn' + i] = (typeof parameters['btn' + i] === 'function') ? parameters['btn' + i] : function () {}
     }
     return this.open(1, parameters, {
-      closeBtn: typeof parameters.closeBtn === 'boolean' ? parameters.closeBtn : true,
-      closeCall: typeof parameters.closeCall === 'function' ? parameters.closeCall : function () {},
+      closeBtn: (typeof parameters.closeBtn === 'boolean') ? parameters.closeBtn : true,
+      closeCall: (typeof parameters.closeCall === 'function') ? parameters.closeCall : function () {},
       title: parameters.title,
       btn: btn,
       event: event
@@ -719,9 +720,9 @@
    * @param {object} parameter 配置参数
    */
   Popup.fn.loading = function (parameter) {
-    let parameters = parameter instanceof Object ? parameter : {}
+    let parameters = (typeof parameter === 'object') ? parameter : {}
     return this.open(2, parameters, {
-      style: typeof parameters.style === 'number' ? parameters.style <= 2 && parameters.style >= 0 ? parameters.style : 0 : typeof parameters.style === 'string' ? parseInt(parameters.style) <= 2 && parseInt(parameters.style) >= 0 ? parseInt(parameters.style) : 0 : 0
+      style: (typeof parameters.style === 'number') ? parameters.style <= 2 && parameters.style >= 0 ? parameters.style : 0 : (typeof parameters.style === 'string') ? parseInt(parameters.style) <= 2 && parseInt(parameters.style) >= 0 ? parseInt(parameters.style) : 0 : 0
     })
   }
 
@@ -734,10 +735,10 @@
    * @param {object} parameter 配置参数
    */
   Popup.fn.remind = function (text, time, parameter) {
-    let parameters = parameter instanceof Object ? parameter : time instanceof Object ? time : text instanceof Object ? text : {}
+    let parameters = (typeof parameter === 'object') ? parameter : (typeof time === 'object') ? time : (typeof text === 'object') ? text : {}
     return this.open(3, parameters, {
       text: text === parameters ? '' : text,
-      time: typeof time === 'string' || typeof time === 'number' ? time : 3000
+      time: (typeof time === 'string') || (typeof time === 'number') ? time : 3000
     })
   }
 
@@ -751,7 +752,7 @@
    */
   Popup.fn.tips = function (text, dom, parameter) {
     let doms = null
-    let parameters = parameter instanceof Object ? parameter : {}
+    let parameters = (typeof parameter === 'object') ? parameter : {}
     if (typeof dom === 'string') {
       doms = native.queryAll(dom)
     } else if (typeof dom.length === 'number') {
@@ -765,7 +766,7 @@
     return this.open(4, parameters, {
       text: text,
       dom: doms,
-      time: ((typeof parameters.time === 'string') || (typeof parameters.time === 'number')) ? parameters.time : 3000
+      time: (typeof parameters.time === 'string') || (typeof parameters.time === 'number') ? parameters.time : 3000
     })
   }
 
@@ -776,14 +777,14 @@
    * @param {object} parameter 配置参数
    */
   Popup.fn.win = function (parameter) {
-    let parameters = parameter instanceof Object ? parameter : {}
+    let parameters = (typeof parameter === 'object') ? parameter : {}
     return this.open(5, parameters, {
-      size: typeof parameters.full === 'boolean' && parameters.full ? ['100%', '100%'] : parameters.size instanceof Object ? parameters.size : win.kxui.info().device === 'mobile' ? ['100%', '100%'] : ['800px', '480px'],
-      closeBtn: typeof parameters.closeBtn === 'boolean' ? parameters.closeBtn : true,
-      closeCall: typeof parameters.closeCall === 'function' ? parameters.closeCall : function () {},
-      shrinkBtn: typeof parameters.shrinkBtn === 'boolean' ? parameters.shrinkBtn : true,
-      shrinkCall: typeof parameters.shrinkCall === 'function' ? parameters.shrinkCall : function () {},
-      full: typeof parameters.full === 'boolean' ? parameters.full : false,
+      size: (typeof parameters.full === 'boolean') && parameters.full ? ['100%', '100%'] : (typeof parameters.size === 'object') ? parameters.size : (win.kxui.info().device === 'mobile') ? ['100%', '100%'] : ['800px', '480px'],
+      closeBtn: (typeof parameters.closeBtn === 'boolean') ? parameters.closeBtn : true,
+      closeCall: (typeof parameters.closeCall === 'function') ? parameters.closeCall : function () {},
+      shrinkBtn: (typeof parameters.shrinkBtn === 'boolean') ? parameters.shrinkBtn : true,
+      shrinkCall: (typeof parameters.shrinkCall === 'function') ? parameters.shrinkCall : function () {},
+      full: (typeof parameters.full === 'boolean') ? parameters.full : false,
       title: parameters.title
     })
   }
@@ -795,10 +796,9 @@
    * @param {number} type 弹窗类型
    * @param {object} parameter 配置参数
    * @param {object} alone 特殊配置参数（带文案与时间等3个字段时，此为配置参数）
-   * @return {string} 当前窗口的唯一值
    */
   Popup.fn.open = function (type, parameter, alone) {
-    let diy = parameter.diy instanceof Object ? parameter.diy : {}
+    let diy = (typeof parameter.diy === 'object') ? parameter.diy : {}
 
     // 弹窗的唯一标识
     let index = Math.random()
@@ -824,16 +824,16 @@
      */
     this.skeleton = new Skeleton({
       type: type,
-      text: (type === 0 || type === 3 || type === 4) ? alone.text : type === 5 ? parameter.content : parameter.text,
-      style: type === 2 ? alone.style : typeof parameter.style === 'string' ? parameter.style : 'default',
-      topPage: typeof parameter.topPage === 'boolean' ? parameter.topPage : false,
-      shade: typeof parameter.shade === 'boolean' ? parameter.shade : false,
-      shadeClose: ((typeof parameter.shadeClose === 'boolean') && parameter.shade) ? parameter.shadeClose : false,
-      shadeCall: (typeof parameter.shadeCall === 'function' && parameter.shade && parameter.shadeClose) ? parameter.shadeCall : function () {},
-      offset: typeof parameter.offset === 'string' ? parameter.offset : 'center',
-      scrollBar: typeof parameter.scrollBar === 'boolean' ? parameter.scrollBar : false,
-      time: (typeof alone.time === 'string' || typeof alone.time === 'number') ? parseInt(alone.time) : (typeof parameter.time === 'string' || typeof parameter.time === 'number') ? parseInt(parameter.time) : false,
-      timeCall: typeof parameter.timeCall === 'function' ? parameter.timeCall : function () {},
+      text: (type === 0 || type === 3 || type === 4) ? alone.text : (type === 5) ? parameter.content : parameter.text,
+      style: type === 2 ? alone.style : (typeof parameter.style === 'string') ? parameter.style : 'default',
+      topPage: (typeof parameter.topPage === 'boolean') ? parameter.topPage : false,
+      shade: (typeof parameter.shade === 'boolean') ? parameter.shade : false,
+      shadeClose: (typeof parameter.shadeClose === 'boolean') && parameter.shade ? parameter.shadeClose : false,
+      shadeCall: (typeof parameter.shadeCall === 'function') && parameter.shade && parameter.shadeClose ? parameter.shadeCall : function () {},
+      offset: (typeof parameter.offset === 'string') ? parameter.offset : 'center',
+      scrollBar: (typeof parameter.scrollBar === 'boolean') ? parameter.scrollBar : false,
+      time: (typeof alone.time === 'string') || (typeof alone.time === 'number') ? parseInt(alone.time) : (typeof parameter.time === 'string') || (typeof parameter.time === 'number') ? parseInt(parameter.time) : false,
+      timeCall: (typeof parameter.timeCall === 'function') ? parameter.timeCall : function () {},
       diy: {
         color: diy.color,
         background: diy.background
@@ -841,7 +841,6 @@
       index: index,
       alone: alone
     })
-    return index
   }
 
   /**
@@ -875,7 +874,7 @@
           break
       }
     }
-    let isObject = index instanceof Object ? false : true
+    let isObject = (typeof index === 'object') ? false : true
     return this.closeAll(index, isObject)
   }
 
@@ -888,7 +887,7 @@
    */
   Popup.fn.closeAll = function (index, separate) {
     let that = this
-    that.cla = index instanceof Object ? index : ['kxui-Popup-alert', 'kxui-Popup-ask', 'kxui-Popup-loading', 'kxui-Popup-loading-noShade', 'kxui-Popup-remind', 'kxui-Popup-tips', 'kxui-Popup-win']
+    that.cla = (typeof index === 'object') ? index : ['kxui-Popup-alert', 'kxui-Popup-ask', 'kxui-Popup-loading', 'kxui-Popup-loading-noShade', 'kxui-Popup-remind', 'kxui-Popup-tips', 'kxui-Popup-win']
     for (let c = 0; c < that.cla.length; c++) {
       let domTrue = native.queryAll('.' + that.cla[c], true)
       let domFalse = native.queryAll('.' + that.cla[c], false)
@@ -947,6 +946,7 @@
     return win.name
   }
 
+  // 根据引入方式暴露对象
   if (isExports) {
     module.exports = new Popup()
   } else {

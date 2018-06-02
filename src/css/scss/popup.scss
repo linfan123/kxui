@@ -299,13 +299,13 @@ body {
   .kxui-Popup-close:hover,
   .kxui-Popup-btn:hover,
   .kxui-Popup-btn-mobile:hover {
-    background: transparent !important;
+    opacity: .5 !important;
   }
   .kxui-Popup-shrink:active,
   .kxui-Popup-close:active,
   .kxui-Popup-btn:active,
   .kxui-Popup-btn-mobile:active {
-    background: transparent !important;
+    opacity: .35 !important;
     box-shadow: none !important;
   }
 }

@@ -28,10 +28,11 @@
  * @method dateChina 时间戳转换中文时间
  * @method getDome 获取节点
  * @method addDome 增加节点
+ * @method attr 替换或创建自定义属性
  */
 
 (function (win) {
-  let isExports = typeof module !== 'undefined' && (module instanceof Object) && (module.exports instanceof Object)
+  let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object')
 
   /**
    * 方法的主入口
@@ -103,7 +104,7 @@
     let newStr = str.split(after)
     if (typeof after === 'number') {
       return str.slice(0, after) + app + str.slice(after)
-    } else if (typeof after === 'string' && newStr.length > 1) {
+    } else if ((typeof after === 'string') && newStr.length > 1) {
       newStr[1] = app + newStr[1]
       str = newStr.join(after)
     }
@@ -324,7 +325,7 @@
   }
 
   /**
-   * 数据对比（内容、DOM及数据类型）
+   * 数据对比（内容与数据类型）
    * @method compare
    * @for Method
    * @param {all} dataOne 需要对比的数据一
@@ -332,18 +333,17 @@
    * @return {boolean} 返回数据是否相等的布尔值
    */
   Method.fn.compare = function (dataOne, dataTwo) {
-    let object = Object
-    let aProps = dataOne instanceof Object
-    let bProps = dataTwo instanceof Object
+    let aProps = (typeof dataOne === 'object')
+    let bProps = (typeof dataTwo === 'object')
     if (!aProps || !bProps) {
       return dataOne === dataTwo
     }
-    if (object.keys(dataOne).length !== object.keys(dataTwo).length) {
+    if (Object.keys(dataOne).length !== Object.keys(dataTwo).length) {
       return false
     }
     for (let attr in dataOne) {
-      let t1 = dataOne[attr] instanceof Object
-      let t2 = dataTwo[attr] instanceof Object
+      let t1 = (typeof dataOne[attr] === 'object')
+      let t2 = (typeof dataTwo[attr] === 'object')
       if (t1 && t2) {
         return this.diff(dataOne[attr], dataTwo[attr])
       } else if (dataOne[attr] !== dataTwo[attr]) {
@@ -365,9 +365,8 @@
     let bars = parseInt(num) || 999
     let history = this.getCache('(method.history)')
     let historyArray = []
-    let json = JSON
     if (history && history.length > 0) {
-      historyArray = json.parse(history)
+      historyArray = JSON.parse(history)
       let temporaryOne = null
       let temporaryTwo = null
       let historyArrayLength = ((historyArray.length < bars) ? historyArray.length + 1 : historyArray.length)
@@ -388,7 +387,7 @@
     } else {
       historyArray[0] = data
     }
-    this.setCache('(method.history)', json.stringify(historyArray))
+    this.setCache('(method.history)', JSON.stringify(historyArray))
     return historyArray
   }
 
@@ -411,7 +410,7 @@
    * @return {number} 当前时间戳
    */
   Method.fn.dateGet = function (digit) {
-    let digitc = ((typeof digit === 'boolean') ? digit : true)
+    let digitc = (typeof digit === 'boolean') ? digit : true
     let result = digitc ? Date.parse(new Date()) : Number(Date.parse(new Date()).toString().substr(0, 10))
     return result
   }
@@ -428,7 +427,7 @@
   Method.fn.dateTurn = function (tamp, div, hour) {
     let date = new Date((tamp.toString().length === 13) ? tamp : (tamp * 1000))
     let dateDiv = div ? String(div) : '-'
-    let isHour = ((typeof hour === 'boolean') ? hour : true)
+    let isHour = (typeof hour === 'boolean') ? hour : true
     let Y = date.getFullYear()
     let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1)
     let D = (date.getDate().toString().length === 1 ? '0' + date.getDate() : date.getDate())
@@ -481,7 +480,7 @@
    * 获取节点
    * @method getDome
    * @for Method
-   * @param {all} dome 节点名称/class值/id值/属性名称
+   * @param {string} dome 节点名称/class值/id值/属性名称
    * @return {object} 节点对象
    */
   Method.fn.getDome = function (dome) {
@@ -507,6 +506,27 @@
     return dom.childNodes[0]
   }
 
+  /**
+   * 替换或创建自定义属性
+   * @method attr
+   * @for Method
+   * @param {string} dome 节点名称/class值/id值/属性名称
+   * @param {string} key 自定义属性键
+   * @param {string/number} value 自定义属性值
+   * @return {boolean} 返回创建或查询对象结果
+   */
+  Method.fn.attr = function (dome, key, value) {
+    let domes = (typeof dome === 'object') ? dome : this.getDome(dome)
+    if (key && (typeof key === 'string') && value) {
+      domes.setAttribute(key, value)
+      return true
+    } else if (key && (typeof key === 'string')) {
+      return domes.getAttribute(key)
+    }
+    return false
+  }
+
+  // 根据引入方式暴露对象
   if (isExports) {
     module.exports = new Method()
   } else {

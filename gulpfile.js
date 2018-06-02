@@ -1,7 +1,7 @@
 /**
  * @method gulpfile 打包工具
  * @author Lkx
- * @create time 2018.05.29
+ * @create time 2018.05.31
  */
 
 var pkg = require('./package.json');
@@ -9,7 +9,7 @@ var gulp = require('gulp');
 var browserSync = require('browser-sync').create();
 var runSequence = require('run-sequence');
 var header = require('gulp-header');
-var note = '/**\n * method ' + pkg.name + '\n * version ' + pkg.version + '\n * author Lkx\n * create time ' + pkg.createTime + '\n * update time ' + pkg.updateTime + '\n */\n\n'
+var note = '/**\n * method ' + pkg.name + '\n * version ' + pkg.version + '\n * author Lkx\n * create time ' + pkg.createTime + '\n * update time ' + pkg.updateTime + '\n * website http://www.kxui.org\n */\n\n'
 var cssPath = './src/css/scss/*.scss';
 var jsPath = ['./src/*.js', './src/modules/*.js'];
 var fontPath = ['./src/font/*']

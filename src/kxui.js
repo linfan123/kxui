@@ -1,11 +1,14 @@
 /**
  * @method kxui
- * @version 1.0.0
+ * @version 1.1.0
+ * 
+ * @method use 加载模块
+ * @method info 信息查询
  */
 
 (function (win) {
-  let stockMod = ['method', 'popup']
-  let isExports = typeof module !== 'undefined' && (module instanceof Object) && (module.exports instanceof Object)
+  let stockMod = ['method', 'popup', 'lazy']
+  let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object')
   let device = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? 'mobile' : 'pc'
 
   /**
@@ -16,8 +19,8 @@
    */
   let Load = function (kxui) {
     this.kxui = kxui
-    this.module = (typeof this.kxui.module === 'string') || (typeof this.kxui.module === 'function') || this.kxui.module instanceof Object ? this.kxui.module : false
-    this.fun = typeof this.kxui.fun === 'function' ? this.kxui.fun : this.module
+    this.module = (typeof this.kxui.module === 'string') || (typeof this.kxui.module === 'function') || (typeof this.kxui.module === 'object') ? this.kxui.module : false
+    this.fun = (typeof this.kxui.fun === 'function') ? this.kxui.fun : this.module
     if ((typeof this.kxui.module === 'function') || (typeof this.fun === 'boolean')) {
       warn(0)
       if (typeof this.fun === 'boolean') {
@@ -103,7 +106,7 @@
           warn(1, this.module)
           this.end()
         }
-      } else if (this.module instanceof Object) {
+      } else if (typeof this.module === 'object') {
         if (stockMod.indexOf(this.module[this.loadLine].toLowerCase()) >= 0) {
           this.register(this.module[this.loadLine])
         } else {
@@ -158,15 +161,25 @@
      * @param {boolean} shunt 分流，true:对象、false：字符串
      */
     wait: function (body, script, shunt) {
-      let that = this
-      script.onload = function () {
-        body.removeChild(script)
-        that.loop(shunt)
+      let that = this　
+      if (script.readyState) {
+        script.onreadystatechange = function () {　　　　　　　　
+          if (script.readyState === 'complete' || script.readyState === 'loaded') {　　　　　　　　　　
+            script.onreadystatechange = null　　　　　　　
+            body.removeChild(script)
+            that.loop(shunt)
+          }　　　　　　
+        }　　　　
+      } else {
+        script.onload = function () {
+          body.removeChild(script)
+          that.loop(shunt)
+        }　　　　
       }
     },
 
     /**
-     * 环路
+     * 加载环
      * @method loop
      * @for shunt/wait/register/loop
      * @param {boolean} shunt 分流，true:对象、false：字符串
@@ -234,12 +247,12 @@
 
   /**
    * 方法的主入口
-   * @method kxui
+   * @method Kxui
    * 开发常用操作方法，可根据需要调用不同的模块，提高开发效率
    */
-  let kxui = function () {
-    this.version = '1.0.0'
-    this.updateTime = '2018.05.31'
+  let Kxui = function () {
+    this.version = '1.1.0'
+    this.updateTime = '2018.06.02'
   }
 
   /**
@@ -249,13 +262,11 @@
    * @param {string/array} mod 模块名称
    * @param {function} fun 加载完成回调方法
    */
-  kxui.prototype.use = function (mod, fun) {
-    this.module = mod
-    this.fun = fun
-    this.Load = new Load(this)
-    delete this.module
-    delete this.fun
-    delete this.Load
+  Kxui.prototype.use = function (mod, fun) {
+    let parameter = []
+    parameter.module = mod
+    parameter.fun = fun
+    parameter.Load = new Load(parameter)
   }
 
   /**
@@ -264,7 +275,7 @@
    * @for kxui
    * @return {object} 开发信息
    */
-  kxui.prototype.info = function () {
+  Kxui.prototype.info = function () {
     return {
       'path': path(),
       'device': device,
@@ -272,8 +283,8 @@
     }
   }
 
-  win.kxui = new kxui()
+  win.kxui = new Kxui()
   if (isExports) {
-    module.exports = new kxui()
+    module.exports = new Kxui()
   }
 })(window)
