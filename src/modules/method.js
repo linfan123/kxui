@@ -420,13 +420,13 @@
    * @method dateTurn
    * @for Method
    * @param {string/number} tamp 需要转换的时间戳
-   * @param {string} div 日期分割符号
+   * @param {string} diy 日期分割符号
    * @param {boolean} hour 是否显示时间
    * @return {string} 返回转换后的日期
    */
-  Method.fn.dateTurn = function (tamp, div, hour) {
+  Method.fn.dateTurn = function (tamp, diy, hour) {
     let date = new Date((tamp.toString().length === 13) ? tamp : (tamp * 1000))
-    let dateDiv = div ? String(div) : '-'
+    let dateDiv = diy ? String(diy) : '-'
     let isHour = (typeof hour === 'boolean') ? hour : true
     let Y = date.getFullYear()
     let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1)
