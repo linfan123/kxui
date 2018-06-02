@@ -18,7 +18,7 @@
    */
   let Logic = function (parameter) {
     this.parameter = parameter
-    this.threshold = this.parameter.threshold ? Number(this.parameter.threshold) : 10
+    this.threshold = this.parameter.threshold ? Number(this.parameter.threshold) : 0
     this.init()
   }
 
@@ -65,9 +65,9 @@
     /**
      * 静态加载
      * @method static
+     * @for graphic
      * @param {boolean} many 是否存在多个对象
      * @param {boolean} manyCtr 是否存在多个容器
-     * @for graphic
      */
     static: function (many, manyCtr) {
       let that = this
@@ -96,10 +96,10 @@
     /**
      * 事件绑定
      * @method event
+     * @for static
      * @param {boolean} many 是否存在多个对象
      * @param {boolean} abroad 是否存在外部容器
      * @param {object} manyCtr 多容器组合
-     * @for static
      */
     event: function (many, abroad, manyCtr) {
       let that = this
@@ -129,7 +129,7 @@
       let scrollTop = abroad ? manyCtrSwitch ? manyCtr[0].scrollTop : this.containers.scrollTop : (document.documentElement.scrollTop || document.body.scrollTop)
       let screenHeight = abroad ? manyCtrSwitch ? manyCtr[0].clientHeight : this.containers.clientHeight : (document.documentElement.clientHeight || document.body.clientHeight)
       if (many) {
-        for (let i = 0; i < img.length; i++) {
+        for (let i = 0; i < lazyImg.length; i++) {
           if (lazyImg[i].offsetTop - (abroad ? lazyImg[i].parentNode.offsetTop : 0) <= ((scrollTop + screenHeight) + this.threshold) && lazyImg[i].offsetTop >= ((scrollTop - screenHeight) - this.threshold)) {
             let src = this.method.attr(lazyImg[i], 'kxui-lazy')
             this.method.attr(lazyImg[i], 'src', src)
@@ -156,7 +156,7 @@
       0: '容器 {' + dome + '} 不存在',
       1: '当前页面未发现 <img> 标签'
     }
-    console.warn('kxui (lazy)： ' + nums[num] + '。')
+    console.warn('kxui-' + win.kxui.version + '： ' + nums[num] + '。')
   }
 
   /**

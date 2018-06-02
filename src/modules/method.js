@@ -421,7 +421,7 @@
    * @for Method
    * @param {string/number} tamp 需要转换的时间戳
    * @param {string} diy 日期分割符号
-   * @param {boolean} hour 是否显示时间
+   * @param {boolean} hour 是否显示时/分/秒
    * @return {string} 返回转换后的日期
    */
   Method.fn.dateTurn = function (tamp, diy, hour) {

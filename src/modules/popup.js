@@ -74,6 +74,7 @@
      * @for init
      */
     skeleton: function () {
+
       // 非小贴士弹窗创建
       if (this.parameter.type !== 4) {
         this.bulk = this.method.addDome('<div class="' + (this.parameter.type !== 2 ? 'kxui-Popup-bulk' : '') + ' kxui-Popup-show kxui-Popup-animation" index="' + this.parameter.index + '"></div>')
@@ -133,9 +134,9 @@
           that.method.addClass(that.bulk, 'kxui-Popup-' + (type === 0 ? 'alert' : 'ask'))
           that.method.addClass(that.content, 'kxui-Popup-' + (type === 0 ? 'alert' : 'ask') + '-content')
           break
+        case 2:
 
           // 等待层骨架组装
-        case 2:
           that.loadingText = that.method.addDome('<p class="kxui-Popup-loading-text ' + (that.parameter.style === 2 ? 'kxui-Popup-loading-text-special' : '') + '">' + (that.parameter.text ? that.parameter.text : '') + '</p>')
           let loadingStyle = {
             0: function () {
@@ -161,17 +162,17 @@
           that.bulk.appendChild(that.loadingText)
           that.method.addClass(that.bulk, (that.parameter.shade ? 'kxui-Popup-loading' : 'kxui-Popup-loading-noShade'))
           break
-
-          // 等待层骨架组装
         case 3:
+
+          // 提醒层骨架组装
           closeAnimation(that.bulk, that.parameter.topPage, that.shade, that.parameter.type)
           that.remindText = that.method.addDome('<p>' + that.parameter.text + '</p>')
           that.bulk.appendChild(that.remindText)
           that.method.addClass(that.bulk, 'kxui-Popup-remind')
           break
+        case 4:
 
           // 小贴士骨架组装
-        case 4:
           that.bulk = []
           that.arrow = []
           that.content = []
@@ -184,9 +185,9 @@
             that.styleStatus(that.bulk[t], that.alone.dom[t])
           }
           return
+        case 5:
 
           // 窗口层骨架组装
-        case 5:
           that.bulk.appendChild(that.resize)
           that.bulk.appendChild(that.title)
           that.bulk.appendChild(that.content)
