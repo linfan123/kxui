@@ -266,7 +266,7 @@
     let parameter = []
     parameter.module = mod
     parameter.fun = fun
-    parameter.Load = new Load(parameter)
+    new Load(parameter)
   }
 
   /**

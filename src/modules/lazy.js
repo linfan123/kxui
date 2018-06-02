@@ -75,8 +75,8 @@
         that.img = []
         for (let i = 0; i < that.containers.length; i++) {
           that.img[i] = {}
-          let child = that.containers[i].childNodes
           let lt = 0
+          let child = that.containers[i].childNodes
           for (let c = 0; c < child.length; c++) {
             if (child[c].nodeName !== "#text" && !/\s/.test(child.nodeValue)) {
               that.img[i][lt] = child[c]

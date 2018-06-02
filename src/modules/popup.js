@@ -239,9 +239,10 @@
             that.method.addClass(dom, that.parameter.type === 3 ? 'kxui-Popup-remind-danger' : that.parameter.type === 4 ? 'kxui-Popup-tips-danger' : 'kxui-Popup-danger')
             break
         }
+      }
 
-        // 非等待层/提醒层/小贴士进入
-      } else if (that.parameter.type !== 2 && that.parameter.type !== 3 && that.parameter.type !== 4) {
+      // 非等待层/提醒层/小贴士进入
+      else if (that.parameter.type !== 2 && that.parameter.type !== 3 && that.parameter.type !== 4) {
         that.title.style.cssText = 'color:' + that.parameter.diy.color + ';background:' + that.parameter.diy.background
         that.close.style.cssText = 'color:' + that.parameter.diy.color + ';background:' + that.parameter.diy.background
         that.shrink.style.cssText = 'color:' + that.parameter.diy.color + ';background:' + that.parameter.diy.background
@@ -251,19 +252,22 @@
         that.content.style.borderTop = '1px solid ' + that.parameter.diy.background
         dom.style.border = '1px solid ' + that.parameter.diy.background
         that.method.addClass(dom, 'kxui-Popup-diy')
+      }
 
-        // 提醒层独有自定义样式结构
-      } else if (that.parameter.type === 3) {
+      // 提醒层独有自定义样式结构
+      else if (that.parameter.type === 3) {
         that.bulk.style.background = that.parameter.diy.background
         that.bulk.childNodes[0].style.color = that.parameter.diy.color
+      }
 
-        // 小贴士独有自定义样式结构
-      } else if (that.parameter.type === 4) {
+      // 小贴士独有自定义样式结构
+      else if (that.parameter.type === 4) {
         ((node.offsetWidth + node.offsetLeft) + dom.offsetWidth + 30) > docSize().docWidth ? dom.childNodes[0].style.borderLeft = '8px solid ' + that.parameter.diy.background : dom.childNodes[0].style.borderRight = '8px solid ' + that.parameter.diy.background
         dom.childNodes[1].style.cssText = 'color:' + that.parameter.diy.color + ';background:' + that.parameter.diy.background
+      }
 
-        // 非提醒层/小贴士进入
-      } else {
+      // 非提醒层/小贴士进入
+      else {
         that.loadingText.style.color = that.parameter.diy.color
         for (let i = 0; i < that.bulk.childNodes.length - 1; i++) {
           that.bulk.childNodes[i].style.cssText = 'color:' + that.parameter.diy.color + ';border:0 solid ' + that.parameter.diy.color + ';background-color:' + that.parameter.diy.color
@@ -320,10 +324,11 @@
         if (that.parameter.type === 5 && that.alone.full) {
           dom.style.left = '0'
           dom.style.top = '0'
+        }
 
-          // 设置弹窗的top偏移量
-          // 存在top、center、bottom之分
-        } else {
+        // 设置弹窗的top偏移量
+        // 存在top、center、bottom之分
+        else {
           if (that.parameter.offset === 'top') {
             dom.style.top = '10px'
           } else if (that.parameter.offset === 'center' || that.parameter.offset === 'left' | that.parameter.offset === 'right') {
@@ -342,8 +347,10 @@
             dom.style.right = '10px'
           }
         }
-        // 除小贴士外的其他所有弹层进入
-      } else {
+      }
+
+      // 除小贴士外的其他所有弹层进入
+      else {
         dom.style.top = node.offsetTop + 'px'
         if (node.offsetWidth + node.offsetLeft + dom.offsetWidth + 30 > docSize().docWidth) {
           dom.style.left = (node.offsetLeft - dom.offsetWidth) + 'px'
@@ -412,9 +419,10 @@
             that.alone.event['btn' + this.index](that.parameter.index)
           }
         }
+      }
 
-        // 提醒层确定回调
-      } else if ((typeof that.alone.btn === 'function') && that.parameter.type === 0) {
+      // 提醒层确定回调
+      else if ((typeof that.alone.btn === 'function') && that.parameter.type === 0) {
         that.btn1.onclick = function () {
           clearTimeout(that.timer)
           closeAnimation(that.bulk, that.parameter.topPage, that.shade, that.parameter.type)
@@ -822,7 +830,7 @@
      * @param {string} index 当前窗口唯一值
      * @param {object} alone 独有参数
      */
-    this.skeleton = new Skeleton({
+    new Skeleton({
       type: type,
       text: (type === 0 || type === 3 || type === 4) ? alone.text : (type === 5) ? parameter.content : parameter.text,
       style: type === 2 ? alone.style : (typeof parameter.style === 'string') ? parameter.style : 'default',

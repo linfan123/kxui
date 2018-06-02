@@ -5,49 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>text</title>
+    <title>test</title>
     <script src="kxui.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
-        img {
-            width: 300px;
-            height: 300px;
-            display: block;
-            margin-top: 600px;
-        }
-
-        .div {
-            width: 100%;
-            overflow: auto;
-            height: 300px;
-            border-bottom: 10px solid red;
-            margin-top: 1000px;
-        }
-    </style>
 </head>
 
-<body>
-    <input type="text">
-    <a id="btn">确定</a>
-</body>
+<body></body>
+
 <script>
-    kxui.use(['method', 'popup'], function () {
-        var popup = kxui.popup
+    kxui.use(['method', 'popup', 'lazy'], function () {
         var method = kxui.method
-        method.getDome('#btn').onclick = function () {
-            popup.ask({
-                text: '哎呦',
-                btn: ['1', '2', '3', '4','5','6','7','8','9'],
-                btn1: function (e) {
-                    console.log(e)
-                    popup.close('ask')
-                }
-            })
-        }
+        var popup = kxui.popup
+        var lazy = kxui.lazy
     })
 </script>
 
