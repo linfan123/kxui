@@ -263,11 +263,12 @@
    * @param {function} fun 加载完成回调方法
    */
   Kxui.prototype.use = function (mod, fun) {
-    let parameter = {
-      'fun': fun,
-      'module': mod
-    }
-    new Load(parameter)
+    this.module = mod
+    this.fun = fun
+    this.Load = new Load(this)
+    delete this.module
+    delete this.fun
+    delete this.Load
   }
 
   /**
