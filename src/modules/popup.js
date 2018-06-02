@@ -333,7 +333,7 @@
             dom.style.top = '10px'
           } else if (that.parameter.offset === 'center' || that.parameter.offset === 'left' | that.parameter.offset === 'right') {
             let top = that.parameter.topPage ? docSize().topHeight : (docSize().docHeight / 2) - (dom.offsetHeight / 2) - 100
-            dom.style.top = (top >= 0) ? top : 0 + 'px'
+            dom.style.top = ((top >= 0) ? top : 0) + 'px'
           } else if (that.parameter.offset === 'bottom') {
             dom.style.bottom = '10px'
           }
