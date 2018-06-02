@@ -841,7 +841,7 @@
      * @param {string} index 当前窗口唯一值
      * @param {object} alone 独有参数
      */
-    new Skeleton({
+    this.skeleton = new Skeleton({
       type: type,
       text: (type === 0 || type === 3 || type === 4) ? alone.text : (type === 5) ? parameter.content : parameter.text,
       style: type === 2 ? alone.style : (typeof parameter.style === 'string') ? parameter.style : 'default',

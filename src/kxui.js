@@ -20,9 +20,9 @@
   let Load = function (kxui) {
     this.kxui = kxui
     this.module = (typeof this.kxui.module === 'string') || (typeof this.kxui.module === 'function') || (typeof this.kxui.module === 'object') ? this.kxui.module : false
-    this.fun = (typeof this.kxui.fun === 'function') ? this.kxui.fun : this.module
+    this.fun = (typeof this.kxui.fun === 'function') ? this.kxui.fun : (typeof this.module === 'function') ? this.module : false
     if ((typeof this.kxui.module === 'function') || (typeof this.fun === 'boolean')) {
-      warn(0)
+      warn(0, this.kxui)
       if (typeof this.fun === 'boolean') {
         return false
       }
@@ -81,13 +81,13 @@
      */
     imports: function (mod) {
       for (let i = 0; i < mod.length; i++) {
-        if (!this.kxui[(mod[i])]) {
+        if (!this.kxui[(mod[i])] && stockMod.indexOf(mod[i].toLowerCase()) >= 0) {
           let modName = mod[i]
           this.kxui[modName] = require('./modules/' + mod[i])
         } else if (this.kxui[(mod[i])]) {
-          warn(2, mod[i])
+          warn(2, mod[i], this.kxui)
         } else {
-          warn(1, mod[i])
+          warn(1, mod[i], this.kxui)
         }
       }
       this.end()
@@ -103,14 +103,14 @@
         if (stockMod.indexOf(this.module.toLowerCase()) >= 0) {
           this.create(this.module, false)
         } else {
-          warn(1, this.module)
+          warn(1, this.module, this.kxui)
           this.end()
         }
       } else if (typeof this.module === 'object') {
         if (stockMod.indexOf(this.module[this.loadLine].toLowerCase()) >= 0) {
           this.register(this.module[this.loadLine])
         } else {
-          warn(1, this.module[this.loadLine])
+          warn(1, this.module[this.loadLine], this.kxui)
           this.loop(true)
         }
       }
@@ -126,10 +126,10 @@
       if (!this.kxui[mod]) {
         this.create(mod, true)
       } else if (this.loadLine < this.module.length - 1) {
-        warn(2, mod)
+        warn(2, mod, this.kxui)
         this.loop(true)
       } else {
-        warn(2, mod)
+        warn(2, mod, this.kxui)
         this.end()
       }
     },
@@ -189,12 +189,12 @@
       if (shunt && this.module[this.loadLine] && stockMod.indexOf(this.module[this.loadLine].toLowerCase()) >= 0) {
         this.register(this.module[this.loadLine])
       } else if (shunt && this.loadLine < this.module.length - 1) {
-        warn(1, this.module[this.loadLine])
+        warn(1, this.module[this.loadLine], this.kxui)
         this.loop(shunt)
       } else {
         let warnAna = shunt && this.module[this.loadLine]
         if (warnAna) {
-          warn(1, this.module[this.loadLine])
+          warn(1, this.module[this.loadLine], this.kxui)
         }
         this.end()
       }
@@ -234,15 +234,17 @@
    * @method warn
    * @for Load
    * @param {number} num 输入警告文案编号
-   * @param {string} mod 发生错误的模块名称
+   * @param {string/object} mod 发生错误的模块名称/kxui
+   * @param {object} kxui
    */
-  function warn(num, mod) {
+  function warn(num, mod, kxui) {
+    let that = kxui ? kxui : (typeof mod === 'object') ? mod : ''
     let nums = {
       0: '调用结构不正确',
       1: '模块 {' + mod + '} 不存在',
       2: '请勿重复调用 {' + mod + ') 模块'
     }
-    console.warn('kxui-' + new kxui().version + '： ' + nums[num] + '。')
+    console.warn('kxui-' + that.version + '： ' + nums[num] + '。')
   }
 
   /**
@@ -265,10 +267,10 @@
   Kxui.prototype.use = function (mod, fun) {
     this.module = mod
     this.fun = fun
-    this.Load = new Load(this)
+    this.load = new Load(this)
     delete this.module
     delete this.fun
-    delete this.Load
+    delete this.load
   }
 
   /**

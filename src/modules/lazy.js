@@ -178,8 +178,8 @@
    * @param {object} parameter 配置参数
    */
   Lazy.fn.load = function (parameter) {
-    let parameters = (typeof parameter === 'object') ? parameter : {}
-    new Logic(parameters)
+    this.logic = new Logic((typeof parameter === 'object') ? parameter : {})
+    delete this.logic
   }
 
   // 根据引入方式暴露对象
