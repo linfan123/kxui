@@ -332,7 +332,8 @@
           if (that.parameter.offset === 'top') {
             dom.style.top = '10px'
           } else if (that.parameter.offset === 'center' || that.parameter.offset === 'left' | that.parameter.offset === 'right') {
-            dom.style.top = (((that.parameter.topPage ? docSize().topHeight : docSize().docHeight) / 2) - dom.offsetHeight / 2) - 100 + 'px'
+            let top = that.parameter.topPage ? docSize().topHeight : (docSize().docHeight / 2) - (dom.offsetHeight / 2) - 100
+            dom.style.top = (top >= 0) ? top : 0 + 'px'
           } else if (that.parameter.offset === 'bottom') {
             dom.style.bottom = '10px'
           }
@@ -342,9 +343,18 @@
           if (that.parameter.offset === 'left') {
             dom.style.left = '10px'
           } else if (that.parameter.offset === 'center' || that.parameter.offset === 'top' || that.parameter.offset === 'bottom') {
-            dom.style.left = ((that.parameter.topPage ? docSize().topWidth : docSize().docWidth) / 2) - (dom.offsetWidth / 2) + 'px'
+            let left = that.parameter.topPage ? docSize().topWidth : (docSize().docWidth / 2) - (dom.offsetWidth / 2)
+            dom.style.left = left + 'px'
           } else if (that.parameter.offset === 'right') {
             dom.style.right = '10px'
+          }
+
+          // 判断当前弹窗是否超长
+          let clientHeight = document.documentElement.clientHeight
+          if (dom.offsetHeight > clientHeight) {
+            dom.style.height = clientHeight + 'px'
+            dom.childNodes[2].style.height = (clientHeight - 90) + 'px'
+            dom.childNodes[2].style.marginBottom = '10px'
           }
         }
       }

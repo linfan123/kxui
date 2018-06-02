@@ -1,10 +1,9 @@
 @import './color.scss';
-html,
-body {
-  width: 100%;
-  height: 100%;
-}
-
+// html,
+// body {
+//   width: 100%;
+//   height: 100%;
+// }
 .kxui-noScrollBar {
   overflow-x: hidden !important;
   overflow-y: hidden !important;
@@ -373,9 +372,9 @@ body {
     overflow: hidden;
     height: 40px;
     cursor: move;
-    $defaultWhite-space: nowrap;
-    text-indent: 20px;
+    padding-left: 20px;
     text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .kxui-Popup-title-wholeBtn {
     width: calc(100% - 80px);
@@ -385,6 +384,7 @@ body {
   }
   .kxui-Popup-title-noBtn {
     width: 100%;
+    padding: 0 20px;
   }
   .kxui-Popup-shrink,
   .kxui-Popup-close {
@@ -659,6 +659,7 @@ body {
     width: 100%;
     min-height: 60px;
     padding: 20px 20px;
+    overflow: auto;
   }
 }
 
