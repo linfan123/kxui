@@ -1,6 +1,6 @@
 /**
  * method kxui
- * version 1.1.0
+ * version 1.1.1
  * author Lkx
  * create time 2018.05.31
  * update time 2018.06.02
