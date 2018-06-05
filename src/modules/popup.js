@@ -498,12 +498,12 @@
        */
       function dowm(event) {
         zIndex(that.bulk)
-        that.event = event || win.event
+        that.e = event || win.event
         frameOperThis = kxui.method.hasClass(this, 'kxui-Popup-resize')
         kxui.method.delClass(that.bulk, 'kxui-Popup-show')
         kxui.method.delClass(that.bulk, 'kxui-Popup-animation')
-        that.dowmX = that.event.clientX
-        that.dowmY = that.event.clientY
+        that.dowmX = that.e.clientX
+        that.dowmY = that.e.clientY
         native.doc(that.parameter.topPage).addEventListener('mousemove', move)
         native.doc(that.parameter.topPage).addEventListener('mouseup', up)
         kxui.method.addClass(native.query('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation')
@@ -516,10 +516,10 @@
        * @param {object} event 事件对象
        */
       function move(event) {
-        that.event = event || win.event
+        that.e = event || win.event
         if (frameOperThis) {
-          that.moveWidth = that.saveWidth + (that.event.clientX - that.dowmX)
-          that.moveHeight = that.saveHeight + (that.event.clientY - that.dowmY)
+          that.moveWidth = that.saveWidth + (that.e.clientX - that.dowmX)
+          that.moveHeight = that.saveHeight + (that.e.clientY - that.dowmY)
           if (that.moveWidth <= 260) {
             that.moveWidth = 260
           }
@@ -529,8 +529,8 @@
           that.bulk.style.width = that.moveWidth + 'px'
           that.bulk.style.height = that.moveHeight + 'px'
         } else {
-          that.moveX = that.event.clientX - that.dowmX + that.saveX
-          that.moveY = that.event.clientY - that.dowmY + that.saveY
+          that.moveX = that.e.clientX - that.dowmX + that.saveX
+          that.moveY = that.e.clientY - that.dowmY + that.saveY
           if (that.moveX <= 0) {
             that.moveX = 0
           }
@@ -646,7 +646,7 @@
   /**
    * 获取当前页面/iframe可视范围的宽高
    * @method docSize
-   * @for event/frameOper/showAnimation
+   * @for styleStatus/last/frameOper
    * @return {object} 返回当前页面宽高以及父级页面宽高
    */
   function docSize() {

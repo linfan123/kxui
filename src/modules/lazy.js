@@ -43,7 +43,7 @@
 
     /**
      * 容器配置
-     * @method graphic
+     * @method container
      * @for init
      */
     container: function () {
@@ -64,7 +64,7 @@
     /**
      * 静态加载
      * @method static
-     * @for graphic
+     * @for container
      * @param {boolean} many 是否存在多个对象
      * @param {boolean} manyCtr 是否存在多个容器
      */
@@ -150,7 +150,7 @@
   /**
    * 输出控制台警告
    * @method warn
-   * @for Load
+   * @for container
    * @param {number} num 输入警告文案编号
    * @param {string} dome 发生错误的节点
    */

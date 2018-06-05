@@ -9,7 +9,7 @@
   <script src="kxui.js"></script>
 </head>
 
-<body>
+<body class="my">
   <div></div>
 </body>
 
@@ -18,6 +18,8 @@
     const method = kxui.method
     const popup = kxui.popup
     const lazy = kxui.lazy
+    // let body = method.getDom('.my')
+    console.log(method.delClass('body', 'my'))
   })
 </script>
 

@@ -155,59 +155,70 @@
   /**
    * 查询是否存在class值
    * @method hasClass
-   * @for Method
-   * @param {string} dom 需要操作的dom对象
+   * @for Method/addClass/delClass
+   * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象
    * @param {string} cls 需要查询的class名称
    * @return {boolean} 根据查询返回布尔值
    */
   Method.fn.hasClass = function (dom, cls) {
-    let cla = cls || ''
-    if (cla.replace(/\s/g, '').length === 0) {
-      return false
+    if (dom && cls) {
+      let doms = (typeof dom === 'string') ? this.getDom(dom) : dom
+      if (cls.replace(/\s/g, '').length === 0) {
+        return false
+      }
+      return new RegExp(' ' + cls + ' ').test(' ' + doms.className + ' ')
     }
-    return new RegExp(' ' + cla + ' ').test(' ' + dom.className + ' ')
+    warn(0, 'hasClass', dom ? 'cls' : 'dom')
   }
 
   /**
    * 增加class值
    * @method addClass
    * @for Method
-   * @param {string} dom 需要操作的dom对象
+   * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象
    * @param {string} cls 需要增加的class名称
    * @return {boolean} 根据成功与否返回布尔值
    */
   Method.fn.addClass = function (dom, cls) {
-    if (!this.hasClass(dom, cls)) {
-      dom.className = ((dom.className === '') ? cls : (dom.className + ' ' + cls))
-      return true
+    if (dom && cls) {
+      let doms = (typeof dom === 'string') ? this.getDom(dom) : dom
+      if (!this.hasClass(doms, cls)) {
+        doms.className = ((doms.className === '') ? cls : (doms.className + ' ' + cls))
+        return true
+      }
+      return false
     }
-    return false
+    warn(0, 'addClass', dom ? 'cls' : 'dom')
   }
 
   /**
    * 移除class值
    * @method delClass
    * @for Method
-   * @param {string} dom 需要操作的dom对象
+   * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象
    * @param {string} cls 需要移除的class名称
    * @return {boolean} 根据成功与否返回布尔值
    */
   Method.fn.delClass = function (dom, cls) {
-    if (this.hasClass(dom, cls)) {
-      let newClass = (' ' + dom.className.replace(/[\t\r\n]/g, '') + ' ')
-      while (newClass.indexOf(' ' + cls + ' ') >= 0) {
-        newClass = newClass.replace(' ' + cls + ' ', ' ')
+    if (dom && cls) {
+      let doms = (typeof dom === 'string') ? this.getDom(dom) : dom
+      if (this.hasClass(doms, cls)) {
+        let newClass = (' ' + doms.className.replace(/[\t\r\n]/g, '') + ' ')
+        while (newClass.indexOf(' ' + cls + ' ') >= 0) {
+          newClass = newClass.replace(' ' + cls + ' ', ' ')
+        }
+        doms.className = newClass.replace(/^\s+|\s+$/g, '')
+        return true
       }
-      dom.className = newClass.replace(/^\s+|\s+$/g, '')
-      return true
+      return false
     }
-    return false
+    warn(0, 'delClass', dom ? 'cls' : 'dom')
   }
 
   /**
    * 设置本地缓存
    * @method setCache
-   * @for Method
+   * @for Method/setHis
    * @param {string} key 设置缓存名称
    * @param {string} val 设置缓存内容
    * @param {number} tim 设置缓存有效时间，单位 1/1s
@@ -229,7 +240,7 @@
   /**
    * 获取本地缓存
    * @method getCache
-   * @for Method
+   * @for Method/setHis/getHis
    * @param {string} key 读取缓存名称
    * @param {string} noWarn 是否抛出异常提示
    * @return {boolean} 返回获取动作布尔值
@@ -250,7 +261,7 @@
   /**
    * 删除本地缓存
    * @method delCache
-   * @for Method
+   * @for Method/getCache/delHis
    * @param {string} key 删除缓存名称
    * @return {boolean} 返回删除动作布尔值
    */
@@ -266,7 +277,7 @@
   /**
    * 数据对比（内容与数据类型）
    * @method compare
-   * @for Method
+   * @for Method/setHis
    * @param {all} dataOne 需要对比的数据一
    * @param {all} dataTwo 需要对比的数据二
    * @param {string} noWarn 是否抛出异常提示
@@ -355,7 +366,7 @@
   /**
    * 获取当前时间戳
    * @method dateGet
-   * @for Method
+   * @for Method/setCache/getCache/dateChina
    * @param {boolean} digit 时间戳长度，默认13位(true)，可返回10位及13位时间戳
    * @return {number} 当前时间戳
    */
@@ -368,7 +379,7 @@
   /**
    * 时间戳转换日期
    * @method dateTurn
-   * @for Method
+   * @for Method/dateChina
    * @param {string/number} tamp 需要转换的时间戳
    * @param {string} diy 日期分割符号
    * @param {boolean} hour 是否显示时/分/秒
@@ -434,8 +445,8 @@
   /**
    * 获取节点
    * @method getDom
-   * @for Method
-   * @param {string} dom 节点名称/class值/id值/属性名称
+   * @for Method/hasClass/addClass/delClass/atrDom
+   * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象
    * @return {object} 节点对象
    */
   Method.fn.getDom = function (dom) {
@@ -471,7 +482,7 @@
    * 替换或创建自定义属性
    * @method atrDom
    * @for Method
-   * @param {string} dom 节点名称/class值/id值/属性名称
+   * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象
    * @param {string} key 自定义属性键
    * @param {string/number} value 自定义属性值
    * @return {boolean} 返回创建或查询对象结果
@@ -495,7 +506,7 @@
   /**
    * 输出控制台警告
    * @method warn
-   * @for Load
+   * @for Method
    * @param {number} num 输入警告文案编号
    * @param {string} name 发生错误的方法
    * @param {string} field 缺少的字段名
