@@ -21,20 +21,6 @@
   let path = kxui.info().path
   let offset = ['top', 'right', 'bottom', 'left', 'center']
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object')
-  let native = {
-    doc: function (topPage) {
-      return topPage ? win.top.document : document
-    },
-    query: function (dom, topPage) {
-      return native.doc(topPage).querySelector(dom)
-    },
-    queryAll: function (dom, topPage) {
-      return native.doc(topPage).querySelectorAll(dom)
-    },
-    create: function (dom, topPage) {
-      return native.doc(topPage).createElement(dom)
-    }
-  }
 
   /**
    * 逻辑入口
@@ -97,7 +83,7 @@
 
       // 是否显示滚动条
       if (this.parameter.scrollBar) {
-        kxui.method.addClass(native.query('body', this.topPage), 'kxui-noScrollBar')
+        kxui.method.addClass(query('body', this.topPage), 'kxui-noScrollBar')
       }
       this.assemble()
     },
@@ -140,19 +126,19 @@
           let loadingStyle = {
             0: function () {
               for (let i = 0; i < 5; i++) {
-                that.bulk.appendChild(native.create('div'));
+                that.bulk.appendChild(create('div'));
                 kxui.method.addClass(that.bulk, 'kxui-Popup-loading-0')
               }
             },
             1: function () {
               for (let i = 0; i < 3; i++) {
-                that.bulk.appendChild(native.create('div'));
+                that.bulk.appendChild(create('div'));
                 kxui.method.addClass(that.bulk, 'kxui-Popup-loading-1')
               }
             },
             2: function () {
               for (let i = 0; i < 8; i++) {
-                that.bulk.appendChild(native.create('div'));
+                that.bulk.appendChild(create('div'));
                 kxui.method.addClass(that.bulk, 'kxui-Popup-loading-2')
               }
             }
@@ -290,12 +276,12 @@
      */
     into: function (dom, node) {
       let that = this
-      native.query('body', that.parameter.topPage).appendChild(dom)
-      if (!native.query('.kxui-Popup-move', that.parameter.topPage)) {
-        native.query('body', that.parameter.topPage).appendChild(that.move)
+      query('body', that.parameter.topPage).appendChild(dom)
+      if (!query('.kxui-Popup-move', that.parameter.topPage)) {
+        query('body', that.parameter.topPage).appendChild(that.move)
       }
-      if (!native.query('.kxui-Popup-shade', that.parameter.topPage) && that.parameter.shade) {
-        native.query('body', that.parameter.topPage).appendChild(that.shade)
+      if (!query('.kxui-Popup-shade', that.parameter.topPage) && that.parameter.shade) {
+        query('body', that.parameter.topPage).appendChild(that.shade)
       }
       that.last(dom, node)
     },
@@ -504,9 +490,9 @@
         kxui.method.delClass(that.bulk, 'kxui-Popup-animation')
         that.dowmX = that.e.clientX
         that.dowmY = that.e.clientY
-        native.doc(that.parameter.topPage).addEventListener('mousemove', move)
-        native.doc(that.parameter.topPage).addEventListener('mouseup', up)
-        kxui.method.addClass(native.query('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation')
+        dynamicDoc(that.parameter.topPage).addEventListener('mousemove', move)
+        dynamicDoc(that.parameter.topPage).addEventListener('mouseup', up)
+        kxui.method.addClass(query('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation')
       }
 
       /**
@@ -560,9 +546,9 @@
         that.saveY = that.bulk.offsetTop
         that.saveWidth = that.bulk.offsetWidth
         that.saveHeight = that.bulk.offsetHeight
-        native.doc(that.parameter.topPage).removeEventListener('mousemove', move, false)
-        native.doc(that.parameter.topPage).removeEventListener('mouseup', up, false)
-        kxui.method.delClass(native.query('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation')
+        dynamicDoc(that.parameter.topPage).removeEventListener('mousemove', move, false)
+        dynamicDoc(that.parameter.topPage).removeEventListener('mouseup', up, false)
+        kxui.method.delClass(query('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation')
       }
     }
   }
@@ -597,8 +583,8 @@
    */
   function closeAnimation(dom, topPage, shade, type) {
     let shadeMatching
-    let mask = native.query('.kxui-Popup-shade', topPage)
-    let remind = native.query('.kxui-Popup-remind', topPage)
+    let mask = query('.kxui-Popup-shade', topPage)
+    let remind = query('.kxui-Popup-remind', topPage)
 
     // 针对remind执行之前存在销毁处理
     if (remind && type === 3) {
@@ -617,16 +603,16 @@
     }
 
     // 针对滚动条隐藏进行释放
-    if (kxui.method.hasClass(native.query('body', topPage), 'kxui-noScrollBar')) {
-      kxui.method.delClass(native.query('body', topPage), 'kxui-noScrollBar')
+    if (kxui.method.hasClass(query('body', topPage), 'kxui-noScrollBar')) {
+      kxui.method.delClass(query('body', topPage), 'kxui-noScrollBar')
     }
     dom.style.opacity = '0'
     kxui.method.addClass(dom, 'kxui-Popup-hide')
     setTimeout(function () {
       try {
-        native.query('body', topPage).removeChild(dom)
+        query('body', topPage).removeChild(dom)
         if (shade && shadeMatching) {
-          native.query('body', topPage).removeChild(mask)
+          query('body', topPage).removeChild(mask)
         }
       } catch (error) {}
     }, 150)
@@ -650,16 +636,63 @@
    * @return {object} 返回当前页面宽高以及父级页面宽高
    */
   function docSize() {
-    let docWidth = native.doc(false).documentElement.clientWidth
-    let docHeight = native.doc(false).documentElement.clientHeight
-    let topWidth = native.doc(true).documentElement.clientWidth
-    let topHeight = native.doc(true).documentElement.clientHeight
+    let docWidth = dynamicDoc(false).documentElement.clientWidth
+    let docHeight = dynamicDoc(false).documentElement.clientHeight
+    let topWidth = dynamicDoc(true).documentElement.clientWidth
+    let topHeight = dynamicDoc(true).documentElement.clientHeight
     return {
       'docWidth': docWidth,
       'docHeight': docHeight,
       'topWidth': topWidth,
       'topHeight': topHeight
     }
+  }
+
+  /**
+   * 层级document对象
+   * @method dynamicDoc
+   * @for frameOper/docSize/create/query/closeAll
+   * @param {boolean} topPage 是否使用顶层
+   * @return {object} 返回层级document对象
+   */
+  function dynamicDoc(topPage) {
+    return topPage ? win.top.document : document
+  }
+
+  /**
+   * 创建层级节点
+   * @method create
+   * @for assemble/style
+   * @param {string} dom 创建的节点
+   * @param {boolean} topPage 是否使用顶层
+   * @return {object} 返回层级节点对象
+   */
+  function create(dom, topPage) {
+    return dynamicDoc(topPage).createElement(dom)
+  }
+
+  /**
+   * 获取层级单独节点
+   * @method query
+   * @for skeleton/into/frameOper/closeAnimation/style
+   * @param {string} dom 获取的节点
+   * @param {boolean} topPage 是否使用顶层
+   * @return {object} 返回层级节点对象
+   */
+  function query(dom, topPage) {
+    return dynamicDoc(topPage).querySelector(dom)
+  }
+
+  /**
+   * 获取层级匹配节点
+   * @method query
+   * @for tips/closeAll
+   * @param {string} dom 获取的节点
+   * @param {boolean} topPage 是否使用顶层
+   * @return {object} 返回层级节点对象
+   */
+  function queryAll(dom, topPage) {
+    return dynamicDoc(topPage).querySelectorAll(dom)
   }
 
   /**
@@ -671,12 +704,12 @@
     if (isExports) {
       require('./../css/popup.css')
     } else {
-      let link = native.create('link')
+      let link = create('link')
       link.media = 'all'
       link.type = 'text/css'
       link.rel = 'stylesheet'
       link.href = path + 'css/popup.css'
-      native.query('head').appendChild(link)
+      query('head').appendChild(link)
     }
   })()
 
@@ -773,7 +806,7 @@
     let doms = null
     let parameters = (typeof parameter === 'object') ? parameter : {}
     if (typeof dom === 'string') {
-      doms = native.queryAll(dom)
+      doms = queryAll(dom)
     } else if (typeof dom.length === 'number') {
       doms = dom
     } else {
@@ -908,9 +941,9 @@
     let that = this
     that.cla = (typeof index === 'object') ? index : ['kxui-Popup-alert', 'kxui-Popup-ask', 'kxui-Popup-loading', 'kxui-Popup-loading-noShade', 'kxui-Popup-remind', 'kxui-Popup-tips', 'kxui-Popup-win']
     for (let c = 0; c < that.cla.length; c++) {
-      let domTrue = native.queryAll('.' + that.cla[c], true)
-      let domFalse = native.queryAll('.' + that.cla[c], false)
-      if (native.doc(true) === native.doc(false)) {
+      let domTrue = queryAll('.' + that.cla[c], true)
+      let domFalse = queryAll('.' + that.cla[c], false)
+      if (dynamicDoc(true) === dynamicDoc(false)) {
         for (let d = 0; d < domFalse.length; d++) {
           closeDom(domFalse[d], false)
         }
