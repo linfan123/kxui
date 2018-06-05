@@ -8,6 +8,7 @@
  */
 
 (function (win) {
+  let kxui = win.kxui
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object')
 
   /**
@@ -31,13 +32,11 @@
      */
     init: function () {
       let that = this
-      if (!win.kxui.method) {
-        win.kxui.use('method', function () {
-          that.method = win.kxui.method
+      if (!kxui.method) {
+        kxui.use('method', function () {
           that.container()
         })
       } else {
-        that.method = win.kxui.method
         that.container()
       }
     },
@@ -49,10 +48,10 @@
      */
     container: function () {
       let that = this
-      that.img = that.method.getDome('img')
+      that.img = kxui.method.getDom('img')
 
       // containers 是否存在外部容器
-      that.containers = that.method.getDome(that.parameter.container)
+      that.containers = (that.parameter.container ? kxui.method.getDom(that.parameter.container) : false)
       if (that.parameter.container && !that.containers) {
         warn(0, that.parameter.container)
       } else if (that.img) {
@@ -131,14 +130,14 @@
       if (many) {
         for (let i = 0; i < lazyImg.length; i++) {
           if (lazyImg[i].offsetTop - (abroad ? lazyImg[i].parentNode.offsetTop : 0) <= ((scrollTop + screenHeight) + this.threshold) && lazyImg[i].offsetTop >= ((scrollTop - screenHeight) - this.threshold)) {
-            let src = this.method.attr(lazyImg[i], 'kxui-lazy')
-            this.method.attr(lazyImg[i], 'src', src)
+            let src = kxui.method.atrDom(lazyImg[i], 'lazy-src')
+            kxui.method.atrDom(lazyImg[i], 'src', src)
           }
         }
       } else {
         if (lazyImg.offsetTop - (abroad ? lazyImg.parentNode.offsetTop : 0) <= ((scrollTop + screenHeight) + this.threshold) && lazyImg.offsetTop >= ((scrollTop - screenHeight) - this.threshold)) {
-          let src = this.method.attr(lazyImg, 'kxui-lazy')
-          this.method.attr(lazyImg, 'src', src)
+          let src = kxui.method.atrDom(lazyImg, 'lazy-src')
+          kxui.method.atrDom(lazyImg, 'src', src)
         }
       }
     }
@@ -156,7 +155,7 @@
       0: '容器 {' + dome + '} 不存在',
       1: '当前页面未发现 <img> 标签'
     }
-    console.warn('kxui-' + win.kxui.version + '： ' + nums[num] + '。')
+    console.warn('kxui-' + kxui.version + '： ' + nums[num] + '。')
   }
 
   /**
@@ -183,9 +182,9 @@
   }
 
   // 根据引入方式暴露对象
-  if (isExports) {
-    module.exports = new Lazy()
+  if (!isExports) {
+    kxui.lazy = new Lazy()
   } else {
-    win.kxui.lazy = new Lazy()
+    module.exports = new Lazy()
   }
 })(window)

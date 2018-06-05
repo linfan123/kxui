@@ -16,8 +16,9 @@
  */
 
 (function (win) {
+  let kxui = win.kxui
   let zIndexNum = 199202
-  let path = win.kxui.info().path
+  let path = kxui.info().path
   let offset = ['top', 'right', 'bottom', 'left', 'center']
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object')
   let native = {
@@ -57,13 +58,11 @@
      */
     init: function () {
       let that = this
-      if (!win.kxui.method) {
-        win.kxui.use('method', function () {
-          that.method = win.kxui.method
+      if (!kxui.method) {
+        kxui.use('method', function () {
           that.skeleton()
         })
       } else {
-        that.method = win.kxui.method
         that.skeleton()
       }
     },
@@ -77,13 +76,13 @@
 
       // 非小贴士弹窗创建
       if (this.parameter.type !== 4) {
-        this.bulk = this.method.addDome('<div class="' + (this.parameter.type !== 2 ? 'kxui-Popup-bulk' : '') + ' kxui-Popup-show kxui-Popup-animation" index="' + this.parameter.index + '"></div>')
-        this.content = this.method.addDome('<div class="kxui-Popup-content"></div>')
-        this.title = this.method.addDome('<div class="kxui-Popup-title ' + ((this.alone.closeBtn && this.alone.shrinkBtn) ? 'kxui-Popup-title-wholeBtn' : (this.alone.closeBtn || this.alone.shrinkBtn) ? 'kxui-Popup-title-oneBtn' : 'kxui-Popup-title-noBtn') + '"></div>')
-        this.shrink = this.method.addDome('<div class="kxui-Popup-shrink kxui-icon ' + (this.alone.full ? 'kxui-icon-min' : 'kxui-icon-max') + ' ' + (this.alone.closeBtn ? '' : 'kxui-Popup-shrink-one') + '" shrinkState="' + (this.alone.full ? 'max' : 'min') + '"></div>')
-        this.close = this.method.addDome('<div class="kxui-Popup-close kxui-icon kxui-icon-close"></div>')
-        this.eventBulk = this.method.addDome('<div class="kxui-Popup-event ' + (win.kxui.info().device === 'mobile' ? 'kxui-Popup-event-mobile' : '') + '"></div>')
-        this.resize = this.method.addDome('<div class="kxui-Popup-resize"></div>')
+        this.bulk = kxui.method.addDom('<div class="' + (this.parameter.type !== 2 ? 'kxui-Popup-bulk' : '') + ' kxui-Popup-show kxui-Popup-animation" index="' + this.parameter.index + '"></div>')
+        this.content = kxui.method.addDom('<div class="kxui-Popup-content"></div>')
+        this.title = kxui.method.addDom('<div class="kxui-Popup-title ' + ((this.alone.closeBtn && this.alone.shrinkBtn) ? 'kxui-Popup-title-wholeBtn' : (this.alone.closeBtn || this.alone.shrinkBtn) ? 'kxui-Popup-title-oneBtn' : 'kxui-Popup-title-noBtn') + '"></div>')
+        this.shrink = kxui.method.addDom('<div class="kxui-Popup-shrink kxui-icon ' + (this.alone.full ? 'kxui-icon-min' : 'kxui-icon-max') + ' ' + (this.alone.closeBtn ? '' : 'kxui-Popup-shrink-one') + '" shrinkState="' + (this.alone.full ? 'max' : 'min') + '"></div>')
+        this.close = kxui.method.addDom('<div class="kxui-Popup-close kxui-icon kxui-icon-close"></div>')
+        this.eventBulk = kxui.method.addDom('<div class="kxui-Popup-event ' + (kxui.info().device === 'mobile' ? 'kxui-Popup-event-mobile' : '') + '"></div>')
+        this.resize = kxui.method.addDom('<div class="kxui-Popup-resize"></div>')
         if (this.alone.closeBtn) {
           this.bulk.appendChild(this.close)
         }
@@ -93,12 +92,12 @@
       }
 
       // 所有弹窗共同创建
-      this.move = this.method.addDome('<div class="kxui-Popup-move"></div>')
-      this.shade = this.method.addDome('<div class="kxui-Popup-shade ' + (this.parameter.shadeClose ? 'kxui-Popup-shade-pointer' : '') + '"></div>')
+      this.move = kxui.method.addDom('<div class="kxui-Popup-move"></div>')
+      this.shade = kxui.method.addDom('<div class="kxui-Popup-shade ' + (this.parameter.shadeClose ? 'kxui-Popup-shade-pointer' : '') + '"></div>')
 
       // 是否显示滚动条
       if (this.parameter.scrollBar) {
-        this.method.addClass(native.query('body', this.topPage), 'kxui-noScrollBar')
+        kxui.method.addClass(native.query('body', this.topPage), 'kxui-noScrollBar')
       }
       this.assemble()
     },
@@ -119,11 +118,11 @@
 
           // 提示层按钮创建
           if (type === 0) {
-            that.btn1 = that.method.addDome('<div class="' + (win.kxui.info().device === 'mobile' ? 'kxui-Popup-btn-mobile' : 'kxui-Popup-btn') + '">确定</div>')
+            that.btn1 = kxui.method.addDom('<div class="' + (kxui.info().device === 'mobile' ? 'kxui-Popup-btn-mobile' : 'kxui-Popup-btn') + '">确定</div>')
             that.eventBulk.appendChild(that.btn1)
           } else if ((typeof that.alone.btn === 'object') && type === 1) {
             for (let i = 1; i <= that.alone.btn.length; i++) {
-              that['btn' + i] = that.method.addDome('<div class="' + (win.kxui.info().device === 'mobile' ? 'kxui-Popup-btn-mobile' : 'kxui-Popup-btn') + '">' + that.alone.btn[i - 1] + '</div>')
+              that['btn' + i] = kxui.method.addDom('<div class="' + (kxui.info().device === 'mobile' ? 'kxui-Popup-btn-mobile' : 'kxui-Popup-btn') + '">' + that.alone.btn[i - 1] + '</div>')
               that.eventBulk.appendChild(that['btn' + i])
             }
           }
@@ -131,44 +130,44 @@
           that.bulk.appendChild(that.content)
           that.bulk.appendChild(that.eventBulk)
           that.content.innerHTML = that.parameter.text
-          that.method.addClass(that.bulk, 'kxui-Popup-' + (type === 0 ? 'alert' : 'ask'))
-          that.method.addClass(that.content, 'kxui-Popup-' + (type === 0 ? 'alert' : 'ask') + '-content')
+          kxui.method.addClass(that.bulk, 'kxui-Popup-' + (type === 0 ? 'alert' : 'ask'))
+          kxui.method.addClass(that.content, 'kxui-Popup-' + (type === 0 ? 'alert' : 'ask') + '-content')
           break
         case 2:
 
           // 等待层骨架组装
-          that.loadingText = that.method.addDome('<p class="kxui-Popup-loading-text ' + (that.parameter.style === 2 ? 'kxui-Popup-loading-text-special' : '') + '">' + (that.parameter.text ? that.parameter.text : '') + '</p>')
+          that.loadingText = kxui.method.addDom('<p class="kxui-Popup-loading-text ' + (that.parameter.style === 2 ? 'kxui-Popup-loading-text-special' : '') + '">' + (that.parameter.text ? that.parameter.text : '') + '</p>')
           let loadingStyle = {
             0: function () {
               for (let i = 0; i < 5; i++) {
                 that.bulk.appendChild(native.create('div'));
-                that.method.addClass(that.bulk, 'kxui-Popup-loading-0')
+                kxui.method.addClass(that.bulk, 'kxui-Popup-loading-0')
               }
             },
             1: function () {
               for (let i = 0; i < 3; i++) {
                 that.bulk.appendChild(native.create('div'));
-                that.method.addClass(that.bulk, 'kxui-Popup-loading-1')
+                kxui.method.addClass(that.bulk, 'kxui-Popup-loading-1')
               }
             },
             2: function () {
               for (let i = 0; i < 8; i++) {
                 that.bulk.appendChild(native.create('div'));
-                that.method.addClass(that.bulk, 'kxui-Popup-loading-2')
+                kxui.method.addClass(that.bulk, 'kxui-Popup-loading-2')
               }
             }
           }
           loadingStyle[that.parameter.style]()
           that.bulk.appendChild(that.loadingText)
-          that.method.addClass(that.bulk, (that.parameter.shade ? 'kxui-Popup-loading' : 'kxui-Popup-loading-noShade'))
+          kxui.method.addClass(that.bulk, (that.parameter.shade ? 'kxui-Popup-loading' : 'kxui-Popup-loading-noShade'))
           break
         case 3:
 
           // 提醒层骨架组装
           closeAnimation(that.bulk, that.parameter.topPage, that.shade, that.parameter.type)
-          that.remindText = that.method.addDome('<p>' + that.parameter.text + '</p>')
+          that.remindText = kxui.method.addDom('<p>' + that.parameter.text + '</p>')
           that.bulk.appendChild(that.remindText)
-          that.method.addClass(that.bulk, 'kxui-Popup-remind')
+          kxui.method.addClass(that.bulk, 'kxui-Popup-remind')
           break
         case 4:
 
@@ -177,9 +176,9 @@
           that.arrow = []
           that.content = []
           for (let t = 0; t < that.alone.dom.length; t++) {
-            that.bulk[t] = that.method.addDome('<div class="kxui-Popup-tips kxui-Popup-show kxui-Popup-animation" index="' + this.parameter.index + '"></div>')
-            that.arrow[t] = that.method.addDome('<div class="kxui-Popup-tips-arrow"></div>')
-            that.content[t] = that.method.addDome('<div class="kxui-Popup-tips-content">' + that.parameter.text + '</div>')
+            that.bulk[t] = kxui.method.addDom('<div class="kxui-Popup-tips kxui-Popup-show kxui-Popup-animation" index="' + this.parameter.index + '"></div>')
+            that.arrow[t] = kxui.method.addDom('<div class="kxui-Popup-tips-arrow"></div>')
+            that.content[t] = kxui.method.addDom('<div class="kxui-Popup-tips-content">' + that.parameter.text + '</div>')
             that.bulk[t].appendChild(that.arrow[t])
             that.bulk[t].appendChild(that.content[t])
             that.styleStatus(that.bulk[t], that.alone.dom[t])
@@ -194,13 +193,13 @@
           if ((typeof that.parameter.text === 'object') && !that.parameter.text[1]) {
             that.content.innerHTML = that.parameter.text[0]
           } else {
-            that.iframe = that.method.addDome('<iframe src="' + that.parameter.text + '" frameborder="0" name="' + this.parameter.index + '" id="' + this.parameter.index + '"></iframe>')
+            that.iframe = kxui.method.addDom('<iframe src="' + that.parameter.text + '" frameborder="0" name="' + this.parameter.index + '" id="' + this.parameter.index + '"></iframe>')
             that.content.appendChild(that.iframe)
           }
           that.bulk.style.width = that.alone.size[0]
           that.bulk.style.height = that.alone.size[1]
-          that.method.addClass(that.bulk, 'kxui-Popup-win')
-          that.method.addClass(that.content, 'kxui-Popup-win-content')
+          kxui.method.addClass(that.bulk, 'kxui-Popup-win')
+          kxui.method.addClass(that.content, 'kxui-Popup-win-content')
           break
       }
       that.styleStatus(that.bulk)
@@ -221,23 +220,23 @@
       if (that.parameter.diy.color === undefined && that.parameter.diy.background === undefined) {
         switch (that.parameter.style) {
           case 'primary':
-            that.method.addClass(dom, that.parameter.type === 3 ? 'kxui-Popup-remind-primary' : that.parameter.type === 4 ? 'kxui-Popup-tips-primary' : 'kxui-Popup-primary')
+            kxui.method.addClass(dom, that.parameter.type === 3 ? 'kxui-Popup-remind-primary' : that.parameter.type === 4 ? 'kxui-Popup-tips-primary' : 'kxui-Popup-primary')
             break
           case 'success':
             text = '成功'
-            that.method.addClass(dom, that.parameter.type === 3 ? 'kxui-Popup-remind-success' : that.parameter.type === 4 ? 'kxui-Popup-tips-success' : 'kxui-Popup-success')
+            kxui.method.addClass(dom, that.parameter.type === 3 ? 'kxui-Popup-remind-success' : that.parameter.type === 4 ? 'kxui-Popup-tips-success' : 'kxui-Popup-success')
             break
           case 'info':
             text = '信息'
-            that.method.addClass(dom, that.parameter.type === 3 ? 'kxui-Popup-remind-info' : that.parameter.type === 4 ? 'kxui-Popup-tips-info' : 'kxui-Popup-info')
+            kxui.method.addClass(dom, that.parameter.type === 3 ? 'kxui-Popup-remind-info' : that.parameter.type === 4 ? 'kxui-Popup-tips-info' : 'kxui-Popup-info')
             break
           case 'warning':
             text = '警告'
-            that.method.addClass(dom, that.parameter.type === 3 ? 'kxui-Popup-remind-warning' : that.parameter.type === 4 ? 'kxui-Popup-tips-warning' : 'kxui-Popup-warning')
+            kxui.method.addClass(dom, that.parameter.type === 3 ? 'kxui-Popup-remind-warning' : that.parameter.type === 4 ? 'kxui-Popup-tips-warning' : 'kxui-Popup-warning')
             break
           case 'danger':
             text = '错误'
-            that.method.addClass(dom, that.parameter.type === 3 ? 'kxui-Popup-remind-danger' : that.parameter.type === 4 ? 'kxui-Popup-tips-danger' : 'kxui-Popup-danger')
+            kxui.method.addClass(dom, that.parameter.type === 3 ? 'kxui-Popup-remind-danger' : that.parameter.type === 4 ? 'kxui-Popup-tips-danger' : 'kxui-Popup-danger')
             break
         }
       }
@@ -252,7 +251,7 @@
         }
         that.content.style.borderTop = '1px solid ' + that.parameter.diy.background
         dom.style.border = '1px solid ' + that.parameter.diy.background
-        that.method.addClass(dom, 'kxui-Popup-diy')
+        kxui.method.addClass(dom, 'kxui-Popup-diy')
       }
 
       // 提醒层独有自定义样式结构
@@ -365,8 +364,8 @@
         dom.style.top = node.offsetTop + 'px'
         if (node.offsetWidth + node.offsetLeft + dom.offsetWidth + 30 > docSize().docWidth) {
           dom.style.left = (node.offsetLeft - dom.offsetWidth) + 'px'
-          that.method.addClass(dom, 'kxui-Popup-tips-right')
-          that.method.addClass(dom.childNodes[0], 'kxui-Popup-tips-right-arrow')
+          kxui.method.addClass(dom, 'kxui-Popup-tips-right')
+          kxui.method.addClass(dom.childNodes[0], 'kxui-Popup-tips-right-arrow')
         } else {
           dom.style.left = (node.offsetWidth + node.offsetLeft) + 'px'
         }
@@ -390,26 +389,28 @@
           that.parameter.timeCall()
           closeAnimation(dom, that.parameter.topPage, that.shade, that.parameter.type)
         }, that.parameter.time)
-        dom.setAttribute('timer', this.timer)
+        kxui.method.atrDom(dom, 'timer', this.timer)
       }
 
       // 是否需要头部缩放按钮
       if (that.alone.shrinkBtn) {
         that.shrink.onclick = function () {
-          let shrinkState = this.getAttribute('shrinkState')
-          that.method.addClass(that.bulk, 'kxui-Popup-animation')
+          let shrinkState = kxui.method.atrDom(this, 'shrinkState')
+          kxui.method.addClass(that.bulk, 'kxui-Popup-animation')
           if (shrinkState === 'min') {
-            that.method.addClass(that.bulk, 'kxui-Popup-max')
-            that.method.delClass(that.shrink, 'kxui-icon-max')
-            that.method.addClass(that.shrink, 'kxui-icon-min')
-            this.setAttribute('shrinkState', 'max')
+            kxui.method.addClass(that.bulk, 'kxui-Popup-max')
+            kxui.method.delClass(that.shrink, 'kxui-icon-max')
+            kxui.method.addClass(that.shrink, 'kxui-icon-min')
+            kxui.method.atrDom(this, 'shrinkState', 'max')
+
           } else if (shrinkState === 'max') {
-            that.method.delClass(that.bulk, 'kxui-Popup-max')
-            that.method.delClass(that.shrink, 'kxui-icon-min')
-            that.method.addClass(that.shrink, 'kxui-icon-max')
-            this.setAttribute('shrinkState', 'min')
+            kxui.method.delClass(that.bulk, 'kxui-Popup-max')
+            kxui.method.delClass(that.shrink, 'kxui-icon-min')
+            kxui.method.addClass(that.shrink, 'kxui-icon-max')
+            kxui.method.atrDom(this, 'shrinkState', 'min')
+
           }
-          that.alone.shrinkCall(this.getAttribute('shrinkState'))
+          that.alone.shrinkCall(kxui.method.atrDom(this, 'shrinkState'))
         }
       }
 
@@ -498,14 +499,14 @@
       function dowm(event) {
         zIndex(that.bulk)
         that.event = event || win.event
-        frameOperThis = that.method.hasClass(this, 'kxui-Popup-resize')
-        that.method.delClass(that.bulk, 'kxui-Popup-show')
-        that.method.delClass(that.bulk, 'kxui-Popup-animation')
+        frameOperThis = kxui.method.hasClass(this, 'kxui-Popup-resize')
+        kxui.method.delClass(that.bulk, 'kxui-Popup-show')
+        kxui.method.delClass(that.bulk, 'kxui-Popup-animation')
         that.dowmX = that.event.clientX
         that.dowmY = that.event.clientY
         native.doc(that.parameter.topPage).addEventListener('mousemove', move)
         native.doc(that.parameter.topPage).addEventListener('mouseup', up)
-        that.method.addClass(native.query('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation')
+        kxui.method.addClass(native.query('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation')
       }
 
       /**
@@ -561,7 +562,7 @@
         that.saveHeight = that.bulk.offsetHeight
         native.doc(that.parameter.topPage).removeEventListener('mousemove', move, false)
         native.doc(that.parameter.topPage).removeEventListener('mouseup', up, false)
-        that.method.delClass(native.query('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation')
+        kxui.method.delClass(native.query('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation')
       }
     }
   }
@@ -578,8 +579,8 @@
     if (shade) {
       mask.style.opacity = '1'
       mask.style.zIndex = zIndexNum
-      mask.setAttribute('shade', zIndexNum)
-      dom.setAttribute('shade', zIndexNum)
+      kxui.method.atrDom(dom, 'shade', zIndexNum)
+      kxui.method.atrDom(mask, 'shade', zIndexNum)
     }
     zIndex(dom)
     dom.style.opacity = '1'
@@ -595,7 +596,6 @@
    * @param {number} type 弹窗类型
    */
   function closeAnimation(dom, topPage, shade, type) {
-    let kxui = win.kxui
     let shadeMatching
     let mask = native.query('.kxui-Popup-shade', topPage)
     let remind = native.query('.kxui-Popup-remind', topPage)
@@ -603,14 +603,14 @@
     // 针对remind执行之前存在销毁处理
     if (remind && type === 3) {
       dom = remind
-      clearTimeout(remind.getAttribute('timer'))
+      clearTimeout(kxui.method.atrDom(remind, 'timer'))
     } else if (type === 3) {
       return false
     }
 
     // 针对遮罩蒙板层进行销毁处理
     if (shade && mask) {
-      shadeMatching = parseInt(dom.getAttribute('shade')) === parseInt(mask.getAttribute('shade'))
+      shadeMatching = parseInt(kxui.method.atrDom(dom, 'shade')) === parseInt(kxui.method.atrDom(mask, 'shade'))
       if (shadeMatching) {
         mask.style.opacity = '0'
       }
@@ -798,7 +798,7 @@
   Popup.fn.win = function (parameter) {
     let parameters = (typeof parameter === 'object') ? parameter : {}
     return this.open(5, parameters, {
-      size: (typeof parameters.full === 'boolean') && parameters.full ? ['100%', '100%'] : (typeof parameters.size === 'object') ? parameters.size : (win.kxui.info().device === 'mobile') ? ['100%', '100%'] : ['800px', '480px'],
+      size: (typeof parameters.full === 'boolean') && parameters.full ? ['100%', '100%'] : (typeof parameters.size === 'object') ? parameters.size : (kxui.info().device === 'mobile') ? ['100%', '100%'] : ['800px', '480px'],
       closeBtn: (typeof parameters.closeBtn === 'boolean') ? parameters.closeBtn : true,
       closeCall: (typeof parameters.closeCall === 'function') ? parameters.closeCall : function () {},
       shrinkBtn: (typeof parameters.shrinkBtn === 'boolean') ? parameters.shrinkBtn : true,
@@ -933,7 +933,7 @@
      */
     function closeDom(dom, topPage) {
       if (separate) {
-        if (String(dom.getAttribute('index')) === String(index)) {
+        if (String(kxui.method.atrDom(dom, 'index')) === String(index)) {
           closeAnimation(dom, topPage, true, null)
         }
       } else {
@@ -949,8 +949,8 @@
      * @param {object} dom 关闭对象
      */
     function clearTimer(dom) {
-      if (dom.getAttribute('timer')) {
-        clearTimeout(dom.getAttribute('timer'))
+      if (kxui.method.atrDom(dom, 'timer')) {
+        clearTimeout(kxui.method.atrDom(dom, 'timer'))
       }
     }
   }
@@ -966,9 +966,9 @@
   }
 
   // 根据引入方式暴露对象
-  if (isExports) {
-    module.exports = new Popup()
+  if (!isExports) {
+    kxui.popup = new Popup()
   } else {
-    win.kxui.popup = new Popup()
+    module.exports = new Popup()
   }
 })(window)
