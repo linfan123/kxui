@@ -129,15 +129,19 @@
       let screenHeight = abroad ? manyCtrSwitch ? manyCtr[0].clientHeight : this.containers.clientHeight : (document.documentElement.clientHeight || document.body.clientHeight)
       if (many) {
         for (let i = 0; i < lazyImg.length; i++) {
-          if (lazyImg[i].offsetTop - (abroad ? lazyImg[i].parentNode.offsetTop : 0) <= ((scrollTop + screenHeight) + this.threshold) && lazyImg[i].offsetTop >= ((scrollTop - screenHeight) - this.threshold)) {
+          if (((lazyImg[i].offsetTop - (abroad ? lazyImg[i].parentNode.offsetTop : 0)) <= ((scrollTop + screenHeight) + this.threshold)) && ((lazyImg[i].offsetTop - (abroad ? lazyImg[i].parentNode.offsetTop : 0)) >= ((scrollTop - screenHeight) - this.threshold))) {
             let src = kxui.method.atrDom(lazyImg[i], 'lazy-src')
-            kxui.method.atrDom(lazyImg[i], 'src', src)
+            if (src !== kxui.method.atrDom(lazyImg[i], 'src')) {
+              kxui.method.atrDom(lazyImg[i], 'src', src)
+            }
           }
         }
       } else {
-        if (lazyImg.offsetTop - (abroad ? lazyImg.parentNode.offsetTop : 0) <= ((scrollTop + screenHeight) + this.threshold) && lazyImg.offsetTop >= ((scrollTop - screenHeight) - this.threshold)) {
+        if (((lazyImg.offsetTop - (abroad ? lazyImg.parentNode.offsetTop : 0)) <= ((scrollTop + screenHeight) + this.threshold)) && ((lazyImg.offsetTop - ((abroad ? lazyImg.parentNode.offsetTop : 0))) >= ((scrollTop - screenHeight) - this.threshold))) {
           let src = kxui.method.atrDom(lazyImg, 'lazy-src')
-          kxui.method.atrDom(lazyImg, 'src', src)
+          if (src !== kxui.method.atrDom(lazyImg, 'src')) {
+            kxui.method.atrDom(lazyImg, 'src', src)
+          }
         }
       }
     }

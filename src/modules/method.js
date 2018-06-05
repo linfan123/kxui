@@ -52,7 +52,7 @@
    */
   Method.fn.urlData = function (data) {
     if (data) {
-      let result = window.location.search.match(new RegExp('[\\?\\&]' + data + '=([^\\&]+)', 'i'))
+      let result = win.location.search.match(new RegExp('[\\?\\&]' + data + '=([^\\&]+)', 'i'))
       return ((!result || result.length < 1) ? '' : result[1])
     }
     warn(0, 'urlData', 'data')
