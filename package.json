@@ -1,8 +1,8 @@
 {
   "name": "kxui",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "createTime": "2018.05.31",
-  "updateTime": "2018.06.05",
+  "updateTime": "2018.07.17",
   "description": "Personal family components",
   "homepage": "http://www.kxui.org",
   "main": "./dist/kxui.js",
