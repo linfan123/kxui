@@ -4,7 +4,8 @@
  * @for kxui
  *
  * @method urlData 获取浏览器地址参数
- * @method repStr 替换指定字符
+ * @method repStr 替换指定字符（通过已知字符查找）
+ * @method chaStr 替换指定字符（通过下标查找）
  * @method insStr 插入指定字符
  * @method queStr 获取指定字符前/后的所有字符
  * @method midStr 获取指定字符中间的字符
@@ -32,9 +33,10 @@
  * @method accMul 防误差乘法运算
  * @method accDiv 防误差除法运算
  * @method middle 元素居中
+ * @method decimal 保留任意位小数
  */
 
-(function(win) {
+(function (win) {
   let kxui = win.kxui;
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object');
 
@@ -43,7 +45,7 @@
    * @method Method
    * 开发常用操作方法，可根据需要调用不同的方法
    */
-  let Method = function() {
+  let Method = function () {
     this.name = 'Method';
     this.info = 'Integration of development methods';
   };
@@ -57,7 +59,7 @@
    * @param {string} data 需要拿取的参数名
    * @return {string} 返回参数值或空
    */
-  Method.fn.urlData = function(data) {
+  Method.fn.urlData = function (data) {
     if (data) {
       let result = win.location.search.match(new RegExp('[\\?\\&]' + data + '=([^\\&]+)', 'i'));
       return ((!result || result.length < 1) ? '' : result[1]);
@@ -66,7 +68,7 @@
   };
 
   /**
-   * 替换指定字符
+   * 替换指定字符（通过已知字符查找）
    * @method repStr
    * @for Method
    * @param {string} str 需要操作的字符串
@@ -74,11 +76,32 @@
    * @param {string} rep 替换之后的字符
    * @return {string} 返回移除后的字符串
    */
-  Method.fn.repStr = function(str, app, rep) {
+  Method.fn.repStr = function (str, app, rep) {
     if (str && app) {
-      return str.replace(new RegExp(app, 'g'), (rep ? rep : ''));
+      return str.replace(new RegExp(app, 'g'), (rep || ''));
     }
     warn(0, 'repStr', (str ? 'app' : 'str'));
+  };
+
+  /**
+   * 替换指定字符（通过下标查找）
+   * @method chaStr
+   * @for Method
+   * @param {string} str 需要操作的字符串
+   * @param {number} ind 需要替換的下标
+   * @param {string} rep 替换之后的字符
+   * @return {string} 返回移除后的字符串
+   */
+  Method.fn.chaStr = function (str, ind, rep) {
+    ind = Number(ind)
+    if (str && (ind || ind === 0)) {
+      let iBeginPos = 0;
+      let sFrontPart = str.substr(iBeginPos, ind);
+      let sTailPart = str.substr(ind + 1, str.length);
+      let sRet = sFrontPart + (rep || '') + sTailPart;
+      return sRet;
+    }
+    warn(0, 'chaStr', (str ? 'ind' : 'str'));
   };
 
   /**
@@ -90,7 +113,7 @@
    * @param {string} app 需要插入的字符
    * @return {string} 返回插入后的字符串
    */
-  Method.fn.insStr = function(str, after, app) {
+  Method.fn.insStr = function (str, after, app) {
     if (str && after && app) {
       let newStr = str.split(after);
       if (typeof after === 'number') {
@@ -113,7 +136,7 @@
    * @param {boolean} pos 前/后 默认(true)后
    * @return {string} 返回前后字符串或空
    */
-  Method.fn.queStr = function(str, app, pos) {
+  Method.fn.queStr = function (str, app, pos) {
     if (str && app) {
       let position = (typeof pos === 'boolean') ? pos : true;
       let result = (position ? str.match(new RegExp(app + '(\\S*)')) : str.match(new RegExp('(\\S*)' + app)));
@@ -131,7 +154,7 @@
    * @param {string} aft 后字符
    * @return {string} 返回参数值或空
    */
-  Method.fn.midStr = function(str, fro, aft) {
+  Method.fn.midStr = function (str, fro, aft) {
     if (str && fro && aft) {
       let result = str.match(new RegExp(fro + '(\\S*)' + aft));
       return ((!result || result.length < 1) ? '' : result[1]);
@@ -147,7 +170,7 @@
    * @param {string} reg num:数字、phone手机号、id身份证和email邮箱
    * @return {boolean} 根据验证情况进行返回布尔值
    */
-  Method.fn.formTest = function(data, reg) {
+  Method.fn.formTest = function (data, reg) {
     if (data && reg) {
       let regs = {};
       regs.num = /^\d+$/;
@@ -167,7 +190,7 @@
    * @param {string} cls 需要查询的class名称
    * @return {boolean} 根据查询返回布尔值
    */
-  Method.fn.hasClass = function(dom, cls) {
+  Method.fn.hasClass = function (dom, cls) {
     if (dom && cls) {
       dom = this.getDom(dom);
       if (cls.replace(/\s/g, '').length === 0) {
@@ -186,7 +209,7 @@
    * @param {string} cls 需要增加的class名称
    * @return {boolean} 根据成功与否返回布尔值
    */
-  Method.fn.addClass = function(dom, cls) {
+  Method.fn.addClass = function (dom, cls) {
     if (dom && cls) {
       dom = this.getDom(dom);
       if (!this.hasClass(dom, cls)) {
@@ -206,7 +229,7 @@
    * @param {string} cls 需要移除的class名称
    * @return {boolean} 根据成功与否返回布尔值
    */
-  Method.fn.delClass = function(dom, cls) {
+  Method.fn.delClass = function (dom, cls) {
     if (dom && cls) {
       dom = this.getDom(dom);
       if (this.hasClass(dom, cls)) {
@@ -228,16 +251,16 @@
    * @for Method/setHis
    * @param {string} key 设置缓存名称
    * @param {string} val 设置缓存内容
-   * @param {number} tim 设置缓存有效时间，单位 1/1s
+   * @param {number} tim 设置缓存有效时间，单位 1000/1s
    * @return {boolean} 返回设置动作布尔值
    */
-  Method.fn.setCache = function(key, val, tim) {
+  Method.fn.setCache = function (key, val, tim) {
     if (key && val) {
-      localStorage.setItem(key, val);
+      localStorage.setItem('(method.' + key + ')', val);
       let seconds = parseInt(tim);
       if (seconds > 0) {
-        let timestamp = (this.dateGet() + (seconds * 1000));
-        localStorage.setItem(key + ' (method.time)', timestamp);
+        let timestamp = (this.dateGet() + seconds);
+        localStorage.setItem('(method.' + key + ') (method.time)', timestamp);
       }
       return true;
     }
@@ -252,10 +275,10 @@
    * @param {string} noWarn 是否抛出异常提示
    * @return {boolean} 返回获取动作布尔值
    */
-  Method.fn.getCache = function(key, noWarn) {
+  Method.fn.getCache = function (key, noWarn) {
     if (key) {
-      let val = localStorage.getItem(key);
-      let timestamp = parseInt(localStorage.getItem(key + ' (method.time)'));
+      let val = localStorage.getItem('(method.' + key + ')');
+      let timestamp = parseInt(localStorage.getItem('(method.' + key + ') (method.time)'));
       if (timestamp && (timestamp < this.dateGet())) {
         warn(1, key);
         this.delCache(key);
@@ -272,10 +295,10 @@
    * @param {string} key 删除缓存名称
    * @return {boolean} 返回删除动作布尔值
    */
-  Method.fn.delCache = function(key) {
+  Method.fn.delCache = function (key) {
     if (key) {
-      localStorage.removeItem(key);
-      localStorage.removeItem(key + ' (method.time)');
+      localStorage.removeItem('(method.' + key + ')');
+      localStorage.removeItem('(method.' + key + ') (method.time)');
       return true;
     }
     warn(0, 'delCache', 'key');
@@ -290,7 +313,7 @@
    * @param {string} noWarn 是否抛出异常提示
    * @return {boolean} 返回数据是否相等的布尔值
    */
-  Method.fn.compare = function(dataOne, dataTwo, noWarn) {
+  Method.fn.compare = function (dataOne, dataTwo, noWarn) {
     if (dataOne && dataTwo) {
       let props1 = Object.getOwnPropertyNames(dataOne);
       let props2 = Object.getOwnPropertyNames(dataTwo);
@@ -317,9 +340,9 @@
    * @param {number} num 需要记录历史缓存的数量
    * @return {object} 返回数组对象
    */
-  Method.fn.setHis = function(data, num) {
+  Method.fn.setHis = function (data, num) {
     if (data) {
-      let bars = parseInt(num) || 999;
+      let bars = parseInt(num) || 6;
       let history = this.getCache('(method.history)', 'noWarn');
       let historyArray = [];
       if (history && history.length > 0) {
@@ -356,8 +379,12 @@
    * @for Method
    * @return {boolean} 返回获取动作布尔值
    */
-  Method.fn.getHis = function() {
-    return this.getCache('(method.history)', 'noWarn');
+  Method.fn.getHis = function () {
+    let history = this.getCache('(method.history)', 'noWarn');
+    if (history) {
+      return JSON.parse(history);
+    }
+    return false
   };
 
   /**
@@ -366,7 +393,7 @@
    * @for Method
    * @return {boolean} 返回获取动作布尔值
    */
-  Method.fn.delHis = function() {
+  Method.fn.delHis = function () {
     return this.delCache('(method.history)');
   };
 
@@ -377,7 +404,7 @@
    * @param {boolean} digit 时间戳长度，默认13位(true)，可返回10位及13位时间戳
    * @return {number} 当前时间戳
    */
-  Method.fn.dateGet = function(digit) {
+  Method.fn.dateGet = function (digit) {
     digit = (typeof digit === 'boolean') ? digit : true;
     let result = (digit ? Date.parse(new Date()) : Number(Date.parse(new Date()).toString().substr(0, 10)));
     return result;
@@ -392,7 +419,7 @@
    * @param {boolean} hour 是否显示时/分/秒
    * @return {string} 返回转换后的日期
    */
-  Method.fn.dateTurn = function(tamp, diy, hour) {
+  Method.fn.dateTurn = function (tamp, diy, hour) {
     if (tamp) {
       let date = new Date((tamp.toString().length === 13) ? tamp : (tamp * 1000));
       let dateDiv = diy ? String(diy) : '-';
@@ -415,7 +442,7 @@
    * @param {string/number} tamp 需要转换的时间戳
    * @return {string} 返回转换后的中文日期
    */
-  Method.fn.dateChina = function(tamp) {
+  Method.fn.dateChina = function (tamp) {
     if (tamp) {
       let m = 60 * 1000;
       let h = m * 60;
@@ -456,8 +483,8 @@
    * @param {string/object} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
    * @return {object} 节点对象
    */
-  Method.fn.getDom = function(dom) {
-    let extract = function() {
+  Method.fn.getDom = function (dom) {
+    let extract = function () {
       if (typeof dom === 'object') {
         return dom;
       } else if (typeof dom === 'string') {
@@ -490,7 +517,7 @@
    * @param {string} str 字符串节点
    * @return {object} 节点对象
    */
-  Method.fn.addDom = function(str) {
+  Method.fn.addDom = function (str) {
     if (str) {
       let dom = document.createElement('div');
       dom.innerHTML = str;
@@ -508,7 +535,7 @@
    * @param {string/number} value 自定义属性值
    * @return {boolean} 返回创建或查询对象结果
    */
-  Method.fn.atrDom = function(dom, key, value) {
+  Method.fn.atrDom = function (dom, key, value) {
     if (dom && key) {
       dom = this.getDom(dom);
       if (dom.length) {
@@ -531,7 +558,7 @@
    * @param {string} len 随机字符串长度
    * @return {boolean} 返回创建或查询对象结果
    */
-  Method.fn.random = function(len) {
+  Method.fn.random = function (len) {
     if (len) {
       len = Number(len);
       for (var str = ''; str.length < len; str += Math.random().toString(36).substr(2));
@@ -546,7 +573,7 @@
    * @for Method
    * @return {object} 鼠标当前所在位置
    */
-  Method.fn.mouse = function(e) {
+  Method.fn.mouse = function (e) {
     let ev = e || win.event;
     let x = 0;
     let y = 0;
@@ -566,7 +593,10 @@
       x = ev.clientX + sleft;
       y = ev.clientY + stop;
     }
-    return { x: x, y: y };
+    return {
+      x: x,
+      y: y
+    };
   };
 
   /**
@@ -577,11 +607,19 @@
    * @param {string/number} b 计算数
    * @return {number} 计算结果
    */
-  Method.fn.accAdd = function(a, b) {
+  Method.fn.accAdd = function (a, b) {
     if (a && b) {
       let r1, r2, m;
-      try { r1 = a.toString().split('.')[1].length; } catch (e) { r1 = 0; }
-      try { r2 = b.toString().split('.')[1].length; } catch (e) { r2 = 0; }
+      try {
+        r1 = a.toString().split('.')[1].length;
+      } catch (e) {
+        r1 = 0;
+      }
+      try {
+        r2 = b.toString().split('.')[1].length;
+      } catch (e) {
+        r2 = 0;
+      }
       m = Math.pow(10, Math.max(r1, r2));
       return (a * m + b * m) / m;
     }
@@ -596,11 +634,19 @@
    * @param {string/number} b 计算数
    * @return {number} 计算结果
    */
-  Method.fn.accSub = function(a, b) {
+  Method.fn.accSub = function (a, b) {
     if (a && b) {
       let r1, r2, m, n;
-      try { r1 = a.toString().split('.')[1].length; } catch (e) { r1 = 0; }
-      try { r2 = b.toString().split('.')[1].length; } catch (e) { r2 = 0; }
+      try {
+        r1 = a.toString().split('.')[1].length;
+      } catch (e) {
+        r1 = 0;
+      }
+      try {
+        r2 = b.toString().split('.')[1].length;
+      } catch (e) {
+        r2 = 0;
+      }
       m = Math.pow(10, Math.max(r1, r2));
       n = (r1 >= r2) ? r1 : r2;
       return ((a * m - b * m) / m).toFixed(n);
@@ -616,13 +662,17 @@
    * @param {string/number} b 计算数
    * @return {number} 计算结果
    */
-  Method.fn.accMul = function(a, b) {
+  Method.fn.accMul = function (a, b) {
     if (a && b) {
       let m = 0;
       let s1 = a.toString();
       let s2 = b.toString();
-      try { m += s1.split('.')[1].length; } catch (e) {}
-      try { m += s2.split('.')[1].length; } catch (e) {}
+      try {
+        m += s1.split('.')[1].length;
+      } catch (e) {}
+      try {
+        m += s2.split('.')[1].length;
+      } catch (e) {}
       return Number(s1.replace('.', '')) * Number(s2.replace('.', '')) / Math.pow(10, m);
     }
     warn(0, 'accMul', a ? 'b' : 'a');
@@ -636,13 +686,17 @@
    * @param {string/number} b 计算数
    * @return {number} 计算结果
    */
-  Method.fn.accDiv = function(a, b) {
+  Method.fn.accDiv = function (a, b) {
     if (a && b) {
       let t1 = 0;
       let t2 = 0;
       let r1, r2;
-      try { t1 = a.toString().split('.')[1].length; } catch (e) {}
-      try { t2 = b.toString().split('.')[1].length; } catch (e) {}
+      try {
+        t1 = a.toString().split('.')[1].length;
+      } catch (e) {}
+      try {
+        t2 = b.toString().split('.')[1].length;
+      } catch (e) {}
       r1 = Number(a.toString().replace('.', ''));
       r2 = Number(b.toString().replace('.', ''));
       return (r1 / r2) * Math.pow(10, t2 - t1);
@@ -651,25 +705,58 @@
   };
 
   /**
-   * 元素居中
+   * 元素居中(需自行增加position)
    * @method middle
    * @for Method
    * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
    */
-  Method.fn.middle = function(dom) {
-    let that = this;
-    let boxDom = this.getDom(dom);
-    let sw = boxDom.offsetWidth;
-    let sh = boxDom.offsetHeight;
-    let dw = win.innerWidth;
-    let dh = win.innerHeight;
-    let cleft = (dw - sw) / 2;
-    let ctop = (dh - sh) / 2;
-    boxDom.style.left = cleft + 'px';
-    boxDom.style.top = ctop + 'px';
-    win.onresize = function() {
-      that.middle(dom);
-    };
+  Method.fn.middle = function (dom) {
+    if (dom) {
+      let that = this;
+      let boxDom = this.getDom(dom);
+      let sw = boxDom.offsetWidth;
+      let sh = boxDom.offsetHeight;
+      let dw = win.innerWidth;
+      let dh = win.innerHeight;
+      let cleft = (dw - sw) / 2;
+      let ctop = (dh - sh) / 2;
+      boxDom.style.left = cleft + 'px';
+      boxDom.style.top = ctop + 'px';
+      win.onresize = function () {
+        that.middle(dom);
+      };
+    } else {
+      warn(0, 'middle', 'dom');
+    }
+  };
+
+  /**
+   * 保留任意位小数
+   * @method middle
+   * @for Method
+   * @param {number} num 需要操作的数字
+   * @param {number} len 需要保留的位数
+   * @return {number} 保留后的数字
+   */
+  Method.fn.decimal = function (num, len) {
+    if (num && len) {
+      let nums = parseFloat(num);
+      if (isNaN(nums)) {
+        return 0;
+      }
+      nums = Math.round(nums * 100) / 100;
+      let sx = nums.toString();
+      var pos = sx.indexOf('.');
+      if (pos < 0) {
+        pos = sx.length;
+        sx += '.';
+      }
+      while (sx.length <= pos + len) {
+        sx += '0';
+      }
+      return sx;
+    }
+    warn(0, 'decimal', num ? 'len' : 'num');
   };
 
   /**

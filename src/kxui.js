@@ -1,12 +1,12 @@
 /**
  * @method kxui
- * @version 1.2.1
+ * @version 1.2.2
  *
  * @method use 加载模块
  * @method info 信息查询
  */
 
-(function(win) {
+(function (win) {
   let stockMod = ['lazy', 'method', 'popup'];
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object');
   let device = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? 'mobile' : 'pc';
@@ -17,7 +17,7 @@
    * @for kxui
    * @param {object} kxui
    */
-  let Load = function(kxui) {
+  let Load = function (kxui) {
     this.kxui = kxui;
     this.module = (typeof this.kxui.module === 'string') || (typeof this.kxui.module === 'function') || (typeof this.kxui.module === 'object') ? this.kxui.module : false;
     this.fun = (typeof this.kxui.fun === 'function') ? this.kxui.fun : (typeof this.module === 'function') ? this.module : false;
@@ -37,10 +37,10 @@
      * @method definition
      * @for Load
      */
-    definition: function() {
+    definition: function () {
       this.loadLine = 0;
       this.wheelSearch = 0;
-      this.path = path();
+      this.domain = domain();
       this.isModule();
     },
 
@@ -49,7 +49,7 @@
      * @method isModule
      * @for definition
      */
-    isModule: function() {
+    isModule: function () {
       if ((typeof this.module !== 'boolean') && (typeof this.module !== 'function')) {
         this.mode();
       } else {
@@ -62,7 +62,7 @@
      * @method mode
      * @for isModule
      */
-    mode: function() {
+    mode: function () {
       if (isExports) {
         let newMod = this.module;
         if (typeof this.module === 'string') {
@@ -80,7 +80,7 @@
      * @for mode
      * @param {string} mod 需要加载的mod数组
      */
-    imports: function(mod) {
+    imports: function (mod) {
       for (let i = 0; i < mod.length; i++) {
         if (!this.kxui[(mod[i])] && stockMod.indexOf(mod[i].toLowerCase()) >= 0) {
           let modName = mod[i];
@@ -99,7 +99,7 @@
      * @method shunt
      * @for definition
      */
-    shunt: function() {
+    shunt: function () {
       if (typeof this.module === 'string') {
         if (stockMod.indexOf(this.module.toLowerCase()) >= 0) {
           this.create(this.module, false);
@@ -123,7 +123,7 @@
      * @for shunt/loop
      * @param {string} mod 模块名称
      */
-    register: function(mod) {
+    register: function (mod) {
       if (!this.kxui[mod]) {
         this.create(mod, true);
       } else if (this.loadLine < this.module.length - 1) {
@@ -142,19 +142,19 @@
      * @param {string} mod 模块名称
      * @param {boolean} shunt 分流，true:对象、false：字符串
      */
-    create: function(mod, shunt) {
+    create: function (mod, shunt) {
       let that = this;
       let body = document.getElementsByTagName('body')[0];
       let script = document.createElement('script');
       script.type = 'text/javascript';
       script.async = 'async';
       script.charset = 'utf-8';
-      script.src = this.path + 'modules/' + mod + '.js';
+      script.src = this.domain + 'modules/' + mod + '.js';
       if (body) {
         body.appendChild(script);
         this.wait(body, script, shunt);
       } else if (this.wheelSearch < 10) {
-        setTimeout(function() {
+        setTimeout(function () {
           that.wheelSearch = that.wheelSearch + 1;
           that.create(mod, shunt);
         });
@@ -171,10 +171,10 @@
      * @param {object} script 等待的标签对象
      * @param {boolean} shunt 分流，true:对象、false：字符串
      */
-    wait: function(body, script, shunt) {
+    wait: function (body, script, shunt) {
       let that = this;
       if (script.readyState) {
-        script.onreadystatechange = function() {　　　　　　　　
+        script.onreadystatechange = function () {　　　　　　　　
           if (script.readyState === 'complete' || script.readyState === 'loaded') {
             script.onreadystatechange = null;
             body.removeChild(script);
@@ -182,7 +182,7 @@
           }
         };
       } else {
-        script.onload = function() {
+        script.onload = function () {
           body.removeChild(script);
           that.loop(shunt);
         };
@@ -195,7 +195,7 @@
      * @for shunt/wait/register/loop
      * @param {boolean} shunt 分流，true:对象、false：字符串
      */
-    loop: function(shunt) {
+    loop: function (shunt) {
       this.loadLine = this.loadLine + 1;
       if (shunt && this.module[this.loadLine] && stockMod.indexOf(this.module[this.loadLine].toLowerCase()) >= 0) {
         this.register(this.module[this.loadLine]);
@@ -216,28 +216,28 @@
      * @method end
      * @for isModule/imports/shunt/register/Load
      */
-    end: function() {
+    end: function () {
       this.fun('kxui-' + this.kxui.version);
     }
   };
 
   /**
    * 获取引入路径
-   * @method path
+   * @method domain
    * @for Load
    * @return {string} 引入路径前缀
    */
-  function path() {
-    let kxuiPath = document.scripts;
-    let last = kxuiPath.length - 1;
+  function domain() {
+    let kxuiDomain = document.scripts;
+    let last = kxuiDomain.length - 1;
     for (let i = last; i >= 0; i--) {
-      let src = kxuiPath[i].src.toLowerCase() || false;
+      let src = kxuiDomain[i].src.toLowerCase() || false;
       if (src && src.indexOf('kxui.js') >= 0) {
-        kxuiPath = kxuiPath[i].src.substring(0, kxuiPath[i].src.lastIndexOf('/') + 1);
+        kxuiDomain = kxuiDomain[i].src.substring(0, kxuiDomain[i].src.lastIndexOf('/') + 1);
         break;
       }
     }
-    return kxuiPath;
+    return kxuiDomain;
   }
 
   /**
@@ -270,9 +270,9 @@
    * @method Kxui
    * 开发常用操作方法，可根据需要调用不同的模块，提高开发效率
    */
-  let Kxui = function() {
-    this.version = '1.2.1';
-    this.updateTime = '2018.07.17';
+  let Kxui = function () {
+    this.version = '1.2.2';
+    this.updateTime = '2018.07.24';
   };
 
   /**
@@ -282,7 +282,7 @@
    * @param {string/array} mod 模块名称
    * @param {function} fun 加载完成回调方法
    */
-  Kxui.prototype.use = function(mod, fun) {
+  Kxui.prototype.use = function (mod, fun) {
     this.module = mod;
     this.fun = fun;
     this.load = new Load(this);
@@ -297,9 +297,9 @@
    * @for kxui
    * @return {object} 开发信息
    */
-  Kxui.prototype.info = function() {
+  Kxui.prototype.info = function () {
     return {
-      'path': path(),
+      'domain': domain(),
       'device': device,
       'version': this.version + ' / ' + this.updateTime
     };

@@ -15,10 +15,10 @@
  * @method getFrameIndex 获取自身唯一值
  */
 
-(function(win) {
+(function (win) {
   let kxui = win.kxui;
   let zIndexNum = 199202;
-  let path = kxui.info().path;
+  let domain = kxui.info().domain;
   let offset = ['top', 'right', 'bottom', 'left', 'center'];
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object');
 
@@ -28,7 +28,7 @@
    * @for Popup
    * @param {object} parameter 配置参数
    */
-  let Skeleton = function(parameter) {
+  let Skeleton = function (parameter) {
     this.parameter = parameter;
     this.alone = this.parameter.alone;
     this.timer = null;
@@ -42,10 +42,10 @@
      * @method init
      * @for Skeleton
      */
-    init: function() {
+    init: function () {
       let that = this;
       if (!kxui.method) {
-        kxui.use('method', function() {
+        kxui.use('method', function () {
           that.skeleton();
         });
       } else {
@@ -58,7 +58,7 @@
      * @method skeleton
      * @for init
      */
-    skeleton: function() {
+    skeleton: function () {
 
       // 非小贴士弹窗创建
       if (this.parameter.type !== 4) {
@@ -93,7 +93,7 @@
      * @method assemble
      * @for skeleton
      */
-    assemble: function() {
+    assemble: function () {
       let that = this;
       let type = that.parameter.type;
 
@@ -115,28 +115,28 @@
           that.bulk.appendChild(that.title);
           that.bulk.appendChild(that.content);
           that.bulk.appendChild(that.eventBulk);
-          that.content.innerHTML = that.parameter.text;
+          that.content.innerHTML = that.parameter.text || '';
           kxui.method.addClass(that.bulk, 'kxui-Popup-' + (type === 0 ? 'alert' : 'ask'));
           kxui.method.addClass(that.content, 'kxui-Popup-' + (type === 0 ? 'alert' : 'ask') + '-content');
           break;
         case 2:
 
           // 等待层骨架组装
-          that.loadingText = kxui.method.addDom('<p class="kxui-Popup-loading-text ' + (that.parameter.style === 2 ? 'kxui-Popup-loading-text-special' : '') + '">' + (that.parameter.text ? that.parameter.text : '') + '</p>');
+          that.loadingText = kxui.method.addDom('<p class="kxui-Popup-loading-text ' + (that.parameter.style === 2 ? 'kxui-Popup-loading-text-special' : '') + '">' + (that.parameter.text || '') + '</p>');
           let loadingStyle = {
-            0: function() {
+            0: function () {
               for (let i = 0; i < 5; i++) {
                 that.bulk.appendChild(create('div'));
                 kxui.method.addClass(that.bulk, 'kxui-Popup-loading-0');
               }
             },
-            1: function() {
+            1: function () {
               for (let i = 0; i < 3; i++) {
                 that.bulk.appendChild(create('div'));
                 kxui.method.addClass(that.bulk, 'kxui-Popup-loading-1');
               }
             },
-            2: function() {
+            2: function () {
               for (let i = 0; i < 8; i++) {
                 that.bulk.appendChild(create('div'));
                 kxui.method.addClass(that.bulk, 'kxui-Popup-loading-2');
@@ -151,7 +151,7 @@
 
           // 提醒层骨架组装
           closeAnimation(that.bulk, that.parameter.topPage, that.shade, that.parameter.type);
-          that.remindText = kxui.method.addDom('<p>' + that.parameter.text + '</p>');
+          that.remindText = kxui.method.addDom('<p>' + (that.parameter.text || '') + '</p>');
           that.bulk.appendChild(that.remindText);
           kxui.method.addClass(that.bulk, 'kxui-Popup-remind');
           break;
@@ -164,7 +164,7 @@
           for (let t = 0; t < that.alone.dom.length; t++) {
             that.bulk[t] = kxui.method.addDom('<div class="kxui-Popup-tips kxui-Popup-show kxui-Popup-animation" index="' + this.parameter.index + '"></div>');
             that.arrow[t] = kxui.method.addDom('<div class="kxui-Popup-tips-arrow"></div>');
-            that.content[t] = kxui.method.addDom('<div class="kxui-Popup-tips-content">' + that.parameter.text + '</div>');
+            that.content[t] = kxui.method.addDom('<div class="kxui-Popup-tips-content">' + (that.parameter.text || '') + '</div>');
             that.bulk[t].appendChild(that.arrow[t]);
             that.bulk[t].appendChild(that.content[t]);
             that.styleStatus(that.bulk[t], that.alone.dom[t]);
@@ -176,10 +176,10 @@
           that.bulk.appendChild(that.resize);
           that.bulk.appendChild(that.title);
           that.bulk.appendChild(that.content);
-          if ((typeof that.parameter.text === 'object') && !that.parameter.text[1]) {
+          if ((typeof that.parameter.text === 'object') && that.parameter.text[1] === false) {
             that.content.innerHTML = that.parameter.text[0];
           } else {
-            that.iframe = kxui.method.addDom('<iframe src="' + that.parameter.text + '" frameborder="0" name="' + this.parameter.index + '" id="' + this.parameter.index + '"></iframe>');
+            that.iframe = kxui.method.addDom('<iframe src="' + (that.parameter.text || '') + '" frameborder="0" name="' + this.parameter.index + '" id="' + this.parameter.index + '"></iframe>');
             that.content.appendChild(that.iframe);
           }
           that.bulk.style.width = that.alone.size[0];
@@ -198,10 +198,12 @@
      * @param {object} dom 操作对象
      * @param {object} node 小贴士吸附对象
      */
-    styleStatus: function(dom, node) {
+    styleStatus: function (dom, node) {
       let that = this;
       let text = '提示';
 
+      // 统一默认背景色修改
+      that.shade.style.background = that.parameter.diy.shade;
       // 未使用自定义色值进入，使用官方色值
       if (that.parameter.diy.color === undefined && that.parameter.diy.background === undefined) {
         switch (that.parameter.style) {
@@ -274,7 +276,7 @@
      * @param {object} dom 操作对象
      * @param {object} node 小贴士吸附对象
      */
-    into: function(dom, node) {
+    into: function (dom, node) {
       let that = this;
       query('body', that.parameter.topPage).appendChild(dom);
       if (!query('.kxui-Popup-move', that.parameter.topPage)) {
@@ -293,7 +295,7 @@
      * @param {object} dom 操作对象
      * @param {object} node 小贴士吸附对象
      */
-    last: function(dom, node) {
+    last: function (dom, node) {
       let that = this;
 
       // 非小贴士进入
@@ -318,7 +320,7 @@
           if (that.parameter.offset === 'top') {
             dom.style.top = '10px';
           } else if (that.parameter.offset === 'center' || that.parameter.offset === 'left' | that.parameter.offset === 'right') {
-            let top = that.parameter.topPage ? docSize().topHeight : (docSize().docHeight / 2) - (dom.offsetHeight / 2) - 100;
+            let top = that.parameter.topPage ? docSize().topHeight : (docSize().docHeight / 2) - (dom.offsetHeight / 2) - 50;
             dom.style.top = ((top >= 0) ? top : 0) + 'px';
           } else if (that.parameter.offset === 'bottom') {
             dom.style.bottom = '10px';
@@ -366,12 +368,12 @@
      * @for last
      * @param {object} dom 操作对象
      */
-    event: function(dom) {
+    event: function (dom) {
       let that = this;
 
       // 是否需要自动关闭弹窗
       if (that.parameter.time) {
-        this.timer = setTimeout(function() {
+        this.timer = setTimeout(function () {
           that.parameter.timeCall();
           closeAnimation(dom, that.parameter.topPage, that.shade, that.parameter.type);
         }, that.parameter.time);
@@ -380,7 +382,7 @@
 
       // 是否需要头部缩放按钮
       if (that.alone.shrinkBtn) {
-        that.shrink.onclick = function() {
+        that.shrink.onclick = function () {
           let shrinkState = kxui.method.atrDom(this, 'shrinkState');
           kxui.method.addClass(that.bulk, 'kxui-Popup-animation');
           if (shrinkState === 'min') {
@@ -402,7 +404,7 @@
 
       // 是否需要头部关闭按钮
       if (that.alone.closeBtn) {
-        that.close.onclick = function() {
+        that.close.onclick = function () {
           that.alone.closeCall();
           clearTimeout(that.timer);
           closeAnimation(that.bulk, that.parameter.topPage, that.shade, that.parameter.type);
@@ -413,7 +415,7 @@
       if ((typeof that.alone.btn === 'object') && that.parameter.type === 1) {
         for (let i = 1; i <= that.alone.btn.length; i++) {
           that['btn' + i].index = i;
-          that['btn' + i].onclick = function() {
+          that['btn' + i].onclick = function () {
             that.alone.event['btn' + this.index](that.parameter.index);
           };
         }
@@ -421,7 +423,7 @@
 
       // 提醒层确定回调
       else if ((typeof that.alone.btn === 'function') && that.parameter.type === 0) {
-        that.btn1.onclick = function() {
+        that.btn1.onclick = function () {
           clearTimeout(that.timer);
           closeAnimation(that.bulk, that.parameter.topPage, that.shade, that.parameter.type);
           that.alone.btn(that.parameter.index);
@@ -430,7 +432,7 @@
 
       // 是否允许点击背景遮罩进行关闭
       if (that.parameter.shadeClose) {
-        that.shade.onclick = function() {
+        that.shade.onclick = function () {
           that.parameter.shadeCall();
           clearTimeout(that.timer);
           closeAnimation(that.bulk, that.parameter.topPage, that.shade, that.parameter.type);
@@ -440,7 +442,7 @@
       // 如果存在内容区域
       // 点击内容区域进行层级提升
       if (that.content) {
-        that.content.onclick = function() {
+        that.content.onclick = function () {
           zIndex(that.bulk);
         };
       }
@@ -448,7 +450,7 @@
       // 是否存在事件区域
       // 点击事件区域进行层级提升
       if (that.eventBulk) {
-        that.eventBulk.onclick = function() {
+        that.eventBulk.onclick = function () {
           zIndex(that.bulk);
         };
       }
@@ -466,7 +468,7 @@
      * @method frameOper
      * @for event
      */
-    frameOper: function() {
+    frameOper: function () {
       let that = this;
       let frameOperThis = null;
       that.saveX = that.bulk.offsetLeft;
@@ -604,14 +606,14 @@
     }
     dom.style.opacity = '0';
     kxui.method.addClass(dom, 'kxui-Popup-hide');
-    setTimeout(function() {
+    setTimeout(function () {
       try {
         query('body', topPage).removeChild(dom);
         if (shade && shadeMatching) {
           query('body', topPage).removeChild(mask);
         }
       } catch (error) {}
-    }, 150);
+    }, 200);
   }
 
   /**
@@ -704,7 +706,7 @@
       link.media = 'all';
       link.type = 'text/css';
       link.rel = 'stylesheet';
-      link.href = path + 'css/popup.css';
+      link.href = domain + 'css/popup.css';
       query('head').appendChild(link);
     }
   })();
@@ -714,7 +716,7 @@
    * @method Popup
    * 弹出层解决方案
    */
-  let Popup = function() {
+  let Popup = function () {
     this.name = 'Popup';
     this.info = 'Window solution';
   };
@@ -728,14 +730,14 @@
    * @param {number/string} text 文案
    * @param {object} parameter 配置参数
    */
-  Popup.fn.alert = function(text, parameter) {
+  Popup.fn.alert = function (text, parameter) {
     let parameters = (typeof parameter === 'object') ? parameter : {};
     return this.open(0, parameters, {
       text: text,
       closeBtn: (typeof parameters.closeBtn === 'boolean') ? parameters.closeBtn : true,
-      closeCall: (typeof parameters.closeCall === 'function') ? parameters.closeCall : function() {},
+      closeCall: (typeof parameters.closeCall === 'function') ? parameters.closeCall : function () {},
       title: parameters.title,
-      btn: (typeof parameters.btn === 'function') ? parameters.btn : function() {}
+      btn: (typeof parameters.btn === 'function') ? parameters.btn : function () {}
     });
   };
 
@@ -745,16 +747,16 @@
    * @for Popup
    * @param {object} parameter 配置参数
    */
-  Popup.fn.ask = function(parameter) {
+  Popup.fn.ask = function (parameter) {
     let parameters = (typeof parameter === 'object') ? parameter : {};
     let btn = (typeof parameters.btn === 'object') ? parameters.btn : [];
     let event = [];
     for (let i = 1; i <= btn.length; i++) {
-      event['btn' + i] = (typeof parameters['btn' + i] === 'function') ? parameters['btn' + i] : function() {};
+      event['btn' + i] = (typeof parameters['btn' + i] === 'function') ? parameters['btn' + i] : function () {};
     }
     return this.open(1, parameters, {
       closeBtn: (typeof parameters.closeBtn === 'boolean') ? parameters.closeBtn : true,
-      closeCall: (typeof parameters.closeCall === 'function') ? parameters.closeCall : function() {},
+      closeCall: (typeof parameters.closeCall === 'function') ? parameters.closeCall : function () {},
       title: parameters.title,
       btn: btn,
       event: event
@@ -767,7 +769,7 @@
    * @for Popup
    * @param {object} parameter 配置参数
    */
-  Popup.fn.loading = function(parameter) {
+  Popup.fn.loading = function (parameter) {
     let parameters = (typeof parameter === 'object') ? parameter : {};
     return this.open(2, parameters, {
       style: (typeof parameters.style === 'number') ? parameters.style <= 2 && parameters.style >= 0 ? parameters.style : 0 : (typeof parameters.style === 'string') ? parseInt(parameters.style) <= 2 && parseInt(parameters.style) >= 0 ? parseInt(parameters.style) : 0 : 0
@@ -782,7 +784,7 @@
    * @param {number/string} time 持续时间
    * @param {object} parameter 配置参数
    */
-  Popup.fn.remind = function(text, time, parameter) {
+  Popup.fn.remind = function (text, time, parameter) {
     let parameters = (typeof parameter === 'object') ? parameter : (typeof time === 'object') ? time : (typeof text === 'object') ? text : {};
     return this.open(3, parameters, {
       text: text === parameters ? '' : text,
@@ -798,7 +800,7 @@
    * @param {object} dom 吸附对象
    * @param {object} parameter 配置参数
    */
-  Popup.fn.tips = function(text, dom, parameter) {
+  Popup.fn.tips = function (text, dom, parameter) {
     let doms = null;
     let parameters = (typeof parameter === 'object') ? parameter : {};
     if (typeof dom === 'string') {
@@ -824,14 +826,14 @@
    * @for Popup
    * @param {object} parameter 配置参数
    */
-  Popup.fn.win = function(parameter) {
+  Popup.fn.win = function (parameter) {
     let parameters = (typeof parameter === 'object') ? parameter : {};
     return this.open(5, parameters, {
       size: (typeof parameters.full === 'boolean') && parameters.full ? ['100%', '100%'] : (typeof parameters.size === 'object') ? parameters.size : (kxui.info().device === 'mobile') ? ['100%', '100%'] : ['800px', '480px'],
       closeBtn: (typeof parameters.closeBtn === 'boolean') ? parameters.closeBtn : true,
-      closeCall: (typeof parameters.closeCall === 'function') ? parameters.closeCall : function() {},
+      closeCall: (typeof parameters.closeCall === 'function') ? parameters.closeCall : function () {},
       shrinkBtn: (typeof parameters.shrinkBtn === 'boolean') ? parameters.shrinkBtn : true,
-      shrinkCall: (typeof parameters.shrinkCall === 'function') ? parameters.shrinkCall : function() {},
+      shrinkCall: (typeof parameters.shrinkCall === 'function') ? parameters.shrinkCall : function () {},
       full: (typeof parameters.full === 'boolean') ? parameters.full : false,
       title: parameters.title
     });
@@ -845,7 +847,7 @@
    * @param {object} parameter 配置参数
    * @param {object} alone 特殊配置参数（带文案与时间等3个字段时，此为配置参数）
    */
-  Popup.fn.open = function(type, parameter, alone) {
+  Popup.fn.open = function (type, parameter, alone) {
     let diy = (typeof parameter.diy === 'object') ? parameter.diy : {};
 
     // 弹窗的唯一标识
@@ -877,14 +879,15 @@
       topPage: (typeof parameter.topPage === 'boolean') ? parameter.topPage : false,
       shade: (typeof parameter.shade === 'boolean') ? parameter.shade : false,
       shadeClose: (typeof parameter.shadeClose === 'boolean') && parameter.shade ? parameter.shadeClose : false,
-      shadeCall: (typeof parameter.shadeCall === 'function') && parameter.shade && parameter.shadeClose ? parameter.shadeCall : function() {},
+      shadeCall: (typeof parameter.shadeCall === 'function') && parameter.shade && parameter.shadeClose ? parameter.shadeCall : function () {},
       offset: (typeof parameter.offset === 'string') ? parameter.offset : 'center',
       scrollBar: (typeof parameter.scrollBar === 'boolean') ? parameter.scrollBar : false,
       time: (typeof alone.time === 'string') || (typeof alone.time === 'number') ? parseInt(alone.time) : (typeof parameter.time === 'string') || (typeof parameter.time === 'number') ? parseInt(parameter.time) : false,
-      timeCall: (typeof parameter.timeCall === 'function') ? parameter.timeCall : function() {},
+      timeCall: (typeof parameter.timeCall === 'function') ? parameter.timeCall : function () {},
       diy: {
         color: diy.color,
-        background: diy.background
+        background: diy.background,
+        shade: diy.shade
       },
       index: index,
       alone: alone
@@ -901,7 +904,7 @@
    * @param {object} parameter 配置参数
    * @return {object} 返回调用closeAll
    */
-  Popup.fn.close = function(parameter) {
+  Popup.fn.close = function (parameter) {
     let index = parameter;
     if (typeof index === 'string') {
       switch (parameter) {
@@ -936,7 +939,7 @@
    * @param {string} index 关闭窗口class值
    * @param {boolean} separate 是否使用index唯一值进行关闭
    */
-  Popup.fn.closeAll = function(index, separate) {
+  Popup.fn.closeAll = function (index, separate) {
     let that = this;
     that.cla = (typeof index === 'object') ? index : ['kxui-Popup-alert', 'kxui-Popup-ask', 'kxui-Popup-loading', 'kxui-Popup-loading-noShade', 'kxui-Popup-remind', 'kxui-Popup-tips', 'kxui-Popup-win'];
     for (let c = 0; c < that.cla.length; c++) {
@@ -993,7 +996,7 @@
    * @for closeDom
    * @return {string} 自身窗口唯一值
    */
-  Popup.fn.getFrameIndex = function() {
+  Popup.fn.getFrameIndex = function () {
     return win.name;
   };
 

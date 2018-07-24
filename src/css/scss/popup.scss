@@ -11,13 +11,11 @@
 .kxui-Popup-tips,
 .kxui-Popup-win {
   * {
-    font-family: 'Microsoft YaHei';
+    font-family: "PingFang SC", "Helvetica Neue", Helvetica, "Hiragino Sans GB", "Microsoft YaHei", 微软雅黑, 黑体, Arial, sans-serif;
     font-size: 14px;
-
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-
     color: $defaultFont;
   }
   ul,
@@ -91,34 +89,26 @@
 
 .kxui-Popup-loading-0 {
   font-size: 0;
-
   position: relative;
-
   display: block;
-
   box-sizing: border-box;
   width: 35px;
   height: 35px;
-
   color: $defaultWhite;
   >div {
     position: relative;
     position: absolute;
     top: 0;
     left: -100%;
-
     display: inline-block;
     display: block;
     float: none;
-
     box-sizing: border-box;
     width: 16px;
     width: 100%;
     height: 16px;
     height: 100%;
-
     animation: ball-circus-position 2.5s infinite cubic-bezier(.25, 0, .75, 1), ball-circus-size 2.5s infinite cubic-bezier(.25, 0, .75, 1);
-
     opacity: .6;
     border-radius: 100%;
   }
@@ -141,29 +131,21 @@
 
 .kxui-Popup-loading-1 {
   font-size: 0;
-
   position: relative;
-
   display: block;
-
   box-sizing: border-box;
   width: auto;
   height: auto;
-
   color: $defaultWhite;
   >div {
     position: relative;
-
     display: inline-block;
     float: none;
-
     box-sizing: border-box;
     width: 26px;
     height: 26px;
     margin: 4px;
-
     animation: ball-pulse 1s ease infinite;
-
     border-radius: 100%;
   }
   >div:nth-child(1) {
@@ -179,81 +161,65 @@
 
 .kxui-Popup-loading-2 {
   font-size: 0;
-
   position: relative;
-
   display: block;
-
   box-sizing: border-box;
   width: 75px;
   height: 75px;
-
   color: $defaultWhite;
   >div {
     position: relative;
     position: absolute;
     top: 50%;
     left: 50%;
-
     display: inline-block;
     float: none;
-
     box-sizing: border-box;
     width: 22px;
     height: 22px;
     margin-top: -4px;
     margin-left: -4px;
-
     animation: ball-spin-clockwise-fade 1s infinite linear;
-
     border-radius: 100%;
   }
   >div:nth-child(1) {
     top: 5%;
     left: 50%;
-
     animation-delay: -.875s;
   }
   >div:nth-child(2) {
     top: 18.1801948466%;
     left: 81.8198051534%;
-
     animation-delay: -.75s;
   }
   >div:nth-child(3) {
     top: 50%;
     left: 95%;
-
     animation-delay: -.625s;
   }
   >div:nth-child(4) {
     top: 81.8198051534%;
     left: 81.8198051534%;
-
     animation-delay: -.5s;
   }
   >div:nth-child(5) {
     top: 94.9999999966%;
     left: 50.0000000005%;
-
     animation-delay: -.375s;
   }
   >div:nth-child(6) {
     top: 81.8198046966%;
     left: 18.1801949248%;
-
     animation-delay: -.25s;
   }
   >div:nth-child(7) {
     top: 49.9999750815%;
     left: 5.0000051215%;
-
     animation-delay: -.125s;
   }
   >div:nth-child(8) {
     top: 18.179464974%;
     left: 18.1803700518%;
-
     animation-delay: 0s;
   }
 }
@@ -275,12 +241,10 @@
   60%,
   100% {
     transform: scale(1);
-
     opacity: 1;
   }
   30% {
     transform: scale(.01);
-
     opacity: .1;
   }
 }
@@ -288,12 +252,10 @@
 @keyframes ball-spin-clockwise-fade {
   50% {
     transform: scale(.5);
-
     opacity: .25;
   }
   100% {
     transform: scale(1);
-
     opacity: 1;
   }
 }
@@ -303,18 +265,14 @@
   z-index: 19920217;
   top: 0;
   left: 0;
-
   display: none;
-
   width: 100%;
   height: 100%;
-
   opacity: 0;
 }
 
 .kxui-Popup-move-operation {
   display: block;
-
   cursor: move;
 }
 
@@ -322,10 +280,8 @@
   position: fixed;
   top: 0;
   left: 0;
-
   width: 100%;
   height: 100%;
-
   opacity: 0;
   background: $defaultShadow;
 }
@@ -337,7 +293,6 @@
 .kxui-Popup-max {
   top: 0 !important;
   left: 0 !important;
-
   width: 100% !important;
   height: 100% !important;
 }
@@ -346,10 +301,8 @@
   position: absolute;
   right: 0;
   bottom: 0;
-
   width: 15px;
   height: 15px;
-
   cursor: se-resize;
 }
 
@@ -373,29 +326,23 @@
   width: 100%;
   min-height: 40px;
   padding: 0 10px;
-
   text-align: right;
   .kxui-Popup-btn,
   .kxui-Popup-btn-mobile {
     line-height: 30px;
-
     display: inline-block;
     overflow: hidden;
-
     min-width: 60px;
     max-width: 320px;
     height: 30px;
     margin-bottom: 5px;
     margin-left: 5px;
     padding: 0 8px;
-
     cursor: pointer;
     text-align: center;
     text-overflow: ellipsis;
-
     border: 1px solid $defaultBorder;
     border-radius: 1px;
-
     $defaultWhite-space: nowrap;
   }
   .kxui-Popup-btn:hover,
@@ -411,16 +358,12 @@
 
 .kxui-Popup-event-mobile {
   display: flex;
-
   padding: 0;
   .kxui-Popup-btn-mobile {
     line-height: 40px;
-
     height: 40px;
     margin: 0;
-
     border-left: none;
-
     flex: 1;
   }
   .kxui-Popup-btn-mobile:last-child {
@@ -430,9 +373,7 @@
 
 .kxui-Popup-bulk {
   position: fixed;
-
   overflow: hidden;
-
   opacity: 0;
   border: 1px solid $defaultBorder;
   border-radius: 3px;
@@ -440,14 +381,10 @@
   box-shadow: 2px 2px 5px $defaultShadow;
   .kxui-Popup-title {
     line-height: 40px;
-
     position: relative;
-
     overflow: hidden;
-
     height: 40px;
     padding-left: 20px;
-
     cursor: move;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -466,18 +403,14 @@
   .kxui-Popup-close {
     font-size: 17px;
     line-height: 40px;
-
     position: absolute;
     top: 0;
     right: 0;
-
     width: 40px;
     height: 40px;
-
     cursor: pointer;
     text-align: center;
     text-indent: 0;
-
     color: $defaultBlack;
   }
   .kxui-Popup-shrink {
@@ -504,10 +437,8 @@
   .kxui-Popup-content {
     width: 100%;
     height: auto;
-
     word-wrap: break-word;
     word-break: break-all;
-
     color: $defaultGray;
     border-top: 1px solid $defaultBorder;
     iframe {
@@ -739,7 +670,6 @@
   .kxui-Popup-alert-content,
   .kxui-Popup-ask-content {
     overflow: auto;
-
     width: 100%;
     min-height: 60px;
     padding: 20px 20px;
@@ -749,21 +679,16 @@
 .kxui-Popup-loading,
 .kxui-Popup-loading-noShade {
   position: fixed;
-
   opacity: 0;
   .kxui-Popup-loading-text {
     font-size: 14px;
     font-weight: bold;
-
     position: absolute;
     top: 130%;
     left: -100%;
-
     display: block;
-
     width: 300%;
     padding: 0;
-
     text-align: center;
   }
   .kxui-Popup-loading-text-special {
@@ -798,16 +723,13 @@
 .kxui-Popup-win {
   .kxui-Popup-win-content {
     height: calc(100% - 40px);
-
     -webkit-overflow-scrolling: touch;
   }
 }
 
 .kxui-Popup-remind {
   position: fixed;
-
   padding: 10px 20px;
-
   opacity: 0;
   border: none;
   border-radius: 3px;
@@ -815,10 +737,8 @@
   box-shadow: 2px 2px 5px $defaultShadow;
   >p {
     font-size: 14px;
-
     margin: 0;
     padding: 0;
-
     color: $defaultWhite;
   }
 }
@@ -845,23 +765,17 @@
 
 .kxui-Popup-tips {
   position: absolute;
-
   padding-left: 15px;
-
   opacity: 0;
   .kxui-Popup-tips-arrow {
     font-size: 0;
     line-height: 0;
-
     position: absolute;
     top: 50%;
     left: 7px;
-
     display: block;
     overflow: hidden;
-
     margin-top: -8px;
-
     border-top: 8px solid transparent;
     border-right: 8px solid $defaultTips;
     border-bottom: 8px solid transparent;
@@ -869,9 +783,7 @@
   }
   .kxui-Popup-tips-content {
     font-size: 14px;
-
     padding: 10px 10px;
-
     color: $defaultWhite;
     border-radius: 3px;
     background-color: $defaultTips;
@@ -885,7 +797,6 @@
   .kxui-Popup-tips-right-arrow {
     right: 42px;
     left: auto;
-
     border-top: 8px solid transparent;
     border-right: none !important;
     border-bottom: 8px solid transparent;
@@ -958,7 +869,6 @@
 
 @font-face {
   font-family: 'iconfont';
-
   src: url('./../font/iconfont.eot?t=1526708119371');
   src: url('./../font/iconfont.eot?t=1526708119371#iefix') format('embedded-opentype'), url('data:application/x-font-woff;charset=utf-8;base64,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') format('woff'), url('./../font/iconfont.ttf?t=1526708119371') format('truetype'), url('./../font/iconfont.svg?t=1526708119371#iconfont') format('svg');
 }
@@ -967,7 +877,6 @@
   font-family: 'iconfont' !important;
   font-size: 16px;
   font-style: normal;
-
   -webkit-font-smoothing: antialiased;
 }
 

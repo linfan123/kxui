@@ -5,15 +5,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>test</title>
+  <title>kxui | test</title>
   <script src="kxui.js"></script>
 </head>
 
-<body></body>
+<body>
+  <div></div>
+</body>
 <script>
-kxui.use(['method', 'popup', 'lazy'], function() {
-  console.log(kxui);
-});
+  kxui.use(['method', 'popup', 'lazy'], function () {
+    const method = kxui.method;
+    const popup = kxui.popup;
+    const lazy = kxui.lazy;
+  });
 </script>
 
 </html>
