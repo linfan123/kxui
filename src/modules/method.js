@@ -732,7 +732,7 @@
 
   /**
    * 保留任意位小数
-   * @method middle
+   * @method decimal
    * @for Method
    * @param {number} num 需要操作的数字
    * @param {number} len 需要保留的位数
