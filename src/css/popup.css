@@ -1,9 +1,9 @@
 /**
  * method kxui
- * version 1.2.2
+ * version 1.2.3
  * author Lkx
  * create time 2018.05.31
- * update time 2018.07.24
+ * update time 2018.08.02
  * website http://www.kxui.org
  */
 
@@ -62,7 +62,7 @@
 .kxui-Popup-hide,
 .kxui-Popup-btn,
 .kxui-Popup-shade {
-  transition: all .3s !important; }
+  transition: all .2s !important; }
 
 .kxui-Popup-show,
 .kxui-Zoom-noTra-show {

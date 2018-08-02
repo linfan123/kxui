@@ -1,6 +1,6 @@
 /**
  * @method kxui
- * @version 1.2.2
+ * @version 1.2.3
  *
  * @method use 加载模块
  * @method info 信息查询
@@ -58,7 +58,7 @@
     },
 
     /**
-     * 判断加载方法（使用传统方法还是使用require方法引入模块）
+     * 判断加载方法(使用传统方法还是使用require方法引入模块)
      * @method mode
      * @for isModule
      */
@@ -118,7 +118,7 @@
     },
 
     /**
-     * 模块注册记录（只适用于传统加载模式）
+     * 模块注册记录(只适用于传统加载模式)
      * @method register
      * @for shunt/loop
      * @param {string} mod 模块名称
@@ -271,8 +271,8 @@
    * 开发常用操作方法，可根据需要调用不同的模块，提高开发效率
    */
   let Kxui = function () {
-    this.version = '1.2.2';
-    this.updateTime = '2018.07.24';
+    this.version = '1.2.3';
+    this.updateTime = '2018.08.02';
   };
 
   /**

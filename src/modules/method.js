@@ -4,8 +4,8 @@
  * @for kxui
  *
  * @method urlData 获取浏览器地址参数
- * @method repStr 替换指定字符（通过已知字符查找）
- * @method chaStr 替换指定字符（通过下标查找）
+ * @method repStr 替换指定字符(通过已知字符查找)
+ * @method chaStr 替换指定字符(通过下标查找)
  * @method insStr 插入指定字符
  * @method queStr 获取指定字符前/后的所有字符
  * @method midStr 获取指定字符中间的字符
@@ -16,14 +16,14 @@
  * @method setCache 设置本地缓存
  * @method getCache 获取本地缓存
  * @method delCache 删除本地缓存
- * @method compare 数据对比（内容与数据类型）
+ * @method compare 数据对比(内容与数据类型)
  * @method setHis 记录历史搜索信息
  * @method getHis 获取历史搜索信息
  * @method delHis 删除历史搜索信息
  * @method dateGet 获取当前时间戳
  * @method dateTurn 时间戳转换日期
  * @method dateChina 时间戳转换中文时间
- * @method getDom 获取节点
+ * @method getDom 获取节点(转为原生dom节点)
  * @method addDom 增加节点
  * @method atrDom 替换或创建自定义属性
  * @method random 生成指定长度的随机字符串
@@ -32,8 +32,8 @@
  * @method accSub 防误差减法运算
  * @method accMul 防误差乘法运算
  * @method accDiv 防误差除法运算
- * @method middle 元素居中
- * @method decimal 保留任意位小数
+ * @method middle 元素居中(需自行增加position定位)
+ * @method decimal 保留任意位小数(四舍五入)
  */
 
 (function (win) {
@@ -68,40 +68,43 @@
   };
 
   /**
-   * 替换指定字符（通过已知字符查找）
+   * 替换指定字符(通过已知字符查找)
    * @method repStr
    * @for Method
    * @param {string} str 需要操作的字符串
    * @param {string} app 需要替換的字符
-   * @param {string} rep 替换之后的字符
+   * @param {string} rep 替换之后的字符(不填将默认为空)
    * @return {string} 返回移除后的字符串
    */
   Method.fn.repStr = function (str, app, rep) {
-    if (str && app) {
-      return str.replace(new RegExp(app, 'g'), (rep || ''));
+    rep = rep || ''
+    if (str && (app || app === 0)) {
+      return String(str).replace(new RegExp(app, 'g'), rep);
     }
     warn(0, 'repStr', (str ? 'app' : 'str'));
   };
 
   /**
-   * 替换指定字符（通过下标查找）
+   * 替换指定字符(通过下标查找)
    * @method chaStr
    * @for Method
    * @param {string} str 需要操作的字符串
-   * @param {number} ind 需要替換的下标
-   * @param {string} rep 替换之后的字符
+   * @param {number} ind 需要替換的下标(不填将默认为0)
+   * @param {string} rep 替换之后的字符(不填将默认为0)
    * @return {string} 返回移除后的字符串
    */
   Method.fn.chaStr = function (str, ind, rep) {
-    ind = Number(ind)
-    if (str && (ind || ind === 0)) {
+    str = String(str)
+    ind = Number(ind) || 0
+    rep = rep || 0
+    if (str) {
       let iBeginPos = 0;
       let sFrontPart = str.substr(iBeginPos, ind);
       let sTailPart = str.substr(ind + 1, str.length);
-      let sRet = sFrontPart + (rep || '') + sTailPart;
+      let sRet = sFrontPart + rep + sTailPart;
       return sRet;
     }
-    warn(0, 'chaStr', (str ? 'ind' : 'str'));
+    warn(0, 'chaStr', 'str');
   };
 
   /**
@@ -305,7 +308,7 @@
   };
 
   /**
-   * 数据对比（内容与数据类型）
+   * 数据对比(内容与数据类型)
    * @method compare
    * @for Method/setHis
    * @param {all} dataOne 需要对比的数据一
@@ -477,7 +480,7 @@
   };
 
   /**
-   * 获取节点（转为原生dom节点）
+   * 获取节点(转为原生dom节点)
    * @method getDom
    * @for Method/hasClass/addClass/delClass/atrDom
    * @param {string/object} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
@@ -705,7 +708,7 @@
   };
 
   /**
-   * 元素居中(需自行增加position)
+   * 元素居中(需自行增加position定位)
    * @method middle
    * @for Method
    * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
@@ -731,32 +734,23 @@
   };
 
   /**
-   * 保留任意位小数
+   * 保留任意位小数(四舍五入)
    * @method decimal
    * @for Method
    * @param {number} num 需要操作的数字
-   * @param {number} len 需要保留的位数
+   * @param {number} len 需要保留的位数(不填为四舍五入取整)
    * @return {number} 保留后的数字
    */
   Method.fn.decimal = function (num, len) {
-    if (num && len) {
-      let nums = parseFloat(num);
-      if (isNaN(nums)) {
+    len = len || 0
+    if (num) {
+      var floating = parseFloat(num);
+      if (isNaN(floating)) {
         return 0;
       }
-      nums = Math.round(nums * 100) / 100;
-      let sx = nums.toString();
-      var pos = sx.indexOf('.');
-      if (pos < 0) {
-        pos = sx.length;
-        sx += '.';
-      }
-      while (sx.length <= pos + len) {
-        sx += '0';
-      }
-      return sx;
+      return Number(num.toFixed(len));
     }
-    warn(0, 'decimal', num ? 'len' : 'num');
+    warn(0, 'decimal', 'num');
   };
 
   /**

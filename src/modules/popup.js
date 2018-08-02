@@ -613,7 +613,7 @@
           query('body', topPage).removeChild(mask);
         }
       } catch (error) {}
-    }, 200);
+    }, 250);
   }
 
   /**
@@ -845,7 +845,7 @@
    * @for alert/ask/loading/remind/tips/win
    * @param {number} type 弹窗类型
    * @param {object} parameter 配置参数
-   * @param {object} alone 特殊配置参数（带文案与时间等3个字段时，此为配置参数）
+   * @param {object} alone 特殊配置参数(带文案与时间等3个字段时，此为配置参数)
    */
   Popup.fn.open = function (type, parameter, alone) {
     let diy = (typeof parameter.diy === 'object') ? parameter.diy : {};
