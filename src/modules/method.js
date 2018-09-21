@@ -815,9 +815,8 @@
   }
 
   // 根据引入方式暴露对象
-  if (!isExports) {
-    kxui.method = new Method();
-  } else {
-    module.exports = new Method();
+  kxui.method = new Method();
+  if (isExports) {
+    kxui.method = module.exports = new Method();
   }
 })(window);

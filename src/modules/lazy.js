@@ -7,7 +7,7 @@
  * @method load 使用懒加载
  */
 
-(function(win) {
+(function (win) {
   let kxui = win.kxui;
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object');
 
@@ -17,35 +17,19 @@
    * @for Lazy
    * @param {object} parameter 配置参数
    */
-  let Logic = function(parameter) {
+  let Logic = function (parameter) {
     this.parameter = (typeof parameter === 'object') ? parameter : {};
-    this.init();
+    this.variable();
   };
 
   Logic.prototype = {
-
-    /**
-     * 初始化判断是否存在method
-     * @method init
-     * @for Logic
-     */
-    init: function() {
-      let that = this;
-      if (!kxui.method) {
-        kxui.use('method', function() {
-          that.variable();
-        });
-      } else {
-        that.variable();
-      }
-    },
 
     /**
      * 变量生成
      * @method variable
      * @for init
      */
-    variable: function() {
+    variable: function () {
       this.threshold = Number(this.parameter.threshold) ? Number(this.parameter.threshold) : 0;
       this.externalContainer = this.parameter.container ? kxui.method.getDom(this.parameter.container) : '';
       if (this.parameter.container && !this.externalContainer) {
@@ -59,7 +43,7 @@
      * @method container
      * @for variable
      */
-    container: function() {
+    container: function () {
       this.img = kxui.method.getDom('img');
       if (this.img || this.img.length > 0) {
         this.static();
@@ -73,7 +57,7 @@
      * @method static
      * @for container
      */
-    static: function() {
+    static: function () {
       let base64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
       if (this.img.length) {
         for (let i = 0; i < this.img.length; i++) {
@@ -91,7 +75,7 @@
      * @method event
      * @for static
      */
-    event: function() {
+    event: function () {
       let that = this;
       let dom = this.externalContainer || win;
 
@@ -100,7 +84,7 @@
        * @method onscroll
        * @for event
        */
-      dom.onscroll = function() {
+      dom.onscroll = function () {
         that.branch();
       };
     },
@@ -110,7 +94,7 @@
      * @method branch
      * @for static/event
      */
-    branch: function() {
+    branch: function () {
       let scrollTop = this.externalContainer ? this.externalContainer.scrollTop : document.documentElement.scrollTop || document.body.scrollTop;
       let screenHeight = this.externalContainer ? this.externalContainer.clientHeight : document.documentElement.clientHeight || document.body.clientHeight;
       if (this.img.length) {
@@ -130,7 +114,7 @@
      * @param {string} scrollTop 滚动条距顶部的高度
      * @param {string} screenHeight 当前可视界面的高度
      */
-    exhibition: function(img, scrollTop, screenHeight) {
+    exhibition: function (img, scrollTop, screenHeight) {
       let lazySrc = kxui.method.atrDom(img, 'lazy-src');
       if (lazySrc) {
         if (img.offsetTop - (this.externalContainer ? img.parentNode.offsetTop : 0) <= ((scrollTop + screenHeight) + this.threshold) && ((img.offsetTop + img.offsetHeight) - (this.externalContainer ? img.parentNode.offsetTop : 0)) >= (scrollTop - this.threshold)) {
@@ -162,7 +146,7 @@
    * @method Lazy
    * 懒加载入口构造函数
    */
-  let Lazy = function() {
+  let Lazy = function () {
     this.name = 'Lazy';
     this.info = 'Picture loading scheme';
   };
@@ -175,15 +159,14 @@
    * @for Lazy
    * @param {object} parameter 配置参数
    */
-  Lazy.fn.load = function(parameter) {
+  Lazy.fn.load = function (parameter) {
     this.logic = new Logic(parameter);
     delete this.logic;
   };
 
   // 根据引入方式暴露对象
-  if (!isExports) {
-    kxui.lazy = new Lazy();
-  } else {
-    module.exports = new Lazy();
+  kxui.lazy = new Lazy();
+  if (isExports) {
+    kxui.lazy = module.exports = new Lazy();
   }
 })(window);

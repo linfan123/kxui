@@ -909,9 +909,8 @@
   };
 
   // 根据引入方式暴露对象
-  if (!isExports) {
-    kxui.popup = new Popup();
-  } else {
-    module.exports = new Popup();
+  kxui.popup = new Popup();
+  if (isExports) {
+    kxui.popup = module.exports = new Popup();
   }
 })(window);

@@ -206,9 +206,8 @@
   };
 
   // 根据引入方式暴露对象
-  if (!isExports) {
-    kxui.picture = new Picture();
-  } else {
-    module.exports = new Picture();
+  kxui.picture = new Picture();
+  if (isExports) {
+    kxui.picture = module.exports = new Picture();
   }
 })(window);

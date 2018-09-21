@@ -443,9 +443,8 @@
   };
 
   // 根据引入方式暴露对象
-  if (!isExports) {
-    kxui.carousel = new Carousel();
-  } else {
-    module.exports = new Carousel();
+  kxui.carousel = new Carousel();
+  if (isExports) {
+    kxui.carousel = module.exports = new Carousel();
   }
 })(window);
