@@ -1,4 +1,182 @@
 @import './color.scss';
+
+/* carousel {{{{{{ */
+
+.kxui-carousel {
+  position: relative;
+  overflow: hidden;
+
+  .kxui-carousel-box {
+    width: auto;
+    height: auto;
+    user-select: none;
+    overflow: hidden;
+
+    .kxui-carousel-item {
+      width: 100%;
+      height: 100%;
+      display: none;
+      transition: all .45s;
+      overflow: hidden;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .kxui-carousel-item-fade {
+      opacity: 0;
+      display: block;
+      transition: all .7s;
+    }
+
+    .kxui-carousel-item-this {
+      opacity: 1;
+      display: block;
+      z-index: 2;
+    }
+
+    .kxui-carousel-item-front {
+      left: -100%;
+      display: block;
+    }
+
+    .kxui-carousel-item-after {
+      left: 100%;
+      display: block;
+    }
+
+    .kxui-carousel-item-zIndex {
+      z-index: 1;
+    }
+  }
+
+  .kxui-carousel-arrow {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 38px;
+    position: absolute;
+    cursor: pointer;
+    background: $carouselArrowTransparent;
+    transition: all .3s;
+    opacity: 0;
+    text-align: center;
+    z-index: 3;
+    line-height: 38px !important;
+
+    >i {
+      display: block;
+      transition: all .3s;
+      color: $carouselArrowColor;
+      font-size: 14px;
+    }
+  }
+
+  .kxui-carousel-arrow:hover {
+    background: $carouselArrowHover;
+
+    >i {
+      color: $white;
+    }
+  }
+
+  .kxui-carousel-arrowLeft {
+    left: 6px;
+  }
+
+  .kxui-carousel-arrowRight {
+    right: 6px;
+  }
+
+  .kxui-carousel-indicator {
+    position: absolute;
+    bottom: 12px;
+    margin: 0;
+    padding: 5px 10px;
+    background: $carouselArrowTransparent;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all .3s !important;
+    z-index: 3;
+
+    >li {
+      width: 10px;
+      height: 10px;
+      float: left;
+      list-style: none;
+      border-radius: 50%;
+      background: $carouselArrowColor;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+
+    >li:nth-child(1) {
+      margin-left: 0;
+    }
+
+    .kxui-carousel-indicatorSpot-this {
+      background: $white;
+    }
+  }
+
+  .kxui-carousel-indicator:hover {
+    background: $carouselArrowHover;
+  }
+}
+
+.kxui-carousel:hover {
+  .kxui-carousel-arrow {
+    opacity: 1;
+  }
+
+  .kxui-carousel-arrowLeft {
+    left: 12px;
+  }
+
+  .kxui-carousel-arrowRight {
+    right: 12px;
+  }
+}
+
+/* carousel }}}}}} */
+
+/* picture {{{{{{ */
+
+.kxui-picture-html,
+.kxui-picture-body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  position: relative;
+
+  .kxui-picture {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: $pictureArrowMask;
+    z-index: 1992;
+    opacity: 0;
+    transition: all .3s !important;
+
+
+    .kxui-carousel {
+      width: auto;
+      height: auto;
+      margin: 0 auto;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+  }
+}
+
+/* picture }}}}}} */
+
+/* Popup {{{{{{ */
+
 .kxui-noScrollBar {
   overflow-x: hidden !important;
   overflow-y: hidden !important;
@@ -16,12 +194,14 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    color: $defaultFont;
+    color: $popupDefaultFont;
   }
+
   ul,
   li {
     list-style-type: none;
   }
+
   a {
     text-decoration: none;
   }
@@ -55,15 +235,19 @@
   0% {
     transform: scale(.92);
   }
+
   25% {
     transform: scale(.94);
   }
+
   50% {
     transform: scale(.96);
   }
+
   75% {
     transform: scale(.98);
   }
+
   100% {
     transform: scale(1);
   }
@@ -73,15 +257,19 @@
   0% {
     transform: scale(1);
   }
+
   25% {
     transform: scale(.98);
   }
+
   50% {
     transform: scale(.96);
   }
+
   75% {
     transform: scale(.94);
   }
+
   100% {
     transform: scale(.92);
   }
@@ -94,7 +282,8 @@
   box-sizing: border-box;
   width: 35px;
   height: 35px;
-  color: $defaultWhite;
+  color: $white;
+
   >div {
     position: relative;
     position: absolute;
@@ -112,18 +301,23 @@
     opacity: .6;
     border-radius: 100%;
   }
+
   >div:nth-child(1) {
     animation-delay: 0s, -.5s;
   }
+
   >div:nth-child(2) {
     animation-delay: -.5s, -1s;
   }
+
   >div:nth-child(3) {
     animation-delay: -1s, -1.5s;
   }
+
   >div:nth-child(4) {
     animation-delay: -1.5s, -2s;
   }
+
   >div:nth-child(5) {
     animation-delay: -2s, -2.5s;
   }
@@ -136,7 +330,8 @@
   box-sizing: border-box;
   width: auto;
   height: auto;
-  color: $defaultWhite;
+  color: $white;
+
   >div {
     position: relative;
     display: inline-block;
@@ -148,12 +343,15 @@
     animation: ball-pulse 1s ease infinite;
     border-radius: 100%;
   }
+
   >div:nth-child(1) {
     animation-delay: -200ms;
   }
+
   >div:nth-child(2) {
     animation-delay: -100ms;
   }
+
   >div:nth-child(3) {
     animation-delay: 0ms;
   }
@@ -166,7 +364,8 @@
   box-sizing: border-box;
   width: 75px;
   height: 75px;
-  color: $defaultWhite;
+  color: $white;
+
   >div {
     position: relative;
     position: absolute;
@@ -182,41 +381,49 @@
     animation: ball-spin-clockwise-fade 1s infinite linear;
     border-radius: 100%;
   }
+
   >div:nth-child(1) {
     top: 5%;
     left: 50%;
     animation-delay: -.875s;
   }
+
   >div:nth-child(2) {
     top: 18.1801948466%;
     left: 81.8198051534%;
     animation-delay: -.75s;
   }
+
   >div:nth-child(3) {
     top: 50%;
     left: 95%;
     animation-delay: -.625s;
   }
+
   >div:nth-child(4) {
     top: 81.8198051534%;
     left: 81.8198051534%;
     animation-delay: -.5s;
   }
+
   >div:nth-child(5) {
     top: 94.9999999966%;
     left: 50.0000000005%;
     animation-delay: -.375s;
   }
+
   >div:nth-child(6) {
     top: 81.8198046966%;
     left: 18.1801949248%;
     animation-delay: -.25s;
   }
+
   >div:nth-child(7) {
     top: 49.9999750815%;
     left: 5.0000051215%;
     animation-delay: -.125s;
   }
+
   >div:nth-child(8) {
     top: 18.179464974%;
     left: 18.1803700518%;
@@ -237,12 +444,14 @@
 }
 
 @keyframes ball-pulse {
+
   0%,
   60%,
   100% {
     transform: scale(1);
     opacity: 1;
   }
+
   30% {
     transform: scale(.01);
     opacity: .1;
@@ -254,6 +463,7 @@
     transform: scale(.5);
     opacity: .25;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -283,7 +493,7 @@
   width: 100%;
   height: 100%;
   opacity: 0;
-  background: $defaultShadow;
+  background: $popupDefaultShadow;
 }
 
 .kxui-Popup-shade-pointer {
@@ -307,12 +517,14 @@
 }
 
 .kxui-Popup-diy {
+
   .kxui-Popup-shrink:hover,
   .kxui-Popup-close:hover,
   .kxui-Popup-btn:hover,
   .kxui-Popup-btn-mobile:hover {
     opacity: .5 !important;
   }
+
   .kxui-Popup-shrink:active,
   .kxui-Popup-close:active,
   .kxui-Popup-btn:active,
@@ -327,6 +539,7 @@
   min-height: 40px;
   padding: 0 10px;
   text-align: right;
+
   .kxui-Popup-btn,
   .kxui-Popup-btn-mobile {
     line-height: 30px;
@@ -341,24 +554,27 @@
     cursor: pointer;
     text-align: center;
     text-overflow: ellipsis;
-    border: 1px solid $defaultBorder;
+    border: 1px solid $popupDefaultBorder;
     border-radius: 1px;
-    $defaultWhite-space: nowrap;
+    $white-space: nowrap;
   }
+
   .kxui-Popup-btn:hover,
   .kxui-Popup-btn-mobile:hover {
-    background: $defaultHover;
+    background: $popupDefaultHover;
   }
+
   .kxui-Popup-btn:active,
   .kxui-Popup-btn-mobile:active {
-    background: $defaultHover;
-    box-shadow: 2px 2px 5px $defaultBorder inset;
+    background: $popupDefaultHover;
+    box-shadow: 2px 2px 5px $popupDefaultBorder inset;
   }
 }
 
 .kxui-Popup-event-mobile {
   display: flex;
   padding: 0;
+
   .kxui-Popup-btn-mobile {
     line-height: 40px;
     height: 40px;
@@ -366,6 +582,7 @@
     border-left: none;
     flex: 1;
   }
+
   .kxui-Popup-btn-mobile:last-child {
     border-right: none;
   }
@@ -375,10 +592,11 @@
   position: fixed;
   overflow: hidden;
   opacity: 0;
-  border: 1px solid $defaultBorder;
+  border: 1px solid $popupDefaultBorder;
   border-radius: 3px;
-  background: $defaultWhite;
-  box-shadow: 2px 2px 5px $defaultShadow;
+  background: $white;
+  box-shadow: 2px 2px 5px $popupDefaultShadow;
+
   .kxui-Popup-title {
     line-height: 40px;
     position: relative;
@@ -389,16 +607,20 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+
   .kxui-Popup-title-wholeBtn {
     width: calc(100% - 80px);
   }
+
   .kxui-Popup-title-oneBtn {
     width: calc(100% - 40px);
   }
+
   .kxui-Popup-title-noBtn {
     width: 100%;
     padding: 0 20px;
   }
+
   .kxui-Popup-shrink,
   .kxui-Popup-close {
     font-size: 17px;
@@ -411,36 +633,44 @@
     cursor: pointer;
     text-align: center;
     text-indent: 0;
-    color: $defaultBlack;
+    color: $black;
   }
+
   .kxui-Popup-shrink {
     right: 40px;
   }
+
   .kxui-Popup-shrink-one {
     right: 0;
   }
+
   .kxui-Popup-shrink:hover,
   .kxui-Popup-close:hover {
-    background: $defaultHover;
+    background: $popupDefaultHover;
   }
+
   .kxui-Popup-shrink:active,
   .kxui-Popup-close:active {
-    background: $defaultHover;
-    box-shadow: 2px 2px 5px $defaultBorder inset;
+    background: $popupDefaultHover;
+    box-shadow: 2px 2px 5px $popupDefaultBorder inset;
   }
+
   .kxui-icon-max {
     font-size: 17px !important;
   }
+
   .kxui-icon-min {
     font-size: 15px !important;
   }
+
   .kxui-Popup-content {
     width: 100%;
     height: auto;
     word-wrap: break-word;
     word-break: break-all;
-    color: $defaultGray;
-    border-top: 1px solid $defaultBorder;
+    color: $popupDefaultGray;
+    border-top: 1px solid $popupDefaultBorder;
+
     iframe {
       width: 100%;
       height: 100%;
@@ -457,206 +687,246 @@
 }
 
 .kxui-Popup-primary {
-  border: 1px solid $primaryBorder !important;
+  border: 1px solid $popupPrimaryBorder !important;
+
   .kxui-Popup-title,
   .kxui-Popup-shrink,
   .kxui-Popup-close {
-    color: $defaultWhite;
-    background: $primaryColor;
+    color: $white;
+    background: $popupPrimaryColor;
   }
+
   .kxui-Popup-shrink:hover,
   .kxui-Popup-close:hover {
-    background: $primaryHover;
+    background: $popupPrimaryHover;
   }
+
   .kxui-Popup-shrink:active,
   .kxui-Popup-close:active {
-    background: $primaryActive;
-    box-shadow: 2px 2px 5px $primaryActiveShadow inset;
+    background: $popupPrimaryActive;
+    box-shadow: 2px 2px 5px $popupPrimaryActiveShadow inset;
   }
+
   .kxui-Popup-content {
-    border-top: 1px solid $primaryBorder;
+    border-top: 1px solid $popupPrimaryBorder;
   }
+
   .kxui-Popup-event {
+
     .kxui-Popup-btn:nth-child(1),
     .kxui-Popup-btn-mobile:last-child {
-      color: $defaultWhite;
-      border: 1px solid $primaryBorder;
-      background: $primaryColor;
+      color: $white;
+      border: 1px solid $popupPrimaryBorder;
+      background: $popupPrimaryColor;
     }
+
     .kxui-Popup-btn:hover,
     .kxui-Popup-btn-mobile:hover {
-      color: $defaultWhite;
-      border: 1px solid $primaryBorder;
-      background: $primaryHover;
+      color: $white;
+      border: 1px solid $popupPrimaryBorder;
+      background: $popupPrimaryHover;
     }
+
     .kxui-Popup-btn:active,
     .kxui-Popup-btn-mobile:active {
-      background: $primaryActive;
-      box-shadow: 2px 2px 5px $primaryActiveShadow inset;
+      background: $popupPrimaryActive;
+      box-shadow: 2px 2px 5px $popupPrimaryActiveShadow inset;
     }
   }
 }
 
 .kxui-Popup-success {
-  border: 1px solid $successBorder !important;
+  border: 1px solid $popupSuccessBorder !important;
+
   .kxui-Popup-title,
   .kxui-Popup-shrink,
   .kxui-Popup-close {
-    color: $defaultWhite;
-    background: $successColor;
+    color: $white;
+    background: $popupSuccessColor;
   }
+
   .kxui-Popup-shrink:hover,
   .kxui-Popup-close:hover {
-    background: $successHover;
+    background: $popupSuccessHover;
   }
+
   .kxui-Popup-shrink:active,
   .kxui-Popup-close:active {
-    background: $successActive;
-    box-shadow: 2px 2px 5px $successActiveShadow inset;
+    background: $popupSuccessActive;
+    box-shadow: 2px 2px 5px $popupSuccessActiveShadow inset;
   }
+
   .kxui-Popup-content {
-    border-top: 1px solid $successBorder;
+    border-top: 1px solid $popupSuccessBorder;
   }
+
   .kxui-Popup-event {
+
     .kxui-Popup-btn:nth-child(1),
     .kxui-Popup-btn-mobile:last-child {
-      color: $defaultWhite;
-      border: 1px solid $successBorder;
-      background: $successColor;
+      color: $white;
+      border: 1px solid $popupSuccessBorder;
+      background: $popupSuccessColor;
     }
+
     .kxui-Popup-btn:hover,
     .kxui-Popup-btn-mobile:hover {
-      color: $defaultWhite;
-      border: 1px solid $successBorder;
-      background: $successHover;
+      color: $white;
+      border: 1px solid $popupSuccessBorder;
+      background: $popupSuccessHover;
     }
+
     .kxui-Popup-btn:active,
     .kxui-Popup-btn-mobile:active {
-      background: $successActive;
-      box-shadow: 2px 2px 5px $successActiveShadow inset;
+      background: $popupSuccessActive;
+      box-shadow: 2px 2px 5px $popupSuccessActiveShadow inset;
     }
   }
 }
 
 .kxui-Popup-info {
-  border: 1px solid $infoBorder !important;
+  border: 1px solid $popupInfoBorder !important;
+
   .kxui-Popup-title,
   .kxui-Popup-shrink,
   .kxui-Popup-close {
-    color: $defaultWhite;
-    background: $infoColor;
+    color: $white;
+    background: $popupInfoColor;
   }
+
   .kxui-Popup-shrink:hover,
   .kxui-Popup-close:hover {
-    background: $infoHover;
+    background: $popupInfoHover;
   }
+
   .kxui-Popup-shrink:active,
   .kxui-Popup-close:active {
-    background: $infoActive;
-    box-shadow: 2px 2px 5px $infoActiveShadow inset;
+    background: $popupInfoActive;
+    box-shadow: 2px 2px 5px $popupInfoActiveShadow inset;
   }
+
   .kxui-Popup-content {
-    border-top: 1px solid $infoBorder;
+    border-top: 1px solid $popupInfoBorder;
   }
+
   .kxui-Popup-event {
+
     .kxui-Popup-btn:nth-child(1),
     .kxui-Popup-btn-mobile:last-child {
-      color: $defaultWhite;
-      border: 1px solid $infoBorder;
-      background: $infoColor;
+      color: $white;
+      border: 1px solid $popupInfoBorder;
+      background: $popupInfoColor;
     }
+
     .kxui-Popup-btn:hover,
     .kxui-Popup-btn-mobile:hover {
-      color: $defaultWhite;
-      border: 1px solid $infoBorder;
-      background: $infoHover;
+      color: $white;
+      border: 1px solid $popupInfoBorder;
+      background: $popupInfoHover;
     }
+
     .kxui-Popup-btn:active,
     .kxui-Popup-btn-mobile:active {
-      background: $infoActive;
-      box-shadow: 2px 2px 5px $infoActiveShadow inset;
+      background: $popupInfoActive;
+      box-shadow: 2px 2px 5px $popupInfoActiveShadow inset;
     }
   }
 }
 
 .kxui-Popup-warning {
-  border: 1px solid $warningBorder !important;
+  border: 1px solid $popupWarningBorder !important;
+
   .kxui-Popup-title,
   .kxui-Popup-shrink,
   .kxui-Popup-close {
-    color: $defaultWhite;
-    background: $warningColor;
+    color: $white;
+    background: $popupWarningColor;
   }
+
   .kxui-Popup-shrink:hover,
   .kxui-Popup-close:hover {
-    background: $warningHover;
+    background: $popupWarningHover;
   }
+
   .kxui-Popup-shrink:active,
   .kxui-Popup-close:active {
-    background: $warningActive;
-    box-shadow: 2px 2px 5px $warningActiveShadow inset;
+    background: $popupWarningActive;
+    box-shadow: 2px 2px 5px $popupWarningActiveShadow inset;
   }
+
   .kxui-Popup-content {
-    border-top: 1px solid $warningBorder;
+    border-top: 1px solid $popupWarningBorder;
   }
+
   .kxui-Popup-event {
+
     .kxui-Popup-btn:nth-child(1),
     .kxui-Popup-btn-mobile:last-child {
-      color: $defaultWhite;
-      border: 1px solid $warningBorder;
-      background: $warningColor;
+      color: $white;
+      border: 1px solid $popupWarningBorder;
+      background: $popupWarningColor;
     }
+
     .kxui-Popup-btn:hover,
     .kxui-Popup-btn-mobile:hover {
-      color: $defaultWhite;
-      border: 1px solid $warningBorder;
-      background: $warningHover;
+      color: $white;
+      border: 1px solid $popupWarningBorder;
+      background: $popupWarningHover;
     }
+
     .kxui-Popup-btn:active,
     .kxui-Popup-btn-mobile:active {
-      background: $warningActive;
-      box-shadow: 2px 2px 5px $warningActiveShadow inset;
+      background: $popupWarningActive;
+      box-shadow: 2px 2px 5px $popupWarningActiveShadow inset;
     }
   }
 }
 
 .kxui-Popup-danger {
-  border: 1px solid $dangerBorder !important;
+  border: 1px solid $popupDangerBorder !important;
+
   .kxui-Popup-title,
   .kxui-Popup-shrink,
   .kxui-Popup-close {
-    color: $defaultWhite;
-    background: $dangerColor;
+    color: $white;
+    background: $popupDangerColor;
   }
+
   .kxui-Popup-shrink:hover,
   .kxui-Popup-close:hover {
-    background: $dangerHover;
+    background: $popupDangerHover;
   }
+
   .kxui-Popup-shrink:active,
   .kxui-Popup-close:active {
-    background: $dangerActive;
-    box-shadow: 2px 2px 5px $dangerActiveShadow inset;
+    background: $popupDangerActive;
+    box-shadow: 2px 2px 5px $popupDangerActiveShadow inset;
   }
+
   .kxui-Popup-content {
-    border-top: 1px solid $dangerBorder;
+    border-top: 1px solid $popupDangerBorder;
   }
+
   .kxui-Popup-event {
+
     .kxui-Popup-btn:nth-child(1),
     .kxui-Popup-btn-mobile:last-child {
-      color: $defaultWhite;
-      border: 1px solid $dangerBorder;
-      background: $dangerColor;
+      color: $white;
+      border: 1px solid $popupDangerBorder;
+      background: $popupDangerColor;
     }
+
     .kxui-Popup-btn:hover,
     .kxui-Popup-btn-mobile:hover {
-      color: $defaultWhite;
-      border: 1px solid $dangerBorder;
-      background: $dangerHover;
+      color: $white;
+      border: 1px solid $popupDangerBorder;
+      background: $popupDangerHover;
     }
+
     .kxui-Popup-btn:active,
     .kxui-Popup-btn-mobile:active {
-      background: $dangerActive;
-      box-shadow: 2px 2px 5px $dangerActiveShadow inset;
+      background: $popupDangerActive;
+      box-shadow: 2px 2px 5px $popupDangerActiveShadow inset;
     }
   }
 }
@@ -665,6 +935,7 @@
 .kxui-Popup-ask {
   width: 260px;
   height: auto;
+
   .kxui-Popup-alert-content,
   .kxui-Popup-ask-content,
   .kxui-Popup-alert-content,
@@ -680,43 +951,49 @@
 .kxui-Popup-loading-noShade {
   position: fixed;
   opacity: 0;
+
   .kxui-Popup-loading-text {
     font-size: 14px;
     font-weight: bold;
     position: absolute;
     top: 130%;
-    left: -100%;
+    left: -250%;
     display: block;
-    width: 300%;
+    width: 600%;
     padding: 0;
     text-align: center;
   }
+
   .kxui-Popup-loading-text-special {
-    left: -91%;
+    left: -238.5%;
   }
 }
 
 .kxui-Popup-loading {
-  color: $defaultWhite;
+  color: $white;
+
   >div {
-    color: $defaultWhite;
-    border: 0 solid $defaultWhite;
-    background-color: $defaultWhite;
+    color: $white;
+    border: 0 solid $white;
+    background-color: $white;
   }
+
   .kxui-Popup-loading-text {
-    color: $defaultWhite;
+    color: $white;
   }
 }
 
 .kxui-Popup-loading-noShade {
-  color: $defaultGray;
+  color: $popupDefaultGray;
+
   >div {
-    color: $defaultGray;
-    border: 0 solid $defaultGray;
-    background-color: $defaultGray;
+    color: $popupDefaultGray;
+    border: 0 solid $popupDefaultGray;
+    background-color: $popupDefaultGray;
   }
+
   .kxui-Popup-loading-text {
-    color: $defaultGray;
+    color: $popupDefaultGray;
   }
 }
 
@@ -733,40 +1010,42 @@
   opacity: 0;
   border: none;
   border-radius: 3px;
-  background: $defaultTips;
-  box-shadow: 2px 2px 5px $defaultShadow;
+  background: $popupDefaultTips;
+  box-shadow: 2px 2px 5px $popupDefaultShadow;
+
   >p {
     font-size: 14px;
     margin: 0;
     padding: 0;
-    color: $defaultWhite;
+    color: $white;
   }
 }
 
 .kxui-Popup-remind-primary {
-  background: $primaryTransparent;
+  background: $popupPrimaryTransparent;
 }
 
 .kxui-Popup-remind-success {
-  background: $successTransparent;
+  background: $popupSuccessTransparent;
 }
 
 .kxui-Popup-remind-info {
-  background: $infoTransparent;
+  background: $popupInfoTransparent;
 }
 
 .kxui-Popup-remind-warning {
-  background: $warningTransparent;
+  background: $popupWarningTransparent;
 }
 
 .kxui-Popup-remind-danger {
-  background: $dangerTransparent;
+  background: $popupDangerTransparent;
 }
 
 .kxui-Popup-tips {
   position: absolute;
   padding-left: 15px;
   opacity: 0;
+
   .kxui-Popup-tips-arrow {
     font-size: 0;
     line-height: 0;
@@ -777,117 +1056,144 @@
     overflow: hidden;
     margin-top: -8px;
     border-top: 8px solid transparent;
-    border-right: 8px solid $defaultTips;
+    border-right: 8px solid $popupDefaultTips;
     border-bottom: 8px solid transparent;
     border-left: none;
   }
+
   .kxui-Popup-tips-content {
     font-size: 14px;
     padding: 10px 10px;
-    color: $defaultWhite;
+    color: $white;
     border-radius: 3px;
-    background-color: $defaultTips;
-    box-shadow: 2px 2px 5px $defaultShadow;
+    background-color: $popupDefaultTips;
+    box-shadow: 2px 2px 5px $popupDefaultShadow;
   }
 }
 
 .kxui-Popup-tips-right {
   padding-right: 50px;
   padding-left: 0;
+
   .kxui-Popup-tips-right-arrow {
     right: 42px;
     left: auto;
     border-top: 8px solid transparent;
     border-right: none !important;
     border-bottom: 8px solid transparent;
-    border-left: 8px solid $defaultBlack;
+    border-left: 8px solid $black;
   }
+
   .kxui-Popup-tips-content {
-    box-shadow: -2px 2px 5px $defaultShadow;
+    box-shadow: -2px 2px 5px $popupDefaultShadow;
   }
 }
 
 .kxui-Popup-tips-primary {
   .kxui-Popup-tips-arrow {
-    border-right: 8px solid $primaryTransparent;
+    border-right: 8px solid $popupPrimaryTransparent;
   }
+
   .kxui-Popup-tips-right-arrow {
-    border-left: 8px solid $primaryTransparent;
+    border-left: 8px solid $popupPrimaryTransparent;
   }
+
   .kxui-Popup-tips-content {
-    background-color: $primaryTransparent;
+    background-color: $popupPrimaryTransparent;
   }
 }
 
 .kxui-Popup-tips-success {
   .kxui-Popup-tips-arrow {
-    border-right: 8px solid $successTransparent;
+    border-right: 8px solid $popupSuccessTransparent;
   }
+
   .kxui-Popup-tips-right-arrow {
-    border-left: 8px solid $successTransparent;
+    border-left: 8px solid $popupSuccessTransparent;
   }
+
   .kxui-Popup-tips-content {
-    background-color: $successTransparent;
+    background-color: $popupSuccessTransparent;
   }
 }
 
 .kxui-Popup-tips-info {
   .kxui-Popup-tips-arrow {
-    border-right: 8px solid $infoTransparent;
+    border-right: 8px solid $popupInfoTransparent;
   }
+
   .kxui-Popup-tips-right-arrow {
-    border-left: 8px solid $infoTransparent;
+    border-left: 8px solid $popupInfoTransparent;
   }
+
   .kxui-Popup-tips-content {
-    background-color: $infoTransparent;
+    background-color: $popupInfoTransparent;
   }
 }
 
 .kxui-Popup-tips-warning {
   .kxui-Popup-tips-arrow {
-    border-right: 8px solid $warningTransparent;
+    border-right: 8px solid $popupWarningTransparent;
   }
+
   .kxui-Popup-tips-right-arrow {
-    border-left: 8px solid $warningTransparent;
+    border-left: 8px solid $popupWarningTransparent;
   }
+
   .kxui-Popup-tips-content {
-    background-color: $warningTransparent;
+    background-color: $popupWarningTransparent;
   }
 }
 
 .kxui-Popup-tips-danger {
   .kxui-Popup-tips-arrow {
-    border-right: 8px solid $dangerTransparent;
+    border-right: 8px solid $popupDangerTransparent;
   }
+
   .kxui-Popup-tips-right-arrow {
-    border-left: 8px solid $dangerTransparent;
+    border-left: 8px solid $popupDangerTransparent;
   }
+
   .kxui-Popup-tips-content {
-    background-color: $dangerTransparent;
+    background-color: $popupDangerTransparent;
   }
 }
 
+/* Popup }}}}}} */
+
 @font-face {
-  font-family: 'iconfont';
-  src: url('./../font/iconfont.eot?t=1526708119371');
-  src: url('./../font/iconfont.eot?t=1526708119371#iefix') format('embedded-opentype'), url('data:application/x-font-woff;charset=utf-8;base64,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') format('woff'), url('./../font/iconfont.ttf?t=1526708119371') format('truetype'), url('./../font/iconfont.svg?t=1526708119371#iconfont') format('svg');
+  font-family: "iconfont";
+  src: url('./../font/iconfont.eot?t=1536828876583');
+  src: url('./../font/iconfont.eot?t=1536828876583#iefix') format('embedded-opentype'),
+    url('data:application/x-font-woff;charset=utf-8;base64,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') format('woff'),
+    url('./../font/iconfont.ttf?t=1536828876583') format('truetype'),
+    url('./../font/iconfont.svg?t=1536828876583#iconfont') format('svg');
 }
 
 .kxui-icon {
-  font-family: 'iconfont' !important;
+  font-family: "iconfont" !important;
   font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .kxui-icon-close:before {
-  content: '\e646';
+  content: "\e646";
 }
 
 .kxui-icon-min:before {
-  content: '\e627';
+  content: "\e627";
 }
 
 .kxui-icon-max:before {
-  content: '\e603';
+  content: "\e603";
+}
+
+.kxui-icon-arrowLeft:before {
+  content: "\e6f8";
+}
+
+.kxui-icon-arrowRight:before {
+  content: "\e6f9";
 }

@@ -64,7 +64,7 @@ gulp.task('revScss', function () {
 var cssMin = require('gulp-csso');
 var autoprefixer = require('gulp-autoprefixer');
 gulp.task('revCss', function () {
-  return gulp.src('./src/css/popup.css', {
+  return gulp.src('./src/css/kxui.css', {
       base: './src'
     })
     .pipe(autoprefixer())
@@ -126,6 +126,6 @@ gulp.task('server', function () {
       baseDir: './src',
       index: './../test/test.html'
     },
-    port: 8080
+    port: 8000
   })
 });

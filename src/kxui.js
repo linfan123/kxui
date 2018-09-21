@@ -1,13 +1,13 @@
 /**
  * @method kxui
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @method use 加载模块
  * @method info 信息查询
  */
 
 (function (win) {
-  let stockMod = ['lazy', 'method', 'popup'];
+  let stockMod = ['lazy', 'method', 'popup', 'carousel', 'picture'];
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object');
   let device = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? 'mobile' : 'pc';
 
@@ -19,15 +19,14 @@
    */
   let Load = function (kxui) {
     this.kxui = kxui;
-    this.module = (typeof this.kxui.module === 'string') || (typeof this.kxui.module === 'function') || (typeof this.kxui.module === 'object') ? this.kxui.module : false;
-    this.fun = (typeof this.kxui.fun === 'function') ? this.kxui.fun : (typeof this.module === 'function') ? this.module : false;
-    if ((typeof this.kxui.module === 'function') || (typeof this.fun === 'boolean')) {
-      throws(0, this.kxui);
-      if (typeof this.fun === 'boolean') {
-        return false;
-      }
+    this.module = (typeof this.kxui.module === 'string') ? [this.kxui.module] : (typeof this.kxui.module === 'object') ? this.kxui.module : false;
+    this.fun = (typeof this.kxui.fun === 'function') ? this.kxui.fun : false;
+    this.met = (typeof this.kxui.met === 'boolean' ? this.kxui.met : true);
+    if (!this.module || !this.fun) {
+      throws(0, this.kxui, true);
+    } else {
+      this.definition();
     }
-    this.definition();
   };
 
   Load.prototype = {
@@ -40,21 +39,11 @@
     definition: function () {
       this.loadLine = 0;
       this.wheelSearch = 0;
-      this.domain = domain();
-      this.isModule();
-    },
-
-    /**
-     * 判断模块是否符合规范
-     * @method isModule
-     * @for definition
-     */
-    isModule: function () {
-      if ((typeof this.module !== 'boolean') && (typeof this.module !== 'function')) {
-        this.mode();
-      } else {
-        this.end();
+      if (this.module.indexOf('method') < 0 && this.met) {
+        this.module.unshift('method');
       }
+      this.domain = domain();
+      this.mode();
     },
 
     /**
@@ -64,31 +53,27 @@
      */
     mode: function () {
       if (isExports) {
-        let newMod = this.module;
-        if (typeof this.module === 'string') {
-          newMod = [this.module];
-        }
-        this.imports(newMod);
+        this.imports();
       } else {
         this.shunt();
       }
     },
 
     /**
-     * 进行模块注册判断并执行其他操作
+     * 进行模块注册判断与加载
      * @method imports
      * @for mode
-     * @param {string} mod 需要加载的mod数组
      */
-    imports: function (mod) {
-      for (let i = 0; i < mod.length; i++) {
-        if (!this.kxui[(mod[i])] && stockMod.indexOf(mod[i].toLowerCase()) >= 0) {
-          let modName = mod[i];
-          this.kxui[modName] = require('./modules/' + mod[i]);
-        } else if (this.kxui[(mod[i])]) {
-          throws(2, mod[i], this.kxui);
+    imports: function () {
+      require('./css/kxui.css');
+      for (let i = 0; i < this.module.length; i++) {
+        if (!this.kxui[(this.module[i])] && stockMod.indexOf(this.module[i].toLowerCase()) >= 0) {
+          let modName = this.module[i];
+          this.kxui[modName] = require('./modules/' + this.module[i]);
+        } else if (this.kxui[(this.module[i])]) {
+          throws(2, this.module[i], this.kxui);
         } else {
-          throws(1, mod[i], this.kxui);
+          throws(1, this.module[i], this.kxui);
         }
       }
       this.end();
@@ -97,24 +82,31 @@
     /**
      * 模块加载分流
      * @method shunt
-     * @for definition
+     * @for mode
      */
     shunt: function () {
-      if (typeof this.module === 'string') {
-        if (stockMod.indexOf(this.module.toLowerCase()) >= 0) {
-          this.create(this.module, false);
-        } else {
-          throws(1, this.module, this.kxui);
-          this.end();
-        }
-      } else if (typeof this.module === 'object') {
-        if (stockMod.indexOf(this.module[this.loadLine].toLowerCase()) >= 0) {
-          this.register(this.module[this.loadLine]);
-        } else {
-          throws(1, this.module[this.loadLine], this.kxui);
-          this.loop(true);
-        }
+      this.style();
+      if (stockMod.indexOf(this.module[this.loadLine].toLowerCase()) >= 0) {
+        this.register(this.module[this.loadLine]);
+      } else {
+        throws(1, this.module[this.loadLine], this.kxui);
+        this.loop();
       }
+    },
+
+    /**
+     * 模块样式加载(只适用于传统加载模式)
+     * @method style
+     * @for shunt
+     */
+    style: function () {
+      let head = document.querySelector('head');
+      let link = document.createElement('link');
+      link.media = 'all';
+      link.type = 'text/css';
+      link.rel = 'stylesheet';
+      link.href = this.domain + 'css/kxui.css';
+      head.appendChild(link);
     },
 
     /**
@@ -125,13 +117,14 @@
      */
     register: function (mod) {
       if (!this.kxui[mod]) {
-        this.create(mod, true);
-      } else if (this.loadLine < this.module.length - 1) {
-        throws(2, mod, this.kxui);
-        this.loop(true);
+        this.create(mod);
       } else {
         throws(2, mod, this.kxui);
-        this.end();
+        if (this.loadLine < this.module.length - 1) {
+          this.loop();
+        } else {
+          this.end();
+        }
       }
     },
 
@@ -140,26 +133,25 @@
      * @method create
      * @for register
      * @param {string} mod 模块名称
-     * @param {boolean} shunt 分流，true:对象、false：字符串
      */
-    create: function (mod, shunt) {
+    create: function (mod) {
       let that = this;
-      let body = document.getElementsByTagName('body')[0];
+      let body = document.querySelector('body');
       let script = document.createElement('script');
       script.type = 'text/javascript';
       script.async = 'async';
       script.charset = 'utf-8';
-      script.src = this.domain + 'modules/' + mod + '.js';
+      script.src = that.domain + 'modules/' + mod + '.js';
       if (body) {
         body.appendChild(script);
-        this.wait(body, script, shunt);
-      } else if (this.wheelSearch < 10) {
+        that.wait(body, script);
+      } else if (that.wheelSearch < 10) {
         setTimeout(function () {
           that.wheelSearch = that.wheelSearch + 1;
-          that.create(mod, shunt);
+          that.create(mod);
         });
       } else {
-        throws(3, mod, this.kxui, true);
+        throws(3, mod, that.kxui, true);
       }
     },
 
@@ -169,42 +161,49 @@
      * @for create
      * @param {object} body 结构对象
      * @param {object} script 等待的标签对象
-     * @param {boolean} shunt 分流，true:对象、false：字符串
      */
-    wait: function (body, script, shunt) {
+    wait: function (body, script) {
       let that = this;
       if (script.readyState) {
-        script.onreadystatechange = function () {　　　　　　　　
+        script.onreadystatechange = function () {
           if (script.readyState === 'complete' || script.readyState === 'loaded') {
             script.onreadystatechange = null;
-            body.removeChild(script);
-            that.loop(shunt);
+            that.waitEnd(body, script);
           }
         };
       } else {
         script.onload = function () {
-          body.removeChild(script);
-          that.loop(shunt);
+          that.waitEnd(body, script);
         };
       }
     },
 
     /**
-     * 加载环
+     * 当前模块加载完毕
+     * @method waitEnd
+     * @for wait
+     * @param {object} body 结构对象
+     * @param {object} script 等待的标签对象
+     */
+    waitEnd: function (body, script) {
+      body.removeChild(script);
+      this.loop();
+    },
+
+    /**
+     * 加载环路
      * @method loop
      * @for shunt/wait/register/loop
-     * @param {boolean} shunt 分流，true:对象、false：字符串
      */
-    loop: function (shunt) {
+    loop: function () {
       this.loadLine = this.loadLine + 1;
-      if (shunt && this.module[this.loadLine] && stockMod.indexOf(this.module[this.loadLine].toLowerCase()) >= 0) {
+      if (this.module[this.loadLine] && stockMod.indexOf(this.module[this.loadLine].toLowerCase()) >= 0) {
         this.register(this.module[this.loadLine]);
-      } else if (shunt && this.loadLine < this.module.length - 1) {
+      } else if (this.loadLine < this.module.length - 1) {
         throws(1, this.module[this.loadLine], this.kxui);
-        this.loop(shunt);
+        this.loop();
       } else {
-        let warnAna = shunt && this.module[this.loadLine];
-        if (warnAna) {
+        if (this.module[this.loadLine]) {
           throws(1, this.module[this.loadLine], this.kxui);
         }
         this.end();
@@ -241,28 +240,28 @@
   }
 
   /**
-   * 输出控制台警告
+   * 控制台错误/警告
    * @method warn
    * @for Load
    * @param {number} num 输入警告文案编号
-   * @param {string/object} mod 发生错误的模块名称kxui
-   * @param {object} kxui kxui对象自身
+   * @param {string/object} mod 发生错误的模块名称或kxui对象自身
+   * @param {object/boolean} kxui kxui对象自身或是否使用error进行抛出
    * @param {boolean} isError 是否使用error进行抛出
-   * @return {null} 返回空值
    */
   function throws(num, mod, kxui, isError) {
-    let that = kxui ? kxui : (typeof mod === 'object') ? mod : '';
+    isError = (typeof isError === 'boolean') ? isError : (typeof kxui === 'boolean') ? kxui : false;
+    kxui = (typeof kxui === 'object') ? kxui : (typeof mod === 'object') ? mod : false;
     let nums = {
       0: '使用 {use} 不符合结构规范',
       1: '模块 {' + mod + '} 不存在',
       2: '请勿重复调用 {' + mod + ') 模块',
       3: '未能找到 {body} 节点，无法加载 {' + mod + '} 模块'
     };
-    if (!isError) {
-      console.warn('kxui-' + that.version + '： ' + nums[num] + '。');
-      return;
+    if (isError) {
+      console.error('kxui-' + kxui.version + '： ' + nums[num] + '。');
+    } else {
+      console.warn('kxui-' + kxui.version + '： ' + nums[num] + '。');
     }
-    console.error('kxui-' + that.version + '： ' + nums[num] + '。');
   }
 
   /**
@@ -271,8 +270,8 @@
    * 开发常用操作方法，可根据需要调用不同的模块，提高开发效率
    */
   let Kxui = function () {
-    this.version = '1.2.3';
-    this.updateTime = '2018.08.02';
+    this.version = '1.3.0';
+    this.updateTime = '2018.09.21';
   };
 
   /**
@@ -281,13 +280,16 @@
    * @for kxui
    * @param {string/array} mod 模块名称
    * @param {function} fun 加载完成回调方法
+   * @param {boolean} met 是否初始化调用method
    */
-  Kxui.prototype.use = function (mod, fun) {
+  Kxui.prototype.use = function (mod, fun, met) {
     this.module = mod;
     this.fun = fun;
+    this.met = met;
     this.load = new Load(this);
     delete this.module;
     delete this.fun;
+    delete this.met;
     delete this.load;
   };
 
@@ -301,12 +303,22 @@
     return {
       'domain': domain(),
       'device': device,
-      'version': this.version + ' / ' + this.updateTime
+      'version': this.version + ' / ' + this.updateTime,
+      'size': {
+        'cDocW': document.documentElement.clientWidth,
+        'cDocH': document.documentElement.clientHeight,
+        'tDocW': win.top.document.documentElement.clientWidth,
+        'tDocH': win.top.document.documentElement.clientHeight
+      },
+      'document': {
+        'c': document,
+        't': win.top.document
+      }
     };
   };
 
   win.kxui = new Kxui();
   if (isExports) {
-    module.exports = new Kxui();
+    win.kxui = module.exports = new Kxui();
   }
 })(window);

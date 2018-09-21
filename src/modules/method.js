@@ -27,13 +27,14 @@
  * @method addDom 增加节点
  * @method atrDom 替换或创建自定义属性
  * @method random 生成指定长度的随机字符串
- * @method mouse 获取鼠标位置
+ * @method mouse 获取鼠标/手势位置
  * @method accAdd 防误差加法运算
  * @method accSub 防误差减法运算
  * @method accMul 防误差乘法运算
  * @method accDiv 防误差除法运算
  * @method middle 元素居中(需自行增加position定位)
  * @method decimal 保留任意位小数(四舍五入)
+ * @method aniHeight 元素动态高度过渡动画
  */
 
 (function (win) {
@@ -77,7 +78,7 @@
    * @return {string} 返回移除后的字符串
    */
   Method.fn.repStr = function (str, app, rep) {
-    rep = rep || ''
+    rep = rep || '';
     if (str && (app || app === 0)) {
       return String(str).replace(new RegExp(app, 'g'), rep);
     }
@@ -94,9 +95,9 @@
    * @return {string} 返回移除后的字符串
    */
   Method.fn.chaStr = function (str, ind, rep) {
-    str = String(str)
-    ind = Number(ind) || 0
-    rep = rep || 0
+    str = String(str);
+    ind = Number(ind) || 0;
+    rep = rep || 0;
     if (str) {
       let iBeginPos = 0;
       let sFrontPart = str.substr(iBeginPos, ind);
@@ -387,7 +388,7 @@
     if (history) {
       return JSON.parse(history);
     }
-    return false
+    return false;
   };
 
   /**
@@ -484,14 +485,16 @@
    * @method getDom
    * @for Method/hasClass/addClass/delClass/atrDom
    * @param {string/object} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
+   * @param {boolean} top 是否获取最顶层节点(默认为false，查看当前层)
    * @return {object} 节点对象
    */
-  Method.fn.getDom = function (dom) {
+  Method.fn.getDom = function (dom, top) {
+    top = ((typeof top === 'boolean') ? top : false);
     let extract = function () {
       if (typeof dom === 'object') {
         return dom;
       } else if (typeof dom === 'string') {
-        dom = document.querySelectorAll(dom);
+        dom = (top ? win.top.document.querySelectorAll(dom) : document.querySelectorAll(dom));
         if (dom.length === 1) {
           return dom[0];
         } else if (dom.length === 0) {
@@ -571,7 +574,7 @@
   };
 
   /**
-   * 获取鼠标位置
+   * 获取鼠标/手势位置
    * @method mouse
    * @for Method
    * @return {object} 鼠标当前所在位置
@@ -580,21 +583,27 @@
     let ev = e || win.event;
     let x = 0;
     let y = 0;
-    if (ev.pageX) {
-      x = ev.pageX;
-      y = ev.pageY;
-    } else {
-      let sleft = 0;
-      let stop = 0;
-      if (document.documentElement) {
-        stop = document.documentElement.scrollTop;
-        sleft = document.documentElement.scrollLeft;
+    if (kxui.info().device === 'pc') {
+      if (ev.pageX) {
+        x = ev.pageX;
+        y = ev.pageY;
       } else {
-        stop = document.body.scrollTop;
-        sleft = document.body.scrollLeft;
+        let sleft = 0;
+        let stop = 0;
+        if (document.documentElement) {
+          stop = document.documentElement.scrollTop;
+          sleft = document.documentElement.scrollLeft;
+        } else {
+          stop = document.body.scrollTop;
+          sleft = document.body.scrollLeft;
+        }
+        x = ev.clientX + sleft;
+        y = ev.clientY + stop;
       }
-      x = ev.clientX + sleft;
-      y = ev.clientY + stop;
+    } else {
+      let touch = e.changedTouches[0];
+      x = Number(touch.pageX);
+      y = Number(touch.pageY);
     }
     return {
       x: x,
@@ -742,9 +751,9 @@
    * @return {number} 保留后的数字
    */
   Method.fn.decimal = function (num, len) {
-    len = len || 0
+    len = len || 0;
     if (num) {
-      var floating = parseFloat(num);
+      let floating = parseFloat(num);
       if (isNaN(floating)) {
         return 0;
       }
@@ -754,7 +763,42 @@
   };
 
   /**
-   * 输出控制台警告
+   * 元素动态高度过渡动画
+   * @method aniHeight
+   * @for Method
+   * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
+   * @param {number} time 动画执行时间(1000/s)
+   * @param {string} id 若是不符合结构，此字段为新创建的id值(默认为kxui-Method-aniHeight)
+   * @return {boolean} 返回是否成功布尔值
+   */
+  Method.fn.aniHeight = function (dom, time, id) {
+    const box = this.getDom(dom);
+    time = isNaN(parseFloat(time)) ? '.2' : (time / 1000);
+    id = id || 'kxui-Method-aniHeight';
+    if (dom) {
+      if (box && box.children.length === 1) {
+        style(box, box.children[0]);
+      } else if (!this.getDom('#' + id)) {
+        let div = this.addDom('<div id="' + id + '"></div>');
+        box.parentNode.insertBefore(div, box.nextSibling);
+        div.appendChild(box);
+        style(div, box);
+      } else {
+        style(this.getDom('#' + id), box);
+      }
+      return true;
+    }
+
+    function style(node, cdr) {
+      node.style.transition = 'height ' + time + 's';
+      node.style.overflow = 'hidden';
+      node.style.height = cdr.offsetHeight + 'px';
+    }
+    warn(0, 'aniHeight', 'dom');
+  };
+
+  /**
+   * 控制台错误/警告
    * @method warn
    * @for Method
    * @param {number} num 输入警告文案编号
@@ -767,7 +811,7 @@
       1: '缓存 {' + name + '} 不存在或已过期',
       2: 'DOM {' + name + '} 存在重复或不正确'
     };
-    console.warn('kxui-' + kxui.version + '： ' + nums[num] + '。');
+    console.warn('kxui-' + kxui.version + '： 模块 {method} ' + nums[num] + '。');
   }
 
   // 根据引入方式暴露对象

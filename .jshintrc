@@ -1,71 +1,26 @@
 {
-  //是否阻止位运算符的使用(如^，&)
   "bitwise": false,
-
-  //是否要求变量都使用驼峰命名
   "camelcase": true,
-
-  //是否要求 for/while/if 带花括号
   "curly": false,
-
-  //是否强制使用严格等号
   "eqeqeq": true,
-
-  //for-in 语句是否要求过滤原型链上的对象
   "forin": true,
-
-  //是要求否以 "use strict" 模式检查
   "strict": false,
-
-  //禁止复写原生对象(如Array, Date)的原型
   "freeze": true,
-
-  //要求变量在使用前声明，忽略 function 函数声明
   "latedef": "nofunc",
-
-  //不允许空的代码快，默认关闭
   "noempty": false,
-
-  //不允许使用 "non-breaking whitespace"，这些字符在非 UTF8 页面会导致代码失效
   "nonbsp": true,
-
-  //阻止直接使用 new 调用构造函数的语句（不赋值对象）
   "nonew": false,
-
-  //不允许使用 ++ 和 -- 运算符
   "plusplus": false,
-
-  //提示页面未找到的变量
   "undef": false,
-
-  //提示未使用的变量
   "unused": true,
-
-  //字符串不允许以空格加斜杠的形式来换行
   "trailing": true,
-
-  //写变量对象时，允许逗号放前面
   "laxcomma": false,
-
-  //兼容es5的代码风格
   "es5": true,
-
-  //允许使用善不完全支持的es6语法
   "esnext": true,
-
-  //允许省略分号
   "asi": false,
-
-  //允许代码缩进
   "indent": true,
-
-  //预定义全局变量 document，navigator，FileReader 等
   "browser": true,
-
-  //定义用于调试的全局变量：console，alert
   "devel": true,
-
-  //定义全局变量
   "node": true,
   "jquery": true
 }

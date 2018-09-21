@@ -18,7 +18,6 @@
 (function (win) {
   let kxui = win.kxui;
   let zIndexNum = 199202;
-  let domain = kxui.info().domain;
   let offset = ['top', 'right', 'bottom', 'left', 'center'];
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object');
 
@@ -32,26 +31,11 @@
     this.parameter = parameter;
     this.alone = this.parameter.alone;
     this.timer = null;
-    this.init();
+    this.docInfo = (this.parameter.topPage ? kxui.info().document.t : kxui.info().document.c);
+    this.skeleton();
   };
 
   Skeleton.prototype = {
-
-    /**
-     * 初始化判断是否存在method
-     * @method init
-     * @for Skeleton
-     */
-    init: function () {
-      let that = this;
-      if (!kxui.method) {
-        kxui.use('method', function () {
-          that.skeleton();
-        });
-      } else {
-        that.skeleton();
-      }
-    },
 
     /**
      * 创建弹窗骨架
@@ -83,7 +67,7 @@
 
       // 是否显示滚动条
       if (this.parameter.scrollBar) {
-        kxui.method.addClass(query('body', this.topPage), 'kxui-noScrollBar');
+        kxui.method.addClass(kxui.method.getDom('body', this.topPage), 'kxui-noScrollBar');
       }
       this.assemble();
     },
@@ -126,19 +110,19 @@
           let loadingStyle = {
             0: function () {
               for (let i = 0; i < 5; i++) {
-                that.bulk.appendChild(create('div'));
+                that.bulk.appendChild(kxui.method.addDom('<div></div>'));
                 kxui.method.addClass(that.bulk, 'kxui-Popup-loading-0');
               }
             },
             1: function () {
               for (let i = 0; i < 3; i++) {
-                that.bulk.appendChild(create('div'));
+                that.bulk.appendChild(kxui.method.addDom('<div></div>'));
                 kxui.method.addClass(that.bulk, 'kxui-Popup-loading-1');
               }
             },
             2: function () {
               for (let i = 0; i < 8; i++) {
-                that.bulk.appendChild(create('div'));
+                that.bulk.appendChild(kxui.method.addDom('<div></div>'));
                 kxui.method.addClass(that.bulk, 'kxui-Popup-loading-2');
               }
             }
@@ -250,7 +234,7 @@
 
       // 小贴士独有自定义样式结构
       else if (that.parameter.type === 4) {
-        ((node.offsetWidth + node.offsetLeft) + dom.offsetWidth + 30) > docSize().docWidth ? dom.childNodes[0].style.borderLeft = '8px solid ' + that.parameter.diy.background : dom.childNodes[0].style.borderRight = '8px solid ' + that.parameter.diy.background
+        ((node.offsetWidth + node.offsetLeft) + dom.offsetWidth + 30) > kxui.info().size.cDocW ? dom.childNodes[0].style.borderLeft = '8px solid ' + that.parameter.diy.background : dom.childNodes[0].style.borderRight = '8px solid ' + that.parameter.diy.background;
         dom.childNodes[1].style.cssText = 'color:' + that.parameter.diy.color + ';background:' + that.parameter.diy.background;
       }
 
@@ -278,12 +262,12 @@
      */
     into: function (dom, node) {
       let that = this;
-      query('body', that.parameter.topPage).appendChild(dom);
-      if (!query('.kxui-Popup-move', that.parameter.topPage)) {
-        query('body', that.parameter.topPage).appendChild(that.move);
+      kxui.method.getDom('body', that.parameter.topPage).appendChild(dom);
+      if (!kxui.method.getDom('.kxui-Popup-move', that.parameter.topPage)) {
+        kxui.method.getDom('body', that.parameter.topPage).appendChild(that.move);
       }
-      if (!query('.kxui-Popup-shade', that.parameter.topPage) && that.parameter.shade) {
-        query('body', that.parameter.topPage).appendChild(that.shade);
+      if (!kxui.method.getDom('.kxui-Popup-shade', that.parameter.topPage) && that.parameter.shade) {
+        kxui.method.getDom('body', that.parameter.topPage).appendChild(that.shade);
       }
       that.last(dom, node);
     },
@@ -320,7 +304,7 @@
           if (that.parameter.offset === 'top') {
             dom.style.top = '10px';
           } else if (that.parameter.offset === 'center' || that.parameter.offset === 'left' | that.parameter.offset === 'right') {
-            let top = that.parameter.topPage ? docSize().topHeight : (docSize().docHeight / 2) - (dom.offsetHeight / 2) - 50;
+            let top = that.parameter.topPage ? kxui.info().size.tDocH : (kxui.info().size.cDocH / 2) - (dom.offsetHeight / 2) - 50;
             dom.style.top = ((top >= 0) ? top : 0) + 'px';
           } else if (that.parameter.offset === 'bottom') {
             dom.style.bottom = '10px';
@@ -331,7 +315,7 @@
           if (that.parameter.offset === 'left') {
             dom.style.left = '10px';
           } else if (that.parameter.offset === 'center' || that.parameter.offset === 'top' || that.parameter.offset === 'bottom') {
-            let left = that.parameter.topPage ? docSize().topWidth : (docSize().docWidth / 2) - (dom.offsetWidth / 2);
+            let left = that.parameter.topPage ? kxui.info().size.tDocW : (kxui.info().size.cDocW / 2) - (dom.offsetWidth / 2);
             dom.style.left = left + 'px';
           } else if (that.parameter.offset === 'right') {
             dom.style.right = '10px';
@@ -350,7 +334,7 @@
       // 除小贴士外的其他所有弹层进入
       else {
         dom.style.top = node.offsetTop + 'px';
-        if (node.offsetWidth + node.offsetLeft + dom.offsetWidth + 30 > docSize().docWidth) {
+        if (node.offsetWidth + node.offsetLeft + dom.offsetWidth + 30 > kxui.info().size.cDocW) {
           dom.style.left = (node.offsetLeft - dom.offsetWidth) + 'px';
           kxui.method.addClass(dom, 'kxui-Popup-tips-right');
           kxui.method.addClass(dom.childNodes[0], 'kxui-Popup-tips-right-arrow');
@@ -363,7 +347,7 @@
     },
 
     /**
-     * 事件处理
+     * 事件委托
      * @method event
      * @for last
      * @param {object} dom 操作对象
@@ -483,16 +467,16 @@
        * @method dowm
        * @for frameOper
        */
-      function dowm() {
+      function dowm(e) {
         zIndex(that.bulk);
         frameOperThis = kxui.method.hasClass(this, 'kxui-Popup-resize');
         kxui.method.delClass(that.bulk, 'kxui-Popup-show');
         kxui.method.delClass(that.bulk, 'kxui-Popup-animation');
-        that.dowmX = kxui.method.mouse().x;
-        that.dowmY = kxui.method.mouse().y;
-        dynamicDoc(that.parameter.topPage).addEventListener('mousemove', move);
-        dynamicDoc(that.parameter.topPage).addEventListener('mouseup', up);
-        kxui.method.addClass(query('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation');
+        that.dowmX = kxui.method.mouse(e).x;
+        that.dowmY = kxui.method.mouse(e).y;
+        that.docInfo.addEventListener('mousemove', move);
+        that.docInfo.addEventListener('mouseup', up);
+        kxui.method.addClass(kxui.method.getDom('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation');
       }
 
       /**
@@ -500,10 +484,10 @@
        * @method move
        * @for dowm
        */
-      function move() {
+      function move(e) {
         if (frameOperThis) {
-          that.moveWidth = that.saveWidth + (kxui.method.mouse().x - that.dowmX);
-          that.moveHeight = that.saveHeight + (kxui.method.mouse().y - that.dowmY);
+          that.moveWidth = that.saveWidth + (kxui.method.mouse(e).x - that.dowmX);
+          that.moveHeight = that.saveHeight + (kxui.method.mouse(e).y - that.dowmY);
           if (that.moveWidth <= 260) {
             that.moveWidth = 260;
           }
@@ -513,19 +497,19 @@
           that.bulk.style.width = that.moveWidth + 'px';
           that.bulk.style.height = that.moveHeight + 'px';
         } else {
-          that.moveX = kxui.method.mouse().x - that.dowmX + that.saveX;
-          that.moveY = kxui.method.mouse().y - that.dowmY + that.saveY;
+          that.moveX = kxui.method.mouse(e).x - that.dowmX + that.saveX;
+          that.moveY = kxui.method.mouse(e).y - that.dowmY + that.saveY;
           if (that.moveX <= 0) {
             that.moveX = 0;
           }
           if (that.moveY <= 0) {
             that.moveY = 0;
           }
-          if (that.moveX >= (that.parameter.topPage ? docSize().topWidth : docSize().docWidth) - that.bulk.offsetWidth) {
-            that.moveX = (that.parameter.topPage ? docSize().topWidth : docSize().docWidth) - that.bulk.offsetWidth;
+          if (that.moveX >= (that.parameter.topPage ? kxui.info().size.tDocW : kxui.info().size.cDocW) - that.bulk.offsetWidth) {
+            that.moveX = (that.parameter.topPage ? kxui.info().size.tDocW : kxui.info().size.cDocW) - that.bulk.offsetWidth;
           }
-          if (that.moveY >= (that.parameter.topPage ? docSize().topHeight : docSize().docHeight) - that.bulk.offsetHeight) {
-            that.moveY = (that.parameter.topPage ? docSize().topHeight : docSize().docHeight) - that.bulk.offsetHeight;
+          if (that.moveY >= (that.parameter.topPage ? kxui.info().size.tDocH : kxui.info().size.cDocH) - that.bulk.offsetHeight) {
+            that.moveY = (that.parameter.topPage ? kxui.info().size.tDocH : kxui.info().size.cDocH) - that.bulk.offsetHeight;
           }
           that.bulk.style.left = that.moveX + 'px';
           that.bulk.style.top = that.moveY + 'px';
@@ -544,9 +528,9 @@
         that.saveY = that.bulk.offsetTop;
         that.saveWidth = that.bulk.offsetWidth;
         that.saveHeight = that.bulk.offsetHeight;
-        dynamicDoc(that.parameter.topPage).removeEventListener('mousemove', move, false);
-        dynamicDoc(that.parameter.topPage).removeEventListener('mouseup', up, false);
-        kxui.method.delClass(query('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation');
+        that.docInfo.removeEventListener('mousemove', move, false);
+        that.docInfo.removeEventListener('mouseup', up, false);
+        kxui.method.delClass(kxui.method.getDom('.kxui-Popup-move', that.parameter.topPage), 'kxui-Popup-move-operation');
       }
     }
   };
@@ -581,8 +565,8 @@
    */
   function closeAnimation(dom, topPage, shade, type) {
     let shadeMatching;
-    let mask = query('.kxui-Popup-shade', topPage);
-    let remind = query('.kxui-Popup-remind', topPage);
+    let mask = kxui.method.getDom('.kxui-Popup-shade', topPage);
+    let remind = kxui.method.getDom('.kxui-Popup-remind', topPage);
 
     // 针对remind执行之前存在销毁处理
     if (remind && type === 3) {
@@ -601,16 +585,16 @@
     }
 
     // 针对滚动条隐藏进行释放
-    if (kxui.method.hasClass(query('body', topPage), 'kxui-noScrollBar')) {
-      kxui.method.delClass(query('body', topPage), 'kxui-noScrollBar');
+    if (kxui.method.hasClass(kxui.method.getDom('body', topPage), 'kxui-noScrollBar')) {
+      kxui.method.delClass(kxui.method.getDom('body', topPage), 'kxui-noScrollBar');
     }
     dom.style.opacity = '0';
     kxui.method.addClass(dom, 'kxui-Popup-hide');
     setTimeout(function () {
       try {
-        query('body', topPage).removeChild(dom);
+        kxui.method.getDom('body', topPage).removeChild(dom);
         if (shade && shadeMatching) {
-          query('body', topPage).removeChild(mask);
+          kxui.method.getDom('body', topPage).removeChild(mask);
         }
       } catch (error) {}
     }, 250);
@@ -626,90 +610,6 @@
     zIndexNum++;
     dom.style.zIndex = zIndexNum;
   }
-
-  /**
-   * 获取当前页面/iframe可视范围的宽高
-   * @method docSize
-   * @for styleStatus/last/frameOper
-   * @return {object} 返回当前页面宽高以及父级页面宽高
-   */
-  function docSize() {
-    let docWidth = dynamicDoc(false).documentElement.clientWidth;
-    let docHeight = dynamicDoc(false).documentElement.clientHeight;
-    let topWidth = dynamicDoc(true).documentElement.clientWidth;
-    let topHeight = dynamicDoc(true).documentElement.clientHeight;
-    return {
-      'docWidth': docWidth,
-      'docHeight': docHeight,
-      'topWidth': topWidth,
-      'topHeight': topHeight
-    };
-  }
-
-  /**
-   * 层级document对象
-   * @method dynamicDoc
-   * @for frameOper/docSize/create/query/closeAll
-   * @param {boolean} topPage 是否使用顶层
-   * @return {object} 返回层级document对象
-   */
-  function dynamicDoc(topPage) {
-    return topPage ? win.top.document : document;
-  }
-
-  /**
-   * 创建层级节点
-   * @method create
-   * @for assemble/style
-   * @param {string} dom 创建的节点
-   * @param {boolean} topPage 是否使用顶层
-   * @return {object} 返回层级节点对象
-   */
-  function create(dom, topPage) {
-    return dynamicDoc(topPage).createElement(dom);
-  }
-
-  /**
-   * 获取层级单独节点
-   * @method query
-   * @for skeleton/into/frameOper/closeAnimation/style
-   * @param {string} dom 获取的节点
-   * @param {boolean} topPage 是否使用顶层
-   * @return {object} 返回层级节点对象
-   */
-  function query(dom, topPage) {
-    return dynamicDoc(topPage).querySelector(dom);
-  }
-
-  /**
-   * 获取层级匹配节点
-   * @method query
-   * @for tips/closeAll
-   * @param {string} dom 获取的节点
-   * @param {boolean} topPage 是否使用顶层
-   * @return {object} 返回层级节点对象
-   */
-  function queryAll(dom, topPage) {
-    return dynamicDoc(topPage).querySelectorAll(dom);
-  }
-
-  /**
-   * 获取popup所需的样式文件
-   * @method style
-   * @for popup
-   */
-  (function style() {
-    if (isExports) {
-      require('./../css/popup.css');
-    } else {
-      let link = create('link');
-      link.media = 'all';
-      link.type = 'text/css';
-      link.rel = 'stylesheet';
-      link.href = domain + 'css/popup.css';
-      query('head').appendChild(link);
-    }
-  })();
 
   /**
    * 方法的主入口
@@ -804,7 +704,7 @@
     let doms = null;
     let parameters = (typeof parameter === 'object') ? parameter : {};
     if (typeof dom === 'string') {
-      doms = queryAll(dom);
+      doms = kxui.method.getDom(dom);
     } else if (typeof dom.length === 'number') {
       doms = dom;
     } else {
@@ -869,7 +769,7 @@
      * @param {number/string} time 自动关闭时间
      * @param {function} timeCall 自动关闭回调
      * @param {object} diy 自定义颜色
-     * @param {string} index 当前窗口唯一值
+     * @param {number} index 当前窗口唯一值
      * @param {object} alone 独有参数
      */
     this.skeleton = new Skeleton({
@@ -928,8 +828,10 @@
           break;
       }
     }
-    let isObject = (typeof index === 'object') ? false : true;
-    return this.closeAll(index, isObject);
+
+    // 是否使用index唯一值进行关闭
+    let separate = ((typeof index === 'object') ? true : false);
+    return this.closeAll(index, separate);
   };
 
   /**
@@ -940,21 +842,27 @@
    * @param {boolean} separate 是否使用index唯一值进行关闭
    */
   Popup.fn.closeAll = function (index, separate) {
-    let that = this;
-    that.cla = (typeof index === 'object') ? index : ['kxui-Popup-alert', 'kxui-Popup-ask', 'kxui-Popup-loading', 'kxui-Popup-loading-noShade', 'kxui-Popup-remind', 'kxui-Popup-tips', 'kxui-Popup-win'];
-    for (let c = 0; c < that.cla.length; c++) {
-      let domTrue = queryAll('.' + that.cla[c], true);
-      let domFalse = queryAll('.' + that.cla[c], false);
-      if (dynamicDoc(true) === dynamicDoc(false)) {
-        for (let d = 0; d < domFalse.length; d++) {
-          closeDom(domFalse[d], false);
+    let cla = separate ? index : ['kxui-Popup-alert', 'kxui-Popup-ask', 'kxui-Popup-loading', 'kxui-Popup-loading-noShade', 'kxui-Popup-remind', 'kxui-Popup-tips', 'kxui-Popup-win'];
+    for (let c = 0; c < cla.length; c++) {
+      let tDom = kxui.method.getDom('.' + cla[c], true);
+      let cDom = kxui.method.getDom('.' + cla[c], false);
+      if (tDom && tDom.length || cDom && cDom.length) {
+        if (tDom) {
+          for (let d = 0; d < tDom.length; d++) {
+            closeDom(tDom[d], true);
+          }
         }
-      } else {
-        for (let f = 0; f < domFalse.length; f++) {
-          closeDom(domFalse[f], false);
+        if (cDom) {
+          for (let d = 0; d < cDom.length; d++) {
+            closeDom(cDom[d], false);
+          }
         }
-        for (let t = 0; t < domTrue.length; t++) {
-          closeDom(domTrue[t], true);
+      } else if (tDom || cDom) {
+        if (tDom) {
+          closeDom(cDom, true);
+        }
+        if (cDom) {
+          closeDom(cDom, false);
         }
       }
     }
@@ -967,14 +875,14 @@
      * @param {boolean} topPage 是否存在嵌套
      */
     function closeDom(dom, topPage) {
+      clearTimer(dom);
       if (separate) {
+        closeAnimation(dom, topPage, true, null);
+      } else {
         if (String(kxui.method.atrDom(dom, 'index')) === String(index)) {
           closeAnimation(dom, topPage, true, null);
         }
-      } else {
-        closeAnimation(dom, topPage, true, null);
       }
-      clearTimer(dom);
     }
 
     /**
