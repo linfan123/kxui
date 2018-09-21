@@ -4,7 +4,7 @@
  * @for kxui
  * @for method
  *
- * @method load 构造函数
+ * @method binding 轮播绑定
  */
 
 (function (win) {
