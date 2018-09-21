@@ -4,7 +4,7 @@
  * @for kxui
  * @for method/carousel
  *
- * @method enlarge 使用懒加载
+ * @method enlarge 图片放大方案
  */
 
 (function (win) {
