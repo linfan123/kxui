@@ -851,8 +851,7 @@
           for (let d = 0; d < tDom.length; d++) {
             closeDom(tDom[d], true);
           }
-        }
-        if (cDom) {
+        } else if (cDom) {
           for (let d = 0; d < cDom.length; d++) {
             closeDom(cDom[d], false);
           }
@@ -860,8 +859,7 @@
       } else if (tDom || cDom) {
         if (tDom) {
           closeDom(cDom, true);
-        }
-        if (cDom) {
+        } else if (cDom) {
           closeDom(cDom, false);
         }
       }
@@ -880,6 +878,8 @@
         closeAnimation(dom, topPage, true, null);
       } else {
         if (String(kxui.method.atrDom(dom, 'index')) === String(index)) {
+          closeAnimation(dom, topPage, true, null);
+        } else if (!index) {
           closeAnimation(dom, topPage, true, null);
         }
       }

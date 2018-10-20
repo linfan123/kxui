@@ -1,6 +1,6 @@
 /**
  * @method kxui
- * @version 1.3.0
+ * @version 1.3.1
  *
  * @method use 加载模块
  * @method info 信息查询
@@ -270,8 +270,8 @@
    * 开发常用操作方法，可根据需要调用不同的模块，提高开发效率
    */
   let Kxui = function () {
-    this.version = '1.3.0';
-    this.updateTime = '2018.09.21';
+    this.version = '1.3.1';
+    this.updateTime = '2018.10.20';
   };
 
   /**

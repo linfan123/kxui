@@ -107,12 +107,14 @@
       background: $carouselArrowColor;
       margin-left: 5px;
       cursor: pointer;
+      transition: all .3s;
     }
 
     >li:nth-child(1) {
       margin-left: 0;
     }
 
+    >li:hover,
     .kxui-carousel-indicatorSpot-this {
       background: $white;
     }

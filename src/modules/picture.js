@@ -38,6 +38,7 @@
       this.imgHeight = (this.sizeHeight ? this.sizeHeight : ((document.documentElement.clientHeight || document.body.clientHeight) - 120));
       this.id = Math.ceil(Math.random() * 10);
       this.agg = this.parameter.agg;
+      this.closeTime = null;
 
       // carousel模块参数
       this.index = this.carousel.index;
@@ -97,12 +98,12 @@
       kxui.carousel.binding({
         el: '#kxui-picture-' + that.id,
         index: that.index,
-        arrow: this.arrow,
-        indicator: this.indicator,
-        time: this.time,
-        autoplay: this.autoplay,
-        anim: this.anim,
-        callback: this.callback
+        arrow: that.arrow,
+        indicator: that.indicator,
+        time: that.time,
+        autoplay: that.autoplay,
+        anim: that.anim,
+        callback: that.callback
       });
       that.showAnimation();
       that.event();
@@ -124,11 +125,10 @@
      */
     event: function () {
       let that = this;
-
-      // 关闭放大
       that.mask.onclick = function () {
         that.mask.style.opacity = '0';
-        setTimeout(function () {
+        clearTimeout(that.closeTime)
+        that.closeTime = setTimeout(function () {
           kxui.method.getDom('.kxui-picture-body').removeChild(that.mask);
           kxui.method.delClass(kxui.method.getDom('html', true), 'kxui-picture-html');
           kxui.method.delClass(kxui.method.getDom('body', true), 'kxui-picture-body');
