@@ -127,7 +127,7 @@
       let that = this;
       that.mask.onclick = function () {
         that.mask.style.opacity = '0';
-        clearTimeout(that.closeTime)
+        clearTimeout(that.closeTime);
         that.closeTime = setTimeout(function () {
           kxui.method.getDom('.kxui-picture-body').removeChild(that.mask);
           kxui.method.delClass(kxui.method.getDom('html', true), 'kxui-picture-html');
