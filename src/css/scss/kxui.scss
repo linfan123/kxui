@@ -141,6 +141,34 @@
 
 /* carousel }}}}}} */
 
+/* lazy {{{{{{ */
+
+.kxui-drop-html,
+.kxui-drop-body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  position: relative;
+
+  .kxui-drop{
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    .kxui-drop-children{
+      width: 100%;
+      height: auto;
+      overflow-x: hidden;
+    }
+  }
+}
+
+/* lazy }}}}}} */
+
 /* picture {{{{{{ */
 
 .kxui-picture-html,

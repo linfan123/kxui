@@ -1,13 +1,13 @@
 /**
- * @method kxui
- * @version 1.3.1
+ * @method kxui 模块管理方法
+ * @author Lkx
  *
  * @method use 加载模块
  * @method info 信息查询
  */
 
 (function (win) {
-  let stockMod = ['lazy', 'method', 'popup', 'carousel', 'picture'];
+  let stockMod = ['lazy', 'method', 'popup', 'carousel', 'picture', 'verification'];
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object');
   let device = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? 'mobile' : 'pc';
 
@@ -270,8 +270,8 @@
    * 开发常用操作方法，可根据需要调用不同的模块，提高开发效率
    */
   let Kxui = function () {
-    this.version = '1.3.1';
-    this.updateTime = '2018.10.20';
+    this.version = '1.4.0';
+    this.updateTime = '2018.0.0';
   };
 
   /**

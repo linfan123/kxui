@@ -1,5 +1,5 @@
 /**
- * @method Lazy 图片加载方案
+ * @method Lazy 懒加载解决方案
  * @author Lkx
  * @for kxui
  * @for method
@@ -16,9 +16,11 @@
    * @method Lazy
    * @for Lazy
    * @param {object} parameter 配置参数
+   * @param {string} type 功能类型
    */
-  let Logic = function (parameter) {
+  let Logic = function (parameter, type) {
     this.parameter = (typeof parameter === 'object') ? parameter : {};
+    this.type = type;
     this.variable();
   };
 
@@ -27,15 +29,57 @@
     /**
      * 变量生成
      * @method variable
-     * @for init
+     * @for Logic
      */
     variable: function () {
-      this.threshold = Number(this.parameter.threshold) ? Number(this.parameter.threshold) : 0;
-      this.externalContainer = this.parameter.container ? kxui.method.getDom(this.parameter.container) : '';
-      if (this.parameter.container && !this.externalContainer) {
-        warn(0, this.parameter.container);
+      switch (this.type) {
+        case 0:
+
+          // 图片懒加载
+          this.threshold = Number(this.parameter.threshold) ? Number(this.parameter.threshold) : 0;
+          this.externalContainer = this.parameter.container ? kxui.method.getDom(this.parameter.container) : '';
+          if (this.parameter.container && !this.externalContainer) {
+            throws(0, this.parameter.container);
+          } else {
+            this.container();
+          }
+          break;
+        case 1:
+
+          // 下拉加载
+          this.el = this.parameter.el;
+          this.call = (typeof this.parameter.call === 'function') ? this.parameter.call : function () {};
+          this.dropSwitch = true;
+          if (this.el) {
+            this.el = kxui.method.getDom(this.el);
+            if (this.el || (this.el.length && this.el.length === 1)) {
+              this.elChildren = kxui.method.sonDom(this.el);
+              if (this.elChildren && this.elChildren.length === 1) {
+                this.dynamicStyle();
+              } else {
+                throws(4, this.parameter.el, true);
+              }
+            } else {
+              throws(3, this.parameter.el, true);
+            }
+          } else {
+            throws(2);
+          }
+          break;
       }
-      this.container();
+    },
+
+    /**
+     * 动态样式赋值
+     * @method dynamicStyle
+     * @for variable
+     */
+    dynamicStyle: function () {
+      kxui.method.addClass(this.el, 'kxui-drop');
+      kxui.method.addClass(this.elChildren[0], 'kxui-drop-children');
+      kxui.method.addClass(kxui.method.getDom('html'), 'kxui-drop-html');
+      kxui.method.addClass(kxui.method.getDom('body'), 'kxui-drop-body');
+      this.event();
     },
 
     /**
@@ -44,11 +88,11 @@
      * @for variable
      */
     container: function () {
-      this.img = kxui.method.getDom('img');
+      this.img = this.externalContainer ? kxui.method.sonAllDom(this.externalContainer, 'img') : kxui.method.getDom('img');
       if (this.img || this.img.length > 0) {
         this.static();
       } else {
-        warn(1);
+        throws(1);
       }
     },
 
@@ -58,6 +102,7 @@
      * @for container
      */
     static: function () {
+      let that = this
       let base64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
       if (this.img.length) {
         for (let i = 0; i < this.img.length; i++) {
@@ -66,27 +111,7 @@
       } else {
         kxui.method.atrDom(this.img, 'src', base64);
       }
-      this.event();
-      this.branch();
-    },
-
-    /**
-     * 事件绑定
-     * @method event
-     * @for static
-     */
-    event: function () {
-      let that = this;
-      let dom = this.externalContainer || win;
-
-      /**
-       * 滚动条监听事件
-       * @method onscroll
-       * @for event
-       */
-      dom.onscroll = function () {
-        that.branch();
-      };
+      that.branch();
     },
 
     /**
@@ -103,6 +128,43 @@
         }
       } else {
         this.exhibition(this.img, scrollTop, screenHeight);
+      }
+      this.event();
+    },
+
+    /**
+     * 事件绑定
+     * @method event
+     * @for dynamicStyle/branch
+     */
+    event: function () {
+      let that = this;
+      switch (this.type) {
+        case 0:
+
+          // 图片懒加载
+          let dom = that.externalContainer || win;
+
+          /**
+           * 滚动条监听事件
+           * @method onscroll
+           * @for event
+           */
+          dom.onscroll = function () {
+            that.branch();
+          };
+          break;
+        case 1:
+
+          /**
+           * 滚动条监听事件
+           * @method onscroll
+           * @for event
+           */
+          that.el.onscroll = function () {
+            that.listening();
+          };
+          break;
       }
     },
 
@@ -123,32 +185,56 @@
           }
         }
       }
+    },
+
+    /**
+     * 图片显示
+     * @method listening
+     * @for event
+     */
+    listening: function () {
+      this.elTop = this.el.scrollTop;
+      this.elHeight = this.el.offsetHeight;
+      this.elChildrenHeight = this.elChildren[0].offsetHeight;
+      if (((this.elTop + this.elHeight) >= this.elChildrenHeight) && this.dropSwitch) {
+        this.dropSwitch = false;
+        this.call();
+      } else if ((this.elTop + this.elHeight) < this.elChildrenHeight) {
+        this.dropSwitch = true;
+      }
     }
   };
 
   /**
    * 控制台错误/警告
-   * @method warn
+   * @method throws
    * @for container
    * @param {number} num 输入警告文案编号
    * @param {string} dome 发生错误的节点
+   * @param {boolean} isError 是否使用error进行抛出
    */
-  function warn(num, dome) {
+  function throws(num, dome, isError) {
     let nums = {
       0: '容器 {' + dome + '} 不存在',
-      1: '当前页面未发现 <img> 标签'
+      1: '当前页面未发现 <img> 标签',
+      2: '字段 {el} 不能为空',
+      3: '无法找到 {' + dome + '} 节点或存在多个 {' + dome + '} 节点',
+      4: '节点 {' + dome + '} 下不存在子节点或存在多个子节点'
     };
-    console.warn('kxui-' + kxui.version + '： ' + nums[num] + '。');
+    if (isError) {
+      console.error('kxui-' + kxui.version + '： 模块 {lazy} ' + nums[num] + '。');
+    } else {
+      console.warn('kxui-' + kxui.version + '： 模块 {lazy} ' + nums[num] + '。');
+    }
   }
 
   /**
-   * 方法的主入口
+   * 懒加载解决方案
    * @method Lazy
-   * 懒加载入口构造函数
    */
   let Lazy = function () {
     this.name = 'Lazy';
-    this.info = 'Picture loading scheme';
+    this.info = 'Lazy load solution';
   };
 
   Lazy.fn = Lazy.prototype;
@@ -160,7 +246,18 @@
    * @param {object} parameter 配置参数
    */
   Lazy.fn.load = function (parameter) {
-    this.logic = new Logic(parameter);
+    this.logic = new Logic(parameter, 0);
+    delete this.logic;
+  };
+
+  /**
+   * 下拉加载
+   * @method drop
+   * @for Lazy
+   * @param {object} parameter 配置参数
+   */
+  Lazy.fn.drop = function (parameter) {
+    this.logic = new Logic(parameter, 1);
     delete this.logic;
   };
 

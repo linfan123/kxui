@@ -22,7 +22,7 @@
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object');
 
   /**
-   * 逻辑入口
+   * 弹出层骨骼
    * @method Skeleton
    * @for Popup
    * @param {object} parameter 配置参数
@@ -612,9 +612,8 @@
   }
 
   /**
-   * 方法的主入口
-   * @method Popup
    * 弹出层解决方案
+   * @method Popup
    */
   let Popup = function () {
     this.name = 'Popup';

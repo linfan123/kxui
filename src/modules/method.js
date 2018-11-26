@@ -21,11 +21,13 @@
  * @method getHis 获取历史搜索信息
  * @method delHis 删除历史搜索信息
  * @method dateGet 获取当前时间戳
+ * @method dateAppoint 获取指定时间戳
  * @method dateTurn 时间戳转换日期
  * @method dateChina 时间戳转换中文时间
  * @method getDom 获取节点(转为原生dom节点)
  * @method addDom 增加节点
  * @method atrDom 替换或创建自定义属性
+ * @method sonDom 获取子节点
  * @method random 生成指定长度的随机字符串
  * @method mouse 获取鼠标/手势位置
  * @method accAdd 防误差加法运算
@@ -42,9 +44,8 @@
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object');
 
   /**
-   * 方法的主入口
+   * 常用开发解决方案
    * @method Method
-   * 开发常用操作方法，可根据需要调用不同的方法
    */
   let Method = function () {
     this.name = 'Method';
@@ -80,6 +81,7 @@
   Method.fn.repStr = function (str, app, rep) {
     rep = rep || '';
     if (str && (app || app === 0)) {
+      str = String(str);
       return String(str).replace(new RegExp(app, 'g'), rep);
     }
     warn(0, 'repStr', (str ? 'app' : 'str'));
@@ -119,6 +121,7 @@
    */
   Method.fn.insStr = function (str, after, app) {
     if (str && after && app) {
+      str = String(str);
       let newStr = str.split(after);
       if (typeof after === 'number') {
         return (str.slice(0, after) + app + str.slice(after));
@@ -142,6 +145,7 @@
    */
   Method.fn.queStr = function (str, app, pos) {
     if (str && app) {
+      str = String(str);
       let position = (typeof pos === 'boolean') ? pos : true;
       let result = (position ? str.match(new RegExp(app + '(\\S*)')) : str.match(new RegExp('(\\S*)' + app)));
       return ((!result || result.length < 1) ? '' : result[1]);
@@ -160,6 +164,7 @@
    */
   Method.fn.midStr = function (str, fro, aft) {
     if (str && fro && aft) {
+      str = String(str);
       let result = str.match(new RegExp(fro + '(\\S*)' + aft));
       return ((!result || result.length < 1) ? '' : result[1]);
     }
@@ -347,7 +352,7 @@
   Method.fn.setHis = function (data, num) {
     if (data) {
       let bars = parseInt(num) || 6;
-      let history = this.getCache('(method.history)', 'noWarn');
+      let history = this.getCache('history', 'noWarn');
       let historyArray = [];
       if (history && history.length > 0) {
         historyArray = JSON.parse(history);
@@ -371,7 +376,7 @@
       } else {
         historyArray[0] = data;
       }
-      this.setCache('(method.history)', JSON.stringify(historyArray));
+      this.setCache('history', JSON.stringify(historyArray));
       return historyArray;
     }
     warn(0, 'setHis', 'data');
@@ -384,7 +389,7 @@
    * @return {boolean} 返回获取动作布尔值
    */
   Method.fn.getHis = function () {
-    let history = this.getCache('(method.history)', 'noWarn');
+    let history = this.getCache('history', 'noWarn');
     if (history) {
       return JSON.parse(history);
     }
@@ -398,7 +403,7 @@
    * @return {boolean} 返回获取动作布尔值
    */
   Method.fn.delHis = function () {
-    return this.delCache('(method.history)');
+    return this.delCache('history');
   };
 
   /**
@@ -412,6 +417,27 @@
     digit = (typeof digit === 'boolean') ? digit : true;
     let result = (digit ? Date.parse(new Date()) : Number(Date.parse(new Date()).toString().substr(0, 10)));
     return result;
+  };
+
+  /**
+   * 获取指定时间戳
+   * @method dateAppoint
+   * @for Method
+   * @param {string} time 指定日期，格式例：xxxx-xx-xx xx:xx
+   * @return {number} 指定时间戳
+   */
+  Method.fn.dateAppoint = function (time) {
+    if (time) {
+      let date = new Date();
+      date.setFullYear(time.substring(0, 4));
+      date.setMonth(time.substring(5, 7) - 1);
+      date.setDate(time.substring(8, 10));
+      date.setHours(time.substring(11, 13));
+      date.setMinutes(time.substring(14, 16));
+      date.setSeconds(time.substring(17, 19));
+      return Date.parse(date) / 1000;
+    }
+    warn(0, 'dateAppoint', 'time');
   };
 
   /**
@@ -444,7 +470,7 @@
    * @method dateChina
    * @for Method
    * @param {string/number} tamp 需要转换的时间戳
-   * @return {string} 返回转换后的中文日期
+   * @return {string} 返回转换后的中文日期，显示方式：刚刚 x分钟前 x小数前 昨天 前天 x天前 xxxx-xx-xx xx:xx
    */
   Method.fn.dateChina = function (tamp) {
     if (tamp) {
@@ -555,6 +581,64 @@
       return false;
     }
     warn(0, 'atrDom', (dom ? 'key' : 'dom'));
+  };
+
+  /**
+   * 获取子节点
+   * @method sonDom
+   * @for Method/sonAllDom
+   * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
+   * @return {object} 节点对象
+   */
+  Method.fn.sonDom = function (dom) {
+    if (dom) {
+      dom = this.getDom(dom);
+      let child = dom.childNodes;
+      if (child) {
+        let postChild = [];
+        for (var i = 0; i < child.length; i++) {
+          if (!(child[i].nodeType === 3 && child[i].nodeName === '#text' && !/\S/.test(child[i].nodeValue))) {
+            postChild.push(child[i]);
+          }
+        }
+        return postChild;
+      } else {
+        return false;
+      }
+    }
+    warn(0, 'sonDom', 'dom');
+  };
+
+  /**
+   * 获取所有子节点
+   * @method sonDom
+   * @for Method
+   * @param {string} father 父节点名称/class值/id值/属性名称/原生dom对象/jquery对象
+   * @param {string} dom 子节点名称/class值/id值
+   * @return {object} 节点对象
+   */
+  Method.fn.sonAllDom = function (father, dom) {
+    let that = this;
+    let result = [];
+    if (father && dom) {
+      father = that.getDom(father);
+      findRecursion(that.sonDom(father));
+      return result;
+    }
+
+    function findRecursion(fathers) {
+      for (var i = 0; i < fathers.length; i++) {
+        if ('#' + fathers[i].id === dom || '.' + fathers[i].className === dom || fathers[i].tagName === dom.toUpperCase()) {
+          result.push(fathers[i]);
+          if (that.sonDom(fathers[i]).length > 0) {
+            findRecursion(that.sonDom(fathers[i]));
+          }
+        } else if (that.sonDom(fathers[i]).length > 0) {
+          findRecursion(that.sonDom(fathers[i]));
+        }
+      }
+    }
+    warn(0, 'sonAllDom', (father ? 'father' : 'dom'));
   };
 
   /**

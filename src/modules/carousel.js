@@ -403,14 +403,14 @@
    * @method throws
    * @for Load
    * @param {number} num 输入警告文案编号
-   * @param {string/boolean} obj 发生错误的对象名称
+   * @param {string/boolean} dome 发生错误的对象名称
    * @param {boolean} isError 是否使用error进行抛出
    */
-  function throws(num, obj, isError) {
-    isError = (typeof isError === 'boolean') ? isError : (typeof obj === 'boolean') ? obj : false;
+  function throws(num, dome, isError) {
+    isError = (typeof isError === 'boolean') ? isError : (typeof dome === 'boolean') ? dome : false;
     let nums = {
       0: '字段 {el} 不能为空',
-      1: '无法找到 {' + obj + '} 节点'
+      1: '无法找到 {' + dome + '} 节点'
     };
     if (isError) {
       console.error('kxui-' + kxui.version + '： 模块 {carousel} ' + nums[num] + '。');
@@ -420,9 +420,8 @@
   }
 
   /**
-   * 方法的主入口
-   * @method Carousel
    * 轮播解决方案
+   * @method Carousel
    */
   let Carousel = function () {
     this.name = 'Carousel';

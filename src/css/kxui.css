@@ -1,9 +1,9 @@
 /**
  * method kxui
- * version 1.3.1
+ * version 1.4.0
  * author Lkx
  * create time 2018.05.31
- * update time 2018.10.20
+ * update time 2018.00.00
  * website http://www.kxui.org
  */
 
@@ -111,6 +111,29 @@
   right: 12px; }
 
 /* carousel }}}}}} */
+/* lazy {{{{{{ */
+.kxui-drop-html,
+.kxui-drop-body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  position: relative; }
+  .kxui-drop-html .kxui-drop,
+  .kxui-drop-body .kxui-drop {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll; }
+    .kxui-drop-html .kxui-drop .kxui-drop-children,
+    .kxui-drop-body .kxui-drop .kxui-drop-children {
+      width: 100%;
+      height: auto;
+      overflow-x: hidden; }
+
+/* lazy }}}}}} */
 /* picture {{{{{{ */
 .kxui-picture-html,
 .kxui-picture-body {

@@ -2,7 +2,8 @@
  * @method Picture 查看图片大图解决方案
  * @author Lkx
  * @for kxui
- * @for method/carousel
+ * @for method
+ * @for carousel
  *
  * @method enlarge 图片放大方案
  */
@@ -29,7 +30,7 @@
     /**
      * 变量生成
      * @method variable
-     * @for init
+     * @for Logic
      */
     variable: function () {
       this.sizeWidth = Number(this.size.width) || '';
@@ -183,9 +184,8 @@
   })();
 
   /**
-   * 方法的主入口
+   * 查看图片大图解决方案
    * @method Picture
-   * 图片放大方案
    */
   let Picture = function () {
     this.name = 'Picture';
@@ -195,7 +195,7 @@
   Picture.fn = Picture.prototype;
 
   /**
-   * 图片放大方案
+   * 图片放大
    * @method enlarge
    * @for Picture
    * @param {object} parameter 配置参数
