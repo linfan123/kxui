@@ -35,8 +35,8 @@
     variable: function () {
       this.sizeWidth = Number(this.size.width) || '';
       this.sizeHeight = Number(this.size.height) || '';
-      this.imgWidth = (this.sizeWidth ? this.sizeWidth : ((document.documentElement.clientWidth || document.body.clientWidth) - 120));
-      this.imgHeight = (this.sizeHeight ? this.sizeHeight : ((document.documentElement.clientHeight || document.body.clientHeight) - 120));
+      this.imgWidth = (this.sizeWidth ? this.sizeWidth : ((document.documentElement.clientWidth || document.body.clientWidth) - (kxui.info().device === 'mobile' ? 0 : 120)));
+      this.imgHeight = (this.sizeHeight ? this.sizeHeight : ((document.documentElement.clientHeight || document.body.clientHeight) - (kxui.info().device === 'mobile' ? 0 : 120)));
       this.id = Math.ceil(Math.random() * 10);
       this.agg = this.parameter.agg;
       this.closeTime = null;
@@ -65,7 +65,7 @@
       this.box = kxui.method.addDom('<div class="kxui-carousel-box"></div>');
       for (let i = 0; i < this.agg.length; i++) {
         this.item = kxui.method.addDom('<div class="kxui-carousel-item"></div>');
-        this.img = kxui.method.addDom('<img src="' + this.agg[i].src + '">');
+        this.img = kxui.method.addDom('<img src="' + this.agg[i] + '">');
         let imgSrc = this.cropImage(this.img);
         this.img.src = imgSrc;
         this.item.appendChild(this.img);
