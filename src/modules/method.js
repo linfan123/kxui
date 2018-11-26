@@ -589,7 +589,7 @@
    * @method sonDom
    * @for Method/sonAllDom
    * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
-   * @return {object} 节点对象
+   * @return {object} 子节点对象
    */
   Method.fn.sonDom = function (dom) {
     if (dom) {
@@ -616,7 +616,7 @@
    * @for Method
    * @param {string} father 父节点名称/class值/id值/属性名称/原生dom对象/jquery对象
    * @param {string} dom 子节点名称/class值/id值
-   * @return {object} 节点对象
+   * @return {object} 子节点对象
    */
   Method.fn.sonAllDom = function (father, dom) {
     let that = this;
