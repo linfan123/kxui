@@ -187,7 +187,7 @@
     },
 
     /**
-     * 图片显示
+     * 置底监听
      * @method listening
      * @for event
      */
