@@ -102,7 +102,6 @@
      * @for container
      */
     static: function () {
-      let that = this
       let base64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
       if (this.img.length) {
         for (let i = 0; i < this.img.length; i++) {
@@ -111,7 +110,7 @@
       } else {
         kxui.method.atrDom(this.img, 'src', base64);
       }
-      that.branch();
+      this.branch();
     },
 
     /**
