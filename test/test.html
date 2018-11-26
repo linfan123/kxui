@@ -9,17 +9,19 @@
   <script src="kxui.js"></script>
 </head>
 
-<body></body>
+<body>
+  <div id="box">进行倒计时</div>
+</body>
 
 <script>
-  kxui.use(['lazy', 'picture', 'popup', 'verification'], function () {
+  kxui.use(['lazy', 'picture', 'popup', 'countdown'], function () {
     const method = kxui.method;
     const popup = kxui.popup;
     const carousel = kxui.carousel;
     const picture = kxui.picture;
     const lazy = kxui.lazy;
-    const verification = kxui.verification;
-    console.log(method, popup, carousel, picture, lazy, verification);
+    const countdown = kxui.countdown;
+    console.log(method, popup, carousel, picture, lazy, countdown);
   });
 </script>
 

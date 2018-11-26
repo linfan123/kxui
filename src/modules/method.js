@@ -28,6 +28,7 @@
  * @method addDom 增加节点
  * @method atrDom 替换或创建自定义属性
  * @method sonDom 获取子节点
+ * @method sonAllDom 获取所有子节点
  * @method random 生成指定长度的随机字符串
  * @method mouse 获取鼠标/手势位置
  * @method accAdd 防误差加法运算
@@ -66,7 +67,7 @@
       let result = win.location.search.match(new RegExp('[\\?\\&]' + data + '=([^\\&]+)', 'i'));
       return ((!result || result.length < 1) ? '' : result[1]);
     }
-    warn(0, 'urlData', 'data');
+    throws(0, 'urlData', 'data');
   };
 
   /**
@@ -84,7 +85,7 @@
       str = String(str);
       return String(str).replace(new RegExp(app, 'g'), rep);
     }
-    warn(0, 'repStr', (str ? 'app' : 'str'));
+    throws(0, 'repStr', (str ? 'app' : 'str'));
   };
 
   /**
@@ -107,7 +108,7 @@
       let sRet = sFrontPart + rep + sTailPart;
       return sRet;
     }
-    warn(0, 'chaStr', 'str');
+    throws(0, 'chaStr', 'str');
   };
 
   /**
@@ -131,7 +132,7 @@
       }
       return str;
     }
-    warn(0, 'insStr', (str ? (after ? 'app' : 'after') : 'str'));
+    throws(0, 'insStr', (str ? (after ? 'app' : 'after') : 'str'));
   };
 
   /**
@@ -150,7 +151,7 @@
       let result = (position ? str.match(new RegExp(app + '(\\S*)')) : str.match(new RegExp('(\\S*)' + app)));
       return ((!result || result.length < 1) ? '' : result[1]);
     }
-    warn(0, 'queStr', (str ? 'app' : 'str'));
+    throws(0, 'queStr', (str ? 'app' : 'str'));
   };
 
   /**
@@ -168,7 +169,7 @@
       let result = str.match(new RegExp(fro + '(\\S*)' + aft));
       return ((!result || result.length < 1) ? '' : result[1]);
     }
-    warn(0, 'midStr', (str ? (fro ? 'aft' : 'fro') : 'str'));
+    throws(0, 'midStr', (str ? (fro ? 'aft' : 'fro') : 'str'));
   };
 
   /**
@@ -188,7 +189,7 @@
       regs.email = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/;
       return ((regs[reg] && regs[reg].test(data)) ? true : false);
     }
-    warn(0, 'formTest', data ? 'reg' : 'data');
+    throws(0, 'formTest', data ? 'reg' : 'data');
   };
 
   /**
@@ -207,7 +208,7 @@
       }
       return new RegExp(' ' + cls + ' ').test(' ' + dom.className + ' ');
     }
-    warn(0, 'hasClass', dom ? 'cls' : 'dom');
+    throws(0, 'hasClass', dom ? 'cls' : 'dom');
   };
 
   /**
@@ -227,7 +228,7 @@
       }
       return false;
     }
-    warn(0, 'addClass', dom ? 'cls' : 'dom');
+    throws(0, 'addClass', dom ? 'cls' : 'dom');
   };
 
   /**
@@ -251,7 +252,7 @@
       }
       return false;
     }
-    warn(0, 'delClass', dom ? 'cls' : 'dom');
+    throws(0, 'delClass', dom ? 'cls' : 'dom');
   };
 
   /**
@@ -273,7 +274,7 @@
       }
       return true;
     }
-    warn(0, 'setCache', key ? 'val' : 'key');
+    throws(0, 'setCache', key ? 'val' : 'key');
   };
 
   /**
@@ -281,20 +282,20 @@
    * @method getCache
    * @for Method/setHis/getHis
    * @param {string} key 读取缓存名称
-   * @param {string} noWarn 是否抛出异常提示
+   * @param {string} noThrows 是否抛出异常提示
    * @return {boolean} 返回获取动作布尔值
    */
-  Method.fn.getCache = function (key, noWarn) {
+  Method.fn.getCache = function (key, noThrows) {
     if (key) {
       let val = localStorage.getItem('(method.' + key + ')');
       let timestamp = parseInt(localStorage.getItem('(method.' + key + ') (method.time)'));
       if (timestamp && (timestamp < this.dateGet())) {
-        warn(1, key);
+        throws(1, key);
         this.delCache(key);
       }
-      return (val ? String(val) : (noWarn === 'noWarn') ? '' : warn(1, key));
+      return (val ? String(val) : (noThrows === 'noThrows') ? '' : throws(1, key));
     }
-    warn(0, 'getCache', 'key');
+    throws(0, 'getCache', 'key');
   };
 
   /**
@@ -310,7 +311,7 @@
       localStorage.removeItem('(method.' + key + ') (method.time)');
       return true;
     }
-    warn(0, 'delCache', 'key');
+    throws(0, 'delCache', 'key');
   };
 
   /**
@@ -319,10 +320,10 @@
    * @for Method/setHis
    * @param {all} dataOne 需要对比的数据一
    * @param {all} dataTwo 需要对比的数据二
-   * @param {string} noWarn 是否抛出异常提示
+   * @param {string} noThrows 是否抛出异常提示
    * @return {boolean} 返回数据是否相等的布尔值
    */
-  Method.fn.compare = function (dataOne, dataTwo, noWarn) {
+  Method.fn.compare = function (dataOne, dataTwo, noThrows) {
     if (dataOne && dataTwo) {
       let props1 = Object.getOwnPropertyNames(dataOne);
       let props2 = Object.getOwnPropertyNames(dataTwo);
@@ -336,8 +337,8 @@
         }
       }
       return true;
-    } else if (noWarn !== 'noWarn') {
-      warn(0, 'compare', dataOne ? 'dataTwo' : 'dataOne');
+    } else if (noThrows !== 'noThrows') {
+      throws(0, 'compare', dataOne ? 'dataTwo' : 'dataOne');
     }
   };
 
@@ -352,7 +353,7 @@
   Method.fn.setHis = function (data, num) {
     if (data) {
       let bars = parseInt(num) || 6;
-      let history = this.getCache('history', 'noWarn');
+      let history = this.getCache('history', 'noThrows');
       let historyArray = [];
       if (history && history.length > 0) {
         historyArray = JSON.parse(history);
@@ -360,7 +361,7 @@
         let temporaryTwo = null;
         let historyArrayLength = ((historyArray.length < bars) ? historyArray.length + 1 : historyArray.length);
         for (let i = 0; i < historyArrayLength; i++) {
-          if (!this.compare(historyArray[i], data, 'noWarn')) {
+          if (!this.compare(historyArray[i], data, 'noThrows')) {
             if (i === 0) {
               temporaryOne = historyArray[i];
               historyArray[i] = data;
@@ -379,7 +380,7 @@
       this.setCache('history', JSON.stringify(historyArray));
       return historyArray;
     }
-    warn(0, 'setHis', 'data');
+    throws(0, 'setHis', 'data');
   };
 
   /**
@@ -389,7 +390,7 @@
    * @return {boolean} 返回获取动作布尔值
    */
   Method.fn.getHis = function () {
-    let history = this.getCache('history', 'noWarn');
+    let history = this.getCache('history', 'noThrows');
     if (history) {
       return JSON.parse(history);
     }
@@ -437,7 +438,7 @@
       date.setSeconds(time.substring(17, 19));
       return Date.parse(date) / 1000;
     }
-    warn(0, 'dateAppoint', 'time');
+    throws(0, 'dateAppoint', 'time');
   };
 
   /**
@@ -462,7 +463,7 @@
       let s = (date.getSeconds().toString().length === 1 ? '0' + date.getSeconds() : date.getSeconds());
       return Y + dateDiv + M + dateDiv + D + (isHour ? (' ' + h + ':' + m + ':' + s) : '');
     }
-    warn(0, 'dateTurn', 'tamp');
+    throws(0, 'dateTurn', 'tamp');
   };
 
   /**
@@ -503,7 +504,7 @@
       }
       return result;
     }
-    warn(0, 'dateChina', 'tamp');
+    throws(0, 'dateChina', 'tamp');
   };
 
   /**
@@ -539,7 +540,7 @@
         return extract();
       }
     }
-    warn(0, 'getDom', 'dom');
+    throws(0, 'getDom', 'dom');
   };
 
   /**
@@ -555,7 +556,7 @@
       dom.innerHTML = str;
       return dom.childNodes[0];
     }
-    warn(0, 'addDom', 'str');
+    throws(0, 'addDom', 'str');
   };
 
   /**
@@ -571,7 +572,7 @@
     if (dom && key) {
       dom = this.getDom(dom);
       if (dom.length) {
-        warn(2, dom);
+        throws(2, dom);
       } else if (key && (typeof key === 'string') && value) {
         dom.setAttribute(key, value);
         return true;
@@ -580,7 +581,7 @@
       }
       return false;
     }
-    warn(0, 'atrDom', (dom ? 'key' : 'dom'));
+    throws(0, 'atrDom', (dom ? 'key' : 'dom'));
   };
 
   /**
@@ -606,12 +607,12 @@
         return false;
       }
     }
-    warn(0, 'sonDom', 'dom');
+    throws(0, 'sonDom', 'dom');
   };
 
   /**
    * 获取所有子节点
-   * @method sonDom
+   * @method sonAllDom
    * @for Method
    * @param {string} father 父节点名称/class值/id值/属性名称/原生dom对象/jquery对象
    * @param {string} dom 子节点名称/class值/id值
@@ -638,7 +639,7 @@
         }
       }
     }
-    warn(0, 'sonAllDom', (father ? 'father' : 'dom'));
+    throws(0, 'sonAllDom', (father ? 'father' : 'dom'));
   };
 
   /**
@@ -654,7 +655,7 @@
       for (var str = ''; str.length < len; str += Math.random().toString(36).substr(2));
       return str.substr(0, len);
     }
-    warn(0, 'random', 'len');
+    throws(0, 'random', 'len');
   };
 
   /**
@@ -719,7 +720,7 @@
       m = Math.pow(10, Math.max(r1, r2));
       return (a * m + b * m) / m;
     }
-    warn(0, 'accAdd', a ? 'b' : 'a');
+    throws(0, 'accAdd', a ? 'b' : 'a');
   };
 
   /**
@@ -747,7 +748,7 @@
       n = (r1 >= r2) ? r1 : r2;
       return ((a * m - b * m) / m).toFixed(n);
     }
-    warn(0, 'accSub', a ? 'b' : 'a');
+    throws(0, 'accSub', a ? 'b' : 'a');
   };
 
   /**
@@ -771,7 +772,7 @@
       } catch (e) {}
       return Number(s1.replace('.', '')) * Number(s2.replace('.', '')) / Math.pow(10, m);
     }
-    warn(0, 'accMul', a ? 'b' : 'a');
+    throws(0, 'accMul', a ? 'b' : 'a');
   };
 
   /**
@@ -797,7 +798,7 @@
       r2 = Number(b.toString().replace('.', ''));
       return (r1 / r2) * Math.pow(10, t2 - t1);
     }
-    warn(0, 'accDiv', a ? 'b' : 'a');
+    throws(0, 'accDiv', a ? 'b' : 'a');
   };
 
   /**
@@ -822,7 +823,7 @@
         that.middle(dom);
       };
     } else {
-      warn(0, 'middle', 'dom');
+      throws(0, 'middle', 'dom');
     }
   };
 
@@ -843,7 +844,7 @@
       }
       return Number(num.toFixed(len));
     }
-    warn(0, 'decimal', 'num');
+    throws(0, 'decimal', 'num');
   };
 
   /**
@@ -878,18 +879,18 @@
       node.style.overflow = 'hidden';
       node.style.height = cdr.offsetHeight + 'px';
     }
-    warn(0, 'aniHeight', 'dom');
+    throws(0, 'aniHeight', 'dom');
   };
 
   /**
    * 控制台错误/警告
-   * @method warn
+   * @method throws
    * @for Method
    * @param {number} num 输入警告文案编号
    * @param {string} name 发生错误的方法
    * @param {string} field 缺少的字段名
    */
-  function warn(num, name, field) {
+  function throws(num, name, field) {
     let nums = {
       0: '方法 {' + name + '} 必填字段 {' + field + '} 不能为空',
       1: '缓存 {' + name + '} 不存在或已过期',

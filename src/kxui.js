@@ -7,7 +7,7 @@
  */
 
 (function (win) {
-  let stockMod = ['lazy', 'method', 'popup', 'carousel', 'picture', 'verification'];
+  let stockMod = ['lazy', 'method', 'popup', 'carousel', 'picture', 'countdown'];
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object');
   let device = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? 'mobile' : 'pc';
 

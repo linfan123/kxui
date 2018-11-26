@@ -1,5 +1,5 @@
 /**
- * @method verification 验证码解决方案
+ * @method countdown 倒计时解决方案
  * @author Lkx
  * @for kxui
  * @for method
@@ -36,7 +36,7 @@
       this.el = this.parameter.el;
       if (this.el) {
         this.el = kxui.method.getDom(this.el);
-        if (this.el && this.el.length === 1) {
+        if (this.el) {
           this.variable();
         } else {
           throws(1, this.parameter.el, true);
@@ -91,7 +91,7 @@
   /**
    * 控制台错误/警告
    * @method throws
-   * @for verification
+   * @for Logic
    * @param {number} num 输入警告文案编号
    * @param {string/boolean} dome 发生错误的对象名称
    * @param {boolean} isError 是否使用error进行抛出
@@ -99,33 +99,33 @@
   function throws(num, dome, isError) {
     let nums = {
       0: '字段 {el} 不能为空',
-      1: '无法找到 {' + dome + '} 节点或存在多个 {' + dome + '} 节点'
+      1: '无法找到 {' + dome + '} 节点，请确保它存在且是单个'
     };
     if (isError) {
-      console.error('kxui-' + kxui.version + '： 模块 {verification} ' + nums[num] + '。');
+      console.error('kxui-' + kxui.version + '： 模块 {countdown} ' + nums[num] + '。');
     } else {
-      console.warn('kxui-' + kxui.version + '： 模块 {verification} ' + nums[num] + '。');
+      console.warn('kxui-' + kxui.version + '： 模块 {countdown} ' + nums[num] + '。');
     }
   }
 
   /**
    * 验证码解决方案
-   * @method verification
+   * @method countdown
    */
-  let verification = function () {
-    this.name = 'verification';
-    this.info = 'Verification code solution';
+  let countdown = function () {
+    this.name = 'countdown';
+    this.info = 'Countdown method set';
   };
 
-  verification.fn = verification.prototype;
+  countdown.fn = countdown.prototype;
 
   /**
    * 倒计时
    * @method reverse
-   * @for verification
+   * @for countdown
    * @param {object} parameter 配置参数
    */
-  verification.fn.reverse = function (parameter) {
+  countdown.fn.reverse = function (parameter) {
     if (state) {
       state = false;
       this.logic = new Logic(parameter);
@@ -136,16 +136,16 @@
   /**
    * 状态返回
    * @method state
-   * @for verification
+   * @for countdown
    * @param {object} parameter 配置参数
    */
-  verification.fn.state = function () {
+  countdown.fn.state = function () {
     return state;
   };
 
   // 根据引入方式暴露对象
-  kxui.verification = new verification();
+  kxui.countdown = new countdown();
   if (isExports) {
-    kxui.verification = module.exports = new verification();
+    kxui.countdown = module.exports = new countdown();
   }
 })(window);
