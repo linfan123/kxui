@@ -27,8 +27,8 @@
  * @method getDom 获取节点(转为原生dom节点)
  * @method addDom 增加节点
  * @method atrDom 替换或创建自定义属性
- * @method sonDom 获取子节点
- * @method sonAllDom 获取所有子节点
+ * @method sonDom 获取一层子节点
+ * @method sonQueDom 获取指定子节点
  * @method random 生成指定长度的随机字符串
  * @method mouse 获取鼠标/手势位置
  * @method accAdd 防误差加法运算
@@ -37,7 +37,7 @@
  * @method accDiv 防误差除法运算
  * @method middle 元素居中(需自行增加position定位)
  * @method decimal 保留任意位小数(四舍五入)
- * @method aniHeight 元素动态高度过渡动画
+ * @method aniScroll 滚动条滚动动画
  */
 
 (function (win) {
@@ -498,7 +498,7 @@
       } else if (dc >= 3 && dc < 30) {
         result = ' ' + parseInt(dc) + ' 天前';
       } else if (dc >= 30) {
-        result = this.dateTurn(tamp);
+        result = this.dateTurn(tamp, '-', false);
       } else {
         result = '刚刚';
       }
@@ -585,9 +585,9 @@
   };
 
   /**
-   * 获取子节点
+   * 获取一层子节点
    * @method sonDom
-   * @for Method/sonAllDom
+   * @for Method/sonQueDom
    * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
    * @return {object} 子节点对象
    */
@@ -611,14 +611,14 @@
   };
 
   /**
-   * 获取所有子节点
-   * @method sonAllDom
+   * 获取指定子节点
+   * @method sonQueDom
    * @for Method
    * @param {string} father 父节点名称/class值/id值/属性名称/原生dom对象/jquery对象
    * @param {string} dom 子节点名称/class值/id值
    * @return {object} 子节点对象
    */
-  Method.fn.sonAllDom = function (father, dom) {
+  Method.fn.sonQueDom = function (father, dom) {
     let that = this;
     let result = [];
     if (father && dom) {
@@ -639,7 +639,7 @@
         }
       }
     }
-    throws(0, 'sonAllDom', (father ? 'father' : 'dom'));
+    throws(0, 'sonQueDom', (father ? 'dom' : 'father'));
   };
 
   /**
@@ -848,38 +848,24 @@
   };
 
   /**
-   * 元素动态高度过渡动画
-   * @method aniHeight
+   * 滚动条滚动动画
+   * @method aniScroll
    * @for Method
-   * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
-   * @param {number} time 动画执行时间(1000/s)
-   * @param {string} id 若是不符合结构，此字段为新创建的id值(默认为kxui-Method-aniHeight)
-   * @return {boolean} 返回是否成功布尔值
+   * @param {string/number} pageY 滚动y轴位置
    */
-  Method.fn.aniHeight = function (dom, time, id) {
-    const box = this.getDom(dom);
-    time = isNaN(parseFloat(time)) ? '.2' : (time / 1000);
-    id = id || 'kxui-Method-aniHeight';
-    if (dom) {
-      if (box && box.children.length === 1) {
-        style(box, box.children[0]);
-      } else if (!this.getDom('#' + id)) {
-        let div = this.addDom('<div id="' + id + '"></div>');
-        box.parentNode.insertBefore(div, box.nextSibling);
-        div.appendChild(box);
-        style(div, box);
+  Method.fn.aniScroll = function (pageY) {
+    clearInterval(this.getCache('aniScroll'))
+    let timer = setInterval(() => {
+      let currentY = document.documentElement.scrollTop || document.body.scrollTop
+      let distance = pageY > currentY ? pageY - currentY : currentY - pageY
+      let speed = Math.ceil(distance / 10)
+      if (parseInt(currentY) === parseInt(pageY)) {
+        clearInterval(this.getCache('aniScroll'))
       } else {
-        style(this.getDom('#' + id), box);
+        window.scrollTo(0, pageY > currentY ? currentY + speed : currentY - speed)
       }
-      return true;
-    }
-
-    function style(node, cdr) {
-      node.style.transition = 'height ' + time + 's';
-      node.style.overflow = 'hidden';
-      node.style.height = cdr.offsetHeight + 'px';
-    }
-    throws(0, 'aniHeight', 'dom');
+    }, 10)
+    this.setCache('aniScroll', timer)
   };
 
   /**

@@ -6,22 +6,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>kxui | test</title>
+  <style>
+    #div{
+      height: 500px;
+      border: 1px solid red;
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }
+
+    li{
+      height: 100px;
+    }
+  </style>
   <script src="kxui.js"></script>
 </head>
 
 <body>
-  <div id="box">进行倒计时</div>
+  <div id="div">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
 </body>
 
 <script>
-  kxui.use(['lazy', 'picture', 'popup', 'countdown'], function () {
+  kxui.use(['method', 'countdown', 'drop'], function () {
     const method = kxui.method;
-    const popup = kxui.popup;
-    const carousel = kxui.carousel;
-    const picture = kxui.picture;
-    const lazy = kxui.lazy;
     const countdown = kxui.countdown;
-    console.log(method, popup, carousel, picture, lazy, countdown);
+    const drop = kxui.drop;
+    drop.use({
+      el: '#div',
+      call: () => {
+        console.log(111)
+      }
+    })
+    // box.onclick = function () {
+    //   if (countdown.state()) {
+    //     countdown.reverse({
+    //       el: '#box',
+    //       text: '请等#T秒后重新获取',
+    //       time: '12',
+    //       end: '请点击按钮进行重新获取'
+    //     })
+    //     // 此处执行验证码后续方法
+    //   } else {
+    //     console.log('不要重复操作')
+    //   }
+    // }
   });
 </script>
 

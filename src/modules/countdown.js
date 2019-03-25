@@ -1,5 +1,5 @@
 /**
- * @method countdown 倒计时解决方案
+ * @method Countdown 倒计时解决方案
  * @author Lkx
  * @for kxui
  * @for method
@@ -33,9 +33,8 @@
      * @for Logic
      */
     init: function () {
-      this.el = this.parameter.el;
-      if (this.el) {
-        this.el = kxui.method.getDom(this.el);
+      if (this.parameter.el) {
+        this.el = kxui.method.getDom(this.parameter.el);
         if (this.el) {
           this.variable();
         } else {
@@ -53,24 +52,29 @@
      */
     variable: function () {
       this.time = (typeof this.parameter.time === 'string') || (typeof this.parameter.time === 'number') ? parseInt(this.parameter.time) : 120;
-      this.text = this.parameter.text || '重新获取';
-      this.assignment();
+      this.end = this.parameter.end || '重新获取';
+      this.loop()
+      this.reciprocal();
     },
 
     /**
-     * 初始化分配
-     * @method assignment
+     * 可循环赋值
+     * @method loop
      * @for variable
      */
-    assignment: function () {
-      this.el.innerHTML = this.time;
-      this.reciprocal();
+    loop: function () {
+      if (this.parameter.text && this.parameter.text.indexOf('#T') >= 0) {
+        this.text = kxui.method.repStr(this.parameter.text, '#T', this.time);
+      } else {
+        this.text = this.time;
+      }
+      this.el.innerHTML = this.text;
     },
 
     /**
      * 进行倒数事件
      * @method reciprocal
-     * @for assignment
+     * @for variable
      */
     reciprocal: function () {
       const that = this;
@@ -78,10 +82,10 @@
       timer = setInterval(function () {
         that.time = that.time - 1;
         if (that.time > 0) {
-          that.el.innerHTML = that.time;
+          that.loop()
         } else {
           clearInterval(timer);
-          that.el.innerHTML = that.text;
+          that.el.innerHTML = that.end;
           state = true;
         }
       }, 1000);
@@ -102,30 +106,30 @@
       1: '无法找到 {' + dome + '} 节点，请确保它存在且是单个'
     };
     if (isError) {
-      console.error('kxui-' + kxui.version + '： 模块 {countdown} ' + nums[num] + '。');
+      console.error('kxui-' + kxui.version + '： 模块 {Countdown} ' + nums[num] + '。');
     } else {
-      console.warn('kxui-' + kxui.version + '： 模块 {countdown} ' + nums[num] + '。');
+      console.warn('kxui-' + kxui.version + '： 模块 {Countdown} ' + nums[num] + '。');
     }
   }
 
   /**
    * 验证码解决方案
-   * @method countdown
+   * @method Countdown
    */
-  let countdown = function () {
-    this.name = 'countdown';
+  let Countdown = function () {
+    this.name = 'Countdown';
     this.info = 'Countdown method set';
   };
 
-  countdown.fn = countdown.prototype;
+  Countdown.fn = Countdown.prototype;
 
   /**
    * 倒计时
    * @method reverse
-   * @for countdown
+   * @for Countdown
    * @param {object} parameter 配置参数
    */
-  countdown.fn.reverse = function (parameter) {
+  Countdown.fn.reverse = function (parameter) {
     if (state) {
       state = false;
       this.logic = new Logic(parameter);
@@ -136,16 +140,15 @@
   /**
    * 状态返回
    * @method state
-   * @for countdown
+   * @for Countdown
    * @param {object} parameter 配置参数
    */
-  countdown.fn.state = function () {
+  Countdown.fn.state = function () {
     return state;
   };
 
-  // 根据引入方式暴露对象
-  kxui.countdown = new countdown();
+  kxui.countdown = new Countdown();
   if (isExports) {
-    kxui.countdown = module.exports = new countdown();
+    kxui.countdown = module.exports = new Countdown();
   }
 })(window);

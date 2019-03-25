@@ -7,7 +7,7 @@
  */
 
 (function (win) {
-  let stockMod = ['lazy', 'method', 'popup', 'carousel', 'picture', 'countdown'];
+  let stockMod = ['method', 'countdown', 'drop'];
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object');
   let device = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? 'mobile' : 'pc';
 
@@ -21,7 +21,6 @@
     this.kxui = kxui;
     this.module = (typeof this.kxui.module === 'string') ? [this.kxui.module] : (typeof this.kxui.module === 'object') ? this.kxui.module : false;
     this.fun = (typeof this.kxui.fun === 'function') ? this.kxui.fun : false;
-    this.met = (typeof this.kxui.met === 'boolean' ? this.kxui.met : true);
     if (!this.module || !this.fun) {
       throws(0, this.kxui, true);
     } else {
@@ -39,9 +38,6 @@
     definition: function () {
       this.loadLine = 0;
       this.wheelSearch = 0;
-      if (this.module.indexOf('method') < 0 && this.met) {
-        this.module.unshift('method');
-      }
       this.domain = domain();
       this.mode();
     },
@@ -280,16 +276,13 @@
    * @for kxui
    * @param {string/array} mod 模块名称
    * @param {function} fun 加载完成回调方法
-   * @param {boolean} met 是否初始化调用method
    */
-  Kxui.prototype.use = function (mod, fun, met) {
+  Kxui.prototype.use = function (mod, fun) {
     this.module = mod;
     this.fun = fun;
-    this.met = met;
     this.load = new Load(this);
     delete this.module;
     delete this.fun;
-    delete this.met;
     delete this.load;
   };
 
