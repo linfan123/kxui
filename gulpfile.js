@@ -19,7 +19,7 @@ var fontPath = ['./src/font/*']
  * @for gulpfile
  */
 gulp.task('build', function () {
-  runSequence(['clean'], ['revScss'], ['revCss'], ['revJs'], ['iconfont']);
+  runSequence(['clean'], ['revScss'], ['revCss'], ['revJs']);
 });
 
 /**
@@ -93,17 +93,6 @@ gulp.task('revJs', function () {
     .pipe(browserSync.reload({
       stream: true
     }))
-});
-
-/**
- * @method revCss 字体文件复制
- * @for iconfont
- */
-gulp.task('iconfont', function () {
-  return gulp.src(fontPath, {
-      base: './src'
-    })
-    .pipe(gulp.dest('./dist/'))
 });
 
 /**
