@@ -6,71 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>kxui | test</title>
-  <style>
-    html{
-      height: 3000px;
-    }
-    #div{
-      height: 500px;
-      border: 1px solid red;
-      overflow-x: hidden;
-      overflow-y: scroll;
-    }
-
-    li{
-      height: 100px;
-    }
-  </style>
   <script src="kxui.js"></script>
 </head>
 
-<body>
-  <div id="div">
-    <ul>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
-  </div>
-  <div id="box">点击事件</div>
-</body>
+<body></body>
 
 <script>
   kxui.use(['method', 'countdown', 'drop'], function () {
     const method = kxui.method;
     const countdown = kxui.countdown;
     const drop = kxui.drop;
-    const box = method.getDom('#box')
-    drop.use({
-      el: '#div',
-      call: () => {
-        console.log(111)
-      }
-    })
-    console.log(kxui)
-    box.onclick = function () {
-      method.aniScroll(200)
-      // if (countdown.state()) {
-      //   countdown.reverse({
-      //     el: '#box',
-      //     text: '请等#T秒后重新获取',
-      //     time: '12',
-      //     end: '请点击按钮进行重新获取'
-      //   })
-      //   // 此处执行验证码后续方法
-      // } else {
-      //   console.log('不要重复操作')
-      // }
-    }
   });
 </script>
 
