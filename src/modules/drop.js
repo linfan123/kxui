@@ -107,7 +107,7 @@
    */
   let Drop = function () {
     this.name = 'Drop';
-    this.info = 'Page Bottom Solution';
+    this.info = 'Page bottom solution';
   };
 
   Drop.fn = Drop.prototype;

@@ -852,15 +852,19 @@
    * @method aniScroll
    * @for Method
    * @param {string/number} pageY 滚动y轴位置
+   * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
    */
-  Method.fn.aniScroll = function (pageY) {
+  Method.fn.aniScroll = function (pageY, dom) {
     clearInterval(this.getCache('aniScroll'))
+    dom = dom ? this.getDom(dom) : false
     let timer = setInterval(() => {
-      let currentY = document.documentElement.scrollTop || document.body.scrollTop
+      let currentY = dom ? dom.scrollTop : (document.documentElement.scrollTop || document.body.scrollTop)
       let distance = pageY > currentY ? pageY - currentY : currentY - pageY
       let speed = Math.ceil(distance / 10)
       if (parseInt(currentY) === parseInt(pageY)) {
         clearInterval(this.getCache('aniScroll'))
+      } else if (dom) {
+        dom.scrollTo(0, pageY > currentY ? currentY + speed : currentY - speed)
       } else {
         window.scrollTo(0, pageY > currentY ? currentY + speed : currentY - speed)
       }
