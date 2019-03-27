@@ -273,7 +273,7 @@
   /**
    * 模块加载
    * @method use
-   * @for kxui
+   * @for Kxui
    * @param {string/array} mod 模块名称
    * @param {function} fun 加载完成回调方法
    */
@@ -289,7 +289,7 @@
   /**
    * 信息返回
    * @method info
-   * @for kxui
+   * @for Kxui
    * @return {object} 开发信息
    */
   Kxui.prototype.info = function () {
