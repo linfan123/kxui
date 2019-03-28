@@ -9,6 +9,8 @@
  * @method insStr 插入指定字符
  * @method queStr 获取指定字符前/后的所有字符
  * @method midStr 获取指定字符中间的字符
+ * @method sortArr 数组排序(冒泡排序)
+ * @method delRepArr 数组去重
  * @method formTest 表单验证
  * @method hasClass 查询是否存在class值
  * @method addClass 增加class值
@@ -16,6 +18,9 @@
  * @method setCache 设置本地缓存
  * @method getCache 获取本地缓存
  * @method delCache 删除本地缓存
+ * @method setCookie 设置cookie
+ * @method getCookie 获取cookie
+ * @method delCookie 删除cookie
  * @method compare 数据对比(内容与数据类型)
  * @method setHis 记录历史搜索信息
  * @method getHis 获取历史搜索信息
@@ -30,6 +35,8 @@
  * @method sonDom 获取一层子节点
  * @method sonQueDom 获取指定子节点
  * @method random 生成指定长度的随机字符串
+ * @method randomNum 生成随机数字
+ * @method randomColor 生成随机颜色
  * @method mouse 获取鼠标/手势位置
  * @method accAdd 防误差加法运算
  * @method accSub 防误差减法运算
@@ -37,7 +44,12 @@
  * @method accDiv 防误差除法运算
  * @method middle 元素居中(需自行增加position定位)
  * @method decimal 保留任意位小数(四舍五入)
+ * @method money 金钱显示格式(每隔三位数字添加一个逗号)
+ * @method bankCard 银行卡号(每隔四个数字添加一个空格)
  * @method aniScroll 滚动条滚动动画
+ * @method stopProp 阻止事件冒泡
+ * @method utf8 字符串转换为UTF-8编码
+ * @method deepCopy 对象深拷贝
  */
 
 (function (win) {
@@ -77,7 +89,7 @@
    * @param {string} str 需要操作的字符串
    * @param {string} app 需要替換的字符
    * @param {string} rep 替换之后的字符(不填将默认为空)
-   * @return {string} 返回移除后的字符串
+   * @return {string} 返回替换后的字符串
    */
   Method.fn.repStr = function (str, app, rep) {
     rep = rep || '';
@@ -95,7 +107,7 @@
    * @param {string} str 需要操作的字符串
    * @param {number} ind 需要替換的下标(不填将默认为0)
    * @param {string} rep 替换之后的字符(不填将默认为0)
-   * @return {string} 返回移除后的字符串
+   * @return {string} 返回替换后的字符串
    */
   Method.fn.chaStr = function (str, ind, rep) {
     str = String(str);
@@ -161,7 +173,7 @@
    * @param {string} str 需要操作的字符串
    * @param {string} fro 前字符
    * @param {string} aft 后字符
-   * @return {string} 返回参数值或空
+   * @return {string} 返回中间的字符串或空
    */
   Method.fn.midStr = function (str, fro, aft) {
     if (str && fro && aft) {
@@ -170,6 +182,73 @@
       return ((!result || result.length < 1) ? '' : result[1]);
     }
     throws(0, 'midStr', (str ? (fro ? 'aft' : 'fro') : 'str'));
+  };
+
+  /**
+   * 数组排序(冒泡排序)
+   * @method sortArr
+   * @for Method
+   * @param {Array} arr 需要操作的数组
+   * @param {boolean} dir true:正序/false:倒序
+   * @return {Array} 返回排序后数组
+   */
+  Method.fn.sortArr = function (arr, dir) {
+    if (arr) {
+      let temp = [];
+      dir = (typeof dir === 'boolean') ? dir : true;
+      for (let i = 0; i < arr.length - 1; i++) {
+        let bool = true;
+        for (let j = 0; j < arr.length - 1 - i; j++) {
+          let condition = (dir ? arr[j] > arr[j + 1] : arr[j] < arr[j + 1])
+          if (condition) {
+            temp = arr[j];
+            arr[j] = arr[j + 1];
+            arr[j + 1] = temp;
+            bool = false;
+          }
+        }
+        if (bool) {
+          break;
+        }
+      }
+      return arr
+    }
+    throws(0, 'sortArr', 'arr');
+  };
+
+  /**
+   * 数组去重
+   * @method delRepArr
+   * @for Method
+   * @param {Array} arr 需要操作的数组
+   * @return {Array} 返回去重后的数组
+   */
+  Method.fn.delRepArr = function (arr) {
+    if (arr) {
+      return Array.from(new Set(arr))
+    }
+    throws(0, 'delRepStr', 'arr');
+  };
+
+  /**
+   * 元素在数组中出现的次数
+   * @method countArr
+   * @for Method
+   * @param {Array} arr 需要操作的数组
+   * @param {string} ele 要查找的元素
+   * @return {string} 返回去重后的数组
+   */
+  Method.fn.countArr = function (arr, ele) {
+    if (arr && ele) {
+      let num = 0;
+      for (let i = 0, len = arr.length; i < len; i++) {
+        if (ele == arr[i]) {
+          num++;
+        }
+      }
+      return num;
+    }
+    throws(0, 'countArr', (arr ? 'ele' : 'arr'));
   };
 
   /**
@@ -266,11 +345,11 @@
    */
   Method.fn.setCache = function (key, val, tim) {
     if (key && val) {
-      localStorage.setItem('(method.' + key + ')', val);
+      localStorage.setItem(key, val);
       let seconds = parseInt(tim);
       if (seconds > 0) {
         let timestamp = (this.dateGet() + seconds);
-        localStorage.setItem('(method.' + key + ') (method.time)', timestamp);
+        localStorage.setItem(key + ' (method.time)', timestamp);
       }
       return true;
     }
@@ -282,18 +361,17 @@
    * @method getCache
    * @for Method/setHis/getHis
    * @param {string} key 读取缓存名称
-   * @param {string} noThrows 是否抛出异常提示
-   * @return {boolean} 返回获取动作布尔值
+   * @return {string/boolean} 返回获取值或布尔值
    */
-  Method.fn.getCache = function (key, noThrows) {
+  Method.fn.getCache = function (key) {
     if (key) {
-      let val = localStorage.getItem('(method.' + key + ')');
-      let timestamp = parseInt(localStorage.getItem('(method.' + key + ') (method.time)'));
+      let val = localStorage.getItem(key);
+      let timestamp = parseInt(localStorage.getItem(key + ' (method.time)'));
       if (timestamp && (timestamp < this.dateGet())) {
-        throws(1, key);
         this.delCache(key);
+        return false
       }
-      return (val ? String(val) : (noThrows === 'noThrows') ? '' : throws(1, key));
+      return String(val);
     }
     throws(0, 'getCache', 'key');
   };
@@ -307,11 +385,66 @@
    */
   Method.fn.delCache = function (key) {
     if (key) {
-      localStorage.removeItem('(method.' + key + ')');
-      localStorage.removeItem('(method.' + key + ') (method.time)');
+      localStorage.removeItem(key);
+      localStorage.removeItem(key + ' (method.time)');
       return true;
     }
     throws(0, 'delCache', 'key');
+  };
+
+  /**
+   * 设置cookie
+   * @method setCookie
+   * @for Method
+   * @param {string} key 设置cookie名称
+   * @param {string} val 设置cookie内容
+   * @param {number} tim 设置cookie有效时间，单位 1000/1s
+   * @return {boolean} 返回设置动作布尔值
+   */
+  Method.fn.setCookie = function (key, val, tim) {
+    if (key && val) {
+      let oDate = new Date();
+      oDate.setDate(oDate.getDate() + tim);
+      document.cookie = key + '=' + val + ';expires=' + oDate;
+      return true
+    }
+    throws(0, 'setCookie', key ? 'val' : 'key');
+  };
+
+  /**
+   * 获取cookie
+   * @method getCookie
+   * @for Method
+   * @param {string} key 读取cookie名称
+   * @return {string/boolean} 返回获取值或布尔值
+   */
+  Method.fn.getCookie = function (key) {
+    if (key) {
+      let arr = document.cookie.split('; ');
+      for (let i = 0; i < arr.length; i++) {
+        let arr2 = arr[i].split('=');
+        if (arr2[0] === key) {
+          return arr2[1];
+        }
+      }
+      return false;
+    }
+    throws(0, 'getCookie', 'key');
+  };
+
+  /**
+   * 删除cookie
+   * @method delCookie
+   * @for Method
+   * @param {string} key 删除cookie名称
+   * @return {boolean} 返回删除动作布尔值
+   */
+  Method.fn.delCookie = function (key) {
+    if (key) {
+      this.setCookie(key, 1, -1);
+      return true;
+    }
+    throws(0, 'delCookie', 'key');
   };
 
   /**
@@ -353,7 +486,7 @@
   Method.fn.setHis = function (data, num) {
     if (data) {
       let bars = parseInt(num) || 6;
-      let history = this.getCache('history', 'noThrows');
+      let history = this.getCache('(method.history)');
       let historyArray = [];
       if (history && history.length > 0) {
         historyArray = JSON.parse(history);
@@ -377,7 +510,7 @@
       } else {
         historyArray[0] = data;
       }
-      this.setCache('history', JSON.stringify(historyArray));
+      this.setCache('(method.history)', JSON.stringify(historyArray));
       return historyArray;
     }
     throws(0, 'setHis', 'data');
@@ -390,7 +523,7 @@
    * @return {boolean} 返回获取动作布尔值
    */
   Method.fn.getHis = function () {
-    let history = this.getCache('history', 'noThrows');
+    let history = this.getCache('(method.history)');
     if (history) {
       return JSON.parse(history);
     }
@@ -404,7 +537,7 @@
    * @return {boolean} 返回获取动作布尔值
    */
   Method.fn.delHis = function () {
-    return this.delCache('history');
+    return this.delCache('(method.history)');
   };
 
   /**
@@ -572,7 +705,7 @@
     if (dom && key) {
       dom = this.getDom(dom);
       if (dom.length) {
-        throws(2, dom);
+        throws(1, dom);
       } else if (key && (typeof key === 'string') && value) {
         dom.setAttribute(key, value);
         return true;
@@ -597,7 +730,7 @@
       let child = dom.childNodes;
       if (child) {
         let postChild = [];
-        for (var i = 0; i < child.length; i++) {
+        for (let i = 0; i < child.length; i++) {
           if (!(child[i].nodeType === 3 && child[i].nodeName === '#text' && !/\S/.test(child[i].nodeValue))) {
             postChild.push(child[i]);
           }
@@ -628,7 +761,7 @@
     }
 
     function findRecursion(fathers) {
-      for (var i = 0; i < fathers.length; i++) {
+      for (let i = 0; i < fathers.length; i++) {
         if ('#' + fathers[i].id === dom || '.' + fathers[i].className === dom || fathers[i].tagName === dom.toUpperCase()) {
           result.push(fathers[i]);
           if (that.sonDom(fathers[i]).length > 0) {
@@ -647,15 +780,49 @@
    * @method random
    * @for Method
    * @param {string} len 随机字符串长度
-   * @return {boolean} 返回创建或查询对象结果
+   * @return {string} 返回随机结果
    */
   Method.fn.random = function (len) {
     if (len) {
       len = Number(len);
-      for (var str = ''; str.length < len; str += Math.random().toString(36).substr(2));
+      for (let str = ''; str.length < len; str += Math.random().toString(36).substr(2));
       return str.substr(0, len);
     }
     throws(0, 'random', 'len');
+  };
+
+  /**
+   * 生成随机数字
+   * @method randomNum
+   * @for Method/randomColor
+   * @param {string/number} a 开始区间(默认0)
+   * @param {string/number} b 结束区间(默认255)
+   * @return {string} 返回随机结果
+   */
+  Method.fn.randomNum = function (a, b) {
+    if (arguments.length === 2) {
+      return Math.round(a + Math.random() * (b - a));
+    } else if (arguments.length === 1) {
+      return Math.round(Math.random() * a)
+    } else {
+      return Math.round(Math.random() * 255)
+    }
+  };
+
+  /**
+   * 生成随机颜色
+   * @method randomColor
+   * @for Method
+   * @param {string} type 颜色类型 true:RGB/false:二进制颜色
+   * @return {string} 返回随机结果
+   */
+  Method.fn.randomColor = function (type) {
+    type = (typeof type === 'boolean') ? type : true;
+    if (type) {
+      return 'rgb(' + this.randomNum(255) + ',' + this.randomNum(255) + ',' + this.randomNum(255) + ')';
+    } else {
+      return '#' + Math.random().toString(16).substring(2).substr(0, 6);
+    }
   };
 
   /**
@@ -848,6 +1015,36 @@
   };
 
   /**
+   * 金钱显示格式(每隔三位数字添加一个逗号)
+   * @method money
+   * @for Method
+   * @param {string/number} str 金钱
+   * @return {string} 修改过的金钱格式
+   */
+  Method.fn.money = function (str) {
+    if (str) {
+      return parseFloat(str).toFixed(2).replace(/\d(?=(?:\d{3})+\b)/g, `$&,`)
+    }
+    throws(0, 'money', 'str');
+  };
+
+  /**
+   * 银行卡号(每隔四个数字添加一个空格)
+   * @method bankCard
+   * @for Method
+   * @param {string/number} str 银行卡号
+   * @return {string} 修改过的银行卡号格式
+   */
+  Method.fn.bankCard = function (str) {
+    if (str) {
+      str = String(str);
+      let newStr = str.replace(/\d(?=(?:\d{4})+\b)/g, `$& `);
+      return newStr;
+    }
+    throws(0, 'bankCard', 'str');
+  };
+
+  /**
    * 滚动条滚动动画
    * @method aniScroll
    * @for Method
@@ -855,21 +1052,88 @@
    * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
    */
   Method.fn.aniScroll = function (pageY, dom) {
-    clearInterval(this.getCache('aniScroll'))
+    clearInterval(this.getCache('(method.aniScroll)'))
     dom = dom ? this.getDom(dom) : false
     let timer = setInterval(() => {
       let currentY = dom ? dom.scrollTop : (document.documentElement.scrollTop || document.body.scrollTop)
       let distance = pageY > currentY ? pageY - currentY : currentY - pageY
       let speed = Math.ceil(distance / 10)
       if (parseInt(currentY) === parseInt(pageY)) {
-        clearInterval(this.getCache('aniScroll'))
+        clearInterval(this.getCache('(method.aniScroll)'))
       } else if (dom) {
         dom.scrollTo(0, pageY > currentY ? currentY + speed : currentY - speed)
       } else {
         window.scrollTo(0, pageY > currentY ? currentY + speed : currentY - speed)
       }
     }, 10)
-    this.setCache('aniScroll', timer)
+    this.setCache('(method.aniScroll)', timer)
+  };
+
+  /**
+   * 阻止事件冒泡
+   * @method stopProp
+   * @for Method
+   */
+  Method.fn.stopProp = function (e) {
+    if (e && e.stopPropagation) {
+      e.stopPropagation();
+    } else {
+      window.event.cancelBubble = true;
+    }
+  };
+
+  /**
+   * 字符串转换为UTF-8编码
+   * @method utf8
+   * @for Method
+   * @param {string} str 需要操作的字符串
+   * @return {string} 转换后的字符串
+   */
+  Method.fn.utf8 = function (str) {
+    if (str) {
+      let out, i, len, c;
+      out = '';
+      len = str.length;
+      for (i = 0; i < len; i++) {
+        c = str.charCodeAt(i);
+        if ((c >= 0x0001) && (c <= 0x007F)) {
+          out += str.charAt(i);
+        } else if (c > 0x07FF) {
+          out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+          out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
+          out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+        } else {
+          out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
+          out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+        }
+      }
+      return out;
+    }
+    throws(0, 'utf8', 'str');
+  };
+
+  /**
+   * 对象深拷贝
+   * @method deepCopy
+   * @for Method
+   * @param {object} str 需要操作的对象
+   * @return {object} 拷贝返回对象
+   */
+  Method.fn.deepCopy = function (obj) {
+    if (obj) {
+      let result = Array.isArray(obj) ? [] : {};
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          if (typeof obj[key] === 'object') {
+            result[key] = deepCopy(obj[key]);
+          } else {
+            result[key] = obj[key];
+          }
+        }
+      }
+      return result;
+    }
+    throws(0, 'deepCopy', 'obj');
   };
 
   /**
@@ -883,8 +1147,7 @@
   function throws(num, name, field) {
     let nums = {
       0: '方法 {' + name + '} 必填字段 {' + field + '} 不能为空',
-      1: '缓存 {' + name + '} 不存在或已过期',
-      2: 'DOM {' + name + '} 存在重复或不正确'
+      1: 'DOM {' + name + '} 存在重复或不正确'
     };
     console.warn('kxui-' + kxui.version + '： 模块 {method} ' + nums[num] + '。');
   }

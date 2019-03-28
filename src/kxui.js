@@ -9,7 +9,6 @@
 (function (win) {
   let stockMod = ['method', 'countdown', 'drop'];
   let isExports = (typeof module !== 'undefined') && (typeof module === 'object') && (typeof module.exports === 'object');
-  let device = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? 'mobile' : 'pc';
 
   /**
    * 逻辑入口
@@ -219,7 +218,7 @@
   /**
    * 获取引入路径
    * @method domain
-   * @for Load
+   * @for Load/Kxui
    * @return {string} 引入路径前缀
    */
   function domain() {
@@ -233,6 +232,23 @@
       }
     }
     return kxuiDomain;
+  }
+
+  /**
+   * 获取当前接入设备
+   * @method getDevice
+   * @for Kxui
+   * @return {string} 当前的设备
+   */
+  function getDevice() {
+    let device = 'pc';
+    let ua = navigator.userAgent.toLowerCase();
+    if (/iphone|ipad|ipod/.test(ua)) {
+      device = 'ios'
+    } else if (/android/.test(ua)) {
+      device = 'android'
+    }
+    return device;
   }
 
   /**
@@ -266,8 +282,8 @@
    * 开发常用操作方法，可根据需要调用不同的模块，提高开发效率
    */
   let Kxui = function () {
-    this.version = '1.3.4';
-    this.updateTime = '2019.03.26';
+    this.version = '1.3.5';
+    this.updateTime = '2019.03.28';
   };
 
   /**
@@ -295,7 +311,7 @@
   Kxui.prototype.info = function () {
     return {
       'domain': domain(),
-      'device': device,
+      'device': getDevice(),
       'version': this.version + ' / ' + this.updateTime,
       'size': {
         'cDocW': document.documentElement.clientWidth,
