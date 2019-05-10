@@ -9,7 +9,7 @@ let gulp = require('gulp');
 let browserSync = require('browser-sync').create();
 let runSequence = require('run-sequence');
 let header = require('gulp-header');
-let note = '/**\n * method ' + pkg.name + '\n * version ' + pkg.version + '\n * author Lkx\n * create time ' + pkg.createTime + '\n * update time ' + pkg.updateTime + '\n * website http://www.kxui.org\n */\n\n'
+let note = '/**\n * method ' + pkg.name + '\n * version ' + pkg.version + '\n * author Lkx\n * create time ' + pkg.createTime + '\n * update time ' + pkg.updateTime + '\n * website http://www.kxui.org\n */\n\n';
 let cssPath = './src/css/scss/*.scss';
 let jsPath = ['./src/*.js', './src/modules/*.js'];
 
@@ -53,7 +53,7 @@ gulp.task('revScss', function () {
     .pipe(gulp.dest('./src/css'))
     .pipe(browserSync.reload({
       stream: true
-    }))
+    }));
 });
 
 /**
@@ -72,7 +72,7 @@ gulp.task('revCss', function () {
     .pipe(gulp.dest('./dist/'))
     .pipe(browserSync.reload({
       stream: true
-    }))
+    }));
 });
 
 /**
@@ -91,7 +91,7 @@ gulp.task('revJs', function () {
     .pipe(gulp.dest('./dist/'))
     .pipe(browserSync.reload({
       stream: true
-    }))
+    }));
 });
 
 /**
@@ -115,5 +115,5 @@ gulp.task('server', function () {
       index: './../test/test.html'
     },
     port: 8000
-  })
+  });
 });
