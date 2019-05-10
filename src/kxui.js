@@ -244,9 +244,9 @@
     let device = 'pc';
     let ua = navigator.userAgent.toLowerCase();
     if (/iphone|ipad|ipod/.test(ua)) {
-      device = 'ios'
+      device = 'ios';
     } else if (/android/.test(ua)) {
-      device = 'android'
+      device = 'android';
     }
     return device;
   }
@@ -282,8 +282,8 @@
    * 开发常用操作方法，可根据需要调用不同的模块，提高开发效率
    */
   let Kxui = function () {
-    this.version = '1.3.5';
-    this.updateTime = '2019.03.28';
+    this.version = '1.3.6';
+    this.updateTime = '2019.05.10';
   };
 
   /**

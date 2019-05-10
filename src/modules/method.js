@@ -50,6 +50,12 @@
  * @method stopProp 阻止事件冒泡
  * @method utf8 字符串转换为UTF-8编码
  * @method deepCopy 对象深拷贝
+ * @method copyText 复制文本到剪贴板
+ * @method intersect 对比数组取出交集
+ * @method delEle 删除数组中某个元素(通过已知元素查找)
+ * @method remEle 删除数组中某个元素(通过下标查找)
+ * @method conArr 判断数组是否包含某个元素
+ * @method filArr 数组filter(搜索功能)
  */
 
 (function (win) {
@@ -199,7 +205,7 @@
       for (let i = 0; i < arr.length - 1; i++) {
         let bool = true;
         for (let j = 0; j < arr.length - 1 - i; j++) {
-          let condition = (dir ? arr[j] > arr[j + 1] : arr[j] < arr[j + 1])
+          let condition = (dir ? arr[j] > arr[j + 1] : arr[j] < arr[j + 1]);
           if (condition) {
             temp = arr[j];
             arr[j] = arr[j + 1];
@@ -211,7 +217,7 @@
           break;
         }
       }
-      return arr
+      return arr;
     }
     throws(0, 'sortArr', 'arr');
   };
@@ -225,7 +231,7 @@
    */
   Method.fn.delRepArr = function (arr) {
     if (arr) {
-      return Array.from(new Set(arr))
+      return Array.from(new Set(arr));
     }
     throws(0, 'delRepStr', 'arr');
   };
@@ -242,7 +248,7 @@
     if (arr && ele) {
       let num = 0;
       for (let i = 0, len = arr.length; i < len; i++) {
-        if (ele == arr[i]) {
+        if (ele === arr[i]) {
           num++;
         }
       }
@@ -345,13 +351,19 @@
    */
   Method.fn.setCache = function (key, val, tim) {
     if (key && val) {
-      localStorage.setItem(key, val);
-      let seconds = parseInt(tim);
-      if (seconds > 0) {
-        let timestamp = (this.dateGet() + seconds);
-        localStorage.setItem(key + ' (method.time)', timestamp);
+      if (typeof val !== 'function') {
+        val = (typeof val === 'object' ? JSON.stringify(val) : val);
+        localStorage.setItem(key, val);
+        let seconds = parseInt(tim);
+        if (seconds > 0) {
+          let timestamp = (this.dateGet() + seconds);
+          localStorage.setItem(key + ' (method.time)', timestamp);
+        }
+        return true;
+      } else {
+        throws(2, 'setCache');
+        return false;
       }
-      return true;
     }
     throws(0, 'setCache', key ? 'val' : 'key');
   };
@@ -365,13 +377,13 @@
    */
   Method.fn.getCache = function (key) {
     if (key) {
-      let val = localStorage.getItem(key);
+      let val = JSON.parse(localStorage.getItem(key));
       let timestamp = parseInt(localStorage.getItem(key + ' (method.time)'));
       if (timestamp && (timestamp < this.dateGet())) {
         this.delCache(key);
-        return false
+        return false;
       }
-      return String(val);
+      return val;
     }
     throws(0, 'getCache', 'key');
   };
@@ -406,7 +418,7 @@
       let oDate = new Date();
       oDate.setDate(oDate.getDate() + tim);
       document.cookie = key + '=' + val + ';expires=' + oDate;
-      return true
+      return true;
     }
     throws(0, 'setCookie', key ? 'val' : 'key');
   };
@@ -643,7 +655,7 @@
   /**
    * 获取节点(转为原生dom节点)
    * @method getDom
-   * @for Method/hasClass/addClass/delClass/atrDom
+   * @for Method/hasClass/addClass/delClass/atrDom/copyText
    * @param {string/object} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
    * @param {boolean} top 是否获取最顶层节点(默认为false，查看当前层)
    * @return {object} 节点对象
@@ -803,9 +815,9 @@
     if (arguments.length === 2) {
       return Math.round(a + Math.random() * (b - a));
     } else if (arguments.length === 1) {
-      return Math.round(Math.random() * a)
+      return Math.round(Math.random() * a);
     } else {
-      return Math.round(Math.random() * 255)
+      return Math.round(Math.random() * 255);
     }
   };
 
@@ -1023,7 +1035,7 @@
    */
   Method.fn.money = function (str) {
     if (str) {
-      return parseFloat(str).toFixed(2).replace(/\d(?=(?:\d{3})+\b)/g, `$&,`)
+      return parseFloat(str).toFixed(2).replace(/\d(?=(?:\d{3})+\b)/g, `$&,`);
     }
     throws(0, 'money', 'str');
   };
@@ -1052,21 +1064,21 @@
    * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
    */
   Method.fn.aniScroll = function (pageY, dom) {
-    clearInterval(this.getCache('(method.aniScroll)'))
-    dom = dom ? this.getDom(dom) : false
+    clearInterval(this.getCache('(method.aniScroll)'));
+    dom = dom ? this.getDom(dom) : false;
     let timer = setInterval(() => {
-      let currentY = dom ? dom.scrollTop : (document.documentElement.scrollTop || document.body.scrollTop)
-      let distance = pageY > currentY ? pageY - currentY : currentY - pageY
-      let speed = Math.ceil(distance / 10)
+      let currentY = dom ? dom.scrollTop : (document.documentElement.scrollTop || document.body.scrollTop);
+      let distance = pageY > currentY ? pageY - currentY : currentY - pageY;
+      let speed = Math.ceil(distance / 10);
       if (parseInt(currentY) === parseInt(pageY)) {
-        clearInterval(this.getCache('(method.aniScroll)'))
+        clearInterval(this.getCache('(method.aniScroll)'));
       } else if (dom) {
-        dom.scrollTo(0, pageY > currentY ? currentY + speed : currentY - speed)
+        dom.scrollTo(0, pageY > currentY ? currentY + speed : currentY - speed);
       } else {
-        window.scrollTo(0, pageY > currentY ? currentY + speed : currentY - speed)
+        window.scrollTo(0, pageY > currentY ? currentY + speed : currentY - speed);
       }
-    }, 10)
-    this.setCache('(method.aniScroll)', timer)
+    }, 10);
+    this.setCache('(method.aniScroll)', timer);
   };
 
   /**
@@ -1137,6 +1149,131 @@
   };
 
   /**
+   * 复制文本到剪贴板
+   * @method copyText
+   * @for Method
+   * @param {string} text 需要复制的文本内容
+   * @return {boolean} 是否成功
+   */
+  Method.fn.copyText = function (text) {
+    if (text) {
+      const input = document.createElement("input");
+      input.value = text;
+      this.getDom('body').appendChild(input);
+      input.select();
+      input.setSelectionRange(0, input.value.length);
+      document.execCommand('Copy');
+      this.getDom('body').removeChild(input);
+      return true;
+    }
+    throws(0, 'copyText', 'text');
+  };
+
+  /**
+   * 对比数组取出交集
+   * @method intersect
+   * @for Method
+   * @param {Array} 对比数组一
+   * @param {Array} 对比数组二
+   * @return {Array} 交集数组
+   */
+  Method.fn.intersect = function () {
+    let result = [];
+    let obj = {};
+    for (let i = 0; i < arguments.length; i++) {
+      for (let j = 0; j < arguments[i].length; j++) {
+        let str = arguments[i][j];
+        if (!obj[str]) {
+          obj[str] = 1;
+        } else {
+          obj[str]++;
+          if (obj[str] === arguments.length) {
+            result.push(str);
+          }
+        }
+      }
+    }
+    return result;
+  };
+
+  /**
+   * 删除数组中某个元素(通过已知元素查找)
+   * @method delEle
+   * @for Method
+   * @param {Array} arr 需要操作的数组
+   * @param {string} app 需要删除的字符
+   * @return {Array} 返回新数组
+   */
+  Method.fn.delEle = function (arr, app) {
+    if (arr && (app || app === 0)) {
+      let index = arr.indexOf(app);
+      if (index >= 0) {
+        arr.splice(index, 1);
+      }
+      return arr;
+    }
+    throws(0, 'delEle', arr ? 'app' : 'arr');
+  };
+
+  /**
+   * 删除数组中某个元素(通过下标查找)
+   * @method remEle
+   * @for Method
+   * @param {Array} arr 需要操作的数组
+   * @param {Array} ind 需要删除的下标
+   * @return {Array} 返回新数组
+   */
+  Method.fn.remEle = function (arr, ind) {
+    if (arr && (ind || ind === 0)) {
+      for (let i = 0; i < arr.length; i++) {
+        let I = arr.indexOf(arr[i]);
+        if (ind === I) {
+          arr.splice(I, 1);
+        }
+      }
+      return arr;
+    }
+    throws(0, 'remEle', arr ? 'ind' : 'arr');
+  };
+
+  /**
+   * 判断数组是否包含某个元素
+   * @method conArr
+   * @for Method
+   * @param {Array} arr 需要操作的数组
+   * @param {string} ele 需要查找的元素
+   * @return {boolean} 是否包含
+   */
+  Method.fn.conArr = function (arr, ele) {
+    if (arr && ele) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === ele) {
+          return true;
+        }
+      }
+      return false;
+    }
+    throws(0, 'conArr', arr ? 'ele' : 'arr');
+  };
+
+  /**
+   * 数组filter(搜索功能)
+   * @method filArr
+   * @for Method
+   * @param {Array} arr 需要操作的数组
+   * @param {string} que 需要查找的元素
+   * @return {Array} 包含que的数组
+   */
+  Method.fn.filArr = function (arr, que) {
+    if (arr && que) {
+      return arr.filter(function (el) {
+        return el.toLowerCase().indexOf(que.toLowerCase()) > -1;
+      });
+    }
+    throws(0, 'filArr', arr ? 'que' : 'arr');
+  };
+
+  /**
    * 控制台错误/警告
    * @method throws
    * @for Method
@@ -1147,7 +1284,8 @@
   function throws(num, name, field) {
     let nums = {
       0: '方法 {' + name + '} 必填字段 {' + field + '} 不能为空',
-      1: 'DOM {' + name + '} 存在重复或不正确'
+      1: 'DOM {' + name + '} 存在重复或不正确',
+      2: '方法 {' + name + '} 不支持此数据类型',
     };
     console.warn('kxui-' + kxui.version + '： 模块 {method} ' + nums[num] + '。');
   }

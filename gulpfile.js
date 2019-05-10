@@ -4,15 +4,14 @@
  * @create time 2018.05.31
  */
 
-var pkg = require('./package.json');
-var gulp = require('gulp');
-var browserSync = require('browser-sync').create();
-var runSequence = require('run-sequence');
-var header = require('gulp-header');
-var note = '/**\n * method ' + pkg.name + '\n * version ' + pkg.version + '\n * author Lkx\n * create time ' + pkg.createTime + '\n * update time ' + pkg.updateTime + '\n * website http://www.kxui.org\n */\n\n'
-var cssPath = './src/css/scss/*.scss';
-var jsPath = ['./src/*.js', './src/modules/*.js'];
-var fontPath = ['./src/font/*']
+let pkg = require('./package.json');
+let gulp = require('gulp');
+let browserSync = require('browser-sync').create();
+let runSequence = require('run-sequence');
+let header = require('gulp-header');
+let note = '/**\n * method ' + pkg.name + '\n * version ' + pkg.version + '\n * author Lkx\n * create time ' + pkg.createTime + '\n * update time ' + pkg.updateTime + '\n * website http://www.kxui.org\n */\n\n'
+let cssPath = './src/css/scss/*.scss';
+let jsPath = ['./src/*.js', './src/modules/*.js'];
 
 /**
  * @method build 开发构建入口
@@ -34,7 +33,7 @@ gulp.task('dev', function () {
  * @method clean 打包前进行文件清理
  * @for build
  */
-var del = require('del');
+let del = require('del');
 gulp.task('clean', function (cb) {
   return del([
     './dist/*',
@@ -46,7 +45,7 @@ gulp.task('clean', function (cb) {
  * @method revScss scss代码编译
  * @for build/watch
  */
-var sass = require('gulp-sass');
+let sass = require('gulp-sass');
 gulp.task('revScss', function () {
   return gulp.src(cssPath)
     .pipe(sass())
@@ -61,8 +60,8 @@ gulp.task('revScss', function () {
  * @method revCss css兼容性处理及压缩打包
  * @for build/watch
  */
-var cssMin = require('gulp-csso');
-var autoprefixer = require('gulp-autoprefixer');
+let cssMin = require('gulp-csso');
+let autoprefixer = require('gulp-autoprefixer');
 gulp.task('revCss', function () {
   return gulp.src('./src/css/kxui.css', {
       base: './src'
@@ -80,8 +79,8 @@ gulp.task('revCss', function () {
  * @method revCss javascript代码压缩
  * @for build/watch
  */
-var uglify = require('gulp-uglify');
-var babel = require("gulp-babel");
+let uglify = require('gulp-uglify');
+let babel = require("gulp-babel");
 gulp.task('revJs', function () {
   return gulp.src(jsPath, {
       base: './src'

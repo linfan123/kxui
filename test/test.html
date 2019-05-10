@@ -7,15 +7,27 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>kxui | test</title>
   <script src="kxui.js"></script>
+  <style>
+    #btn {
+      margin-top: 100px;
+    }
+  </style>
 </head>
 
-<body></body>
+<body>
+  <p id="btn">复制</p>
+</body>
 
 <script>
   kxui.use(['method', 'countdown', 'drop'], function () {
     const method = kxui.method;
     const countdown = kxui.countdown;
     const drop = kxui.drop;
+    const btn = document.querySelector('#btn')
+    var fruits = ['apple', 'banana', 'grapes', 'mango', 'orange'];
+    btn.onclick = function () {
+      console.log(method.intersect([523, 23, 24], [23, 523, 1]))
+    }
   });
 </script>
 

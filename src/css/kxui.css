@@ -7,15 +7,11 @@
  * website http://www.kxui.org
  */
 
-* {
-  font-size: 14px;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0; }
-
 html,
 body {
-  position: relative; }
+  box-sizing: border-box;
+  position: relative;
+  user-select: none; }
 
 li {
   list-style-type: none; }
