@@ -1,10 +1,10 @@
 /**
  * method kxui
- * version 1.3.5
+ * version 1.3.6
  * author Lkx
  * create time 2018.05.31
  * update time 2019.03.28
  * website http://www.kxui.org
  */
 
-*{font-size:14px;box-sizing:border-box;margin:0;padding:0}body,html{position:relative}li{list-style-type:none}a,a:hover{text-decoration:none}
+body,html{box-sizing:border-box;position:relative;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}li{list-style-type:none}a,a:hover{text-decoration:none}
