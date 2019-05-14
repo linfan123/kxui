@@ -10,8 +10,7 @@
 html,
 body {
   box-sizing: border-box;
-  position: relative;
-  user-select: none; }
+  position: relative; }
 
 li {
   list-style-type: none; }
