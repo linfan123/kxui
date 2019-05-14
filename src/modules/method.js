@@ -11,6 +11,12 @@
  * @method midStr 获取指定字符中间的字符
  * @method sortArr 数组排序(冒泡排序)
  * @method delRepArr 数组去重
+ * @method countArr 元素在数组中出现的次数
+ * @method conArr 判断数组是否包含某个元素
+ * @method filArr 数组filter(搜索功能)
+ * @method delEle 删除数组中某个元素(通过已知元素查找)
+ * @method remEle 删除数组中某个元素(通过下标查找)
+ * @method intersect 对比数组取出交集
  * @method formTest 表单验证
  * @method hasClass 查询是否存在class值
  * @method addClass 增加class值
@@ -51,11 +57,6 @@
  * @method utf8 字符串转换为UTF-8编码
  * @method deepCopy 对象深拷贝
  * @method copyText 复制文本到剪贴板
- * @method intersect 对比数组取出交集
- * @method delEle 删除数组中某个元素(通过已知元素查找)
- * @method remEle 删除数组中某个元素(通过下标查找)
- * @method conArr 判断数组是否包含某个元素
- * @method filArr 数组filter(搜索功能)
  */
 
 (function (win) {
@@ -255,6 +256,110 @@
       return num;
     }
     throws(0, 'countArr', (arr ? 'ele' : 'arr'));
+  };
+
+  /**
+   * 判断数组是否包含某个元素
+   * @method conArr
+   * @for Method
+   * @param {Array} arr 需要操作的数组
+   * @param {string} ele 需要查找的元素
+   * @return {boolean} 是否包含
+   */
+  Method.fn.conArr = function (arr, ele) {
+    if (arr && ele) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === ele) {
+          return true;
+        }
+      }
+      return false;
+    }
+    throws(0, 'conArr', arr ? 'ele' : 'arr');
+  };
+
+  /**
+   * 数组filter(搜索功能)
+   * @method filArr
+   * @for Method
+   * @param {Array} arr 需要操作的数组
+   * @param {string} que 需要查找的元素
+   * @return {Array} 包含que的数组
+   */
+  Method.fn.filArr = function (arr, que) {
+    if (arr && que) {
+      return arr.filter(function (el) {
+        return el.toLowerCase().indexOf(que.toLowerCase()) > -1;
+      });
+    }
+    throws(0, 'filArr', arr ? 'que' : 'arr');
+  };
+
+  /**
+   * 删除数组中某个元素(通过已知元素查找)
+   * @method delEle
+   * @for Method
+   * @param {Array} arr 需要操作的数组
+   * @param {string} app 需要删除的字符
+   * @return {Array} 返回新数组
+   */
+  Method.fn.delEle = function (arr, app) {
+    if (arr && (app || app === 0)) {
+      let index = arr.indexOf(app);
+      if (index >= 0) {
+        arr.splice(index, 1);
+      }
+      return arr;
+    }
+    throws(0, 'delEle', arr ? 'app' : 'arr');
+  };
+
+  /**
+   * 删除数组中某个元素(通过下标查找)
+   * @method remEle
+   * @for Method
+   * @param {Array} arr 需要操作的数组
+   * @param {Array} ind 需要删除的下标
+   * @return {Array} 返回新数组
+   */
+  Method.fn.remEle = function (arr, ind) {
+    if (arr && (ind || ind === 0)) {
+      for (let i = 0; i < arr.length; i++) {
+        let I = arr.indexOf(arr[i]);
+        if (ind === I) {
+          arr.splice(I, 1);
+        }
+      }
+      return arr;
+    }
+    throws(0, 'remEle', arr ? 'ind' : 'arr');
+  };
+
+  /**
+   * 对比数组取出交集
+   * @method intersect
+   * @for Method
+   * @param {Array} 对比数组一
+   * @param {Array} 对比数组二
+   * @return {Array} 交集数组
+   */
+  Method.fn.intersect = function () {
+    let result = [];
+    let obj = {};
+    for (let i = 0; i < arguments.length; i++) {
+      for (let j = 0; j < arguments[i].length; j++) {
+        let str = arguments[i][j];
+        if (!obj[str]) {
+          obj[str] = 1;
+        } else {
+          obj[str]++;
+          if (obj[str] === arguments.length) {
+            result.push(str);
+          }
+        }
+      }
+    }
+    return result;
   };
 
   /**
@@ -657,7 +762,7 @@
    * @method getDom
    * @for Method/hasClass/addClass/delClass/atrDom/copyText
    * @param {string/object} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
-   * @param {boolean} top 是否获取最顶层节点(默认为false，查看当前层)
+   * @param {boolean} top 是否获取最顶层节点(默认为false，查看IFrame当前层)
    * @return {object} 节点对象
    */
   Method.fn.getDom = function (dom, top) {
@@ -1167,110 +1272,6 @@
       return true;
     }
     throws(0, 'copyText', 'text');
-  };
-
-  /**
-   * 对比数组取出交集
-   * @method intersect
-   * @for Method
-   * @param {Array} 对比数组一
-   * @param {Array} 对比数组二
-   * @return {Array} 交集数组
-   */
-  Method.fn.intersect = function () {
-    let result = [];
-    let obj = {};
-    for (let i = 0; i < arguments.length; i++) {
-      for (let j = 0; j < arguments[i].length; j++) {
-        let str = arguments[i][j];
-        if (!obj[str]) {
-          obj[str] = 1;
-        } else {
-          obj[str]++;
-          if (obj[str] === arguments.length) {
-            result.push(str);
-          }
-        }
-      }
-    }
-    return result;
-  };
-
-  /**
-   * 删除数组中某个元素(通过已知元素查找)
-   * @method delEle
-   * @for Method
-   * @param {Array} arr 需要操作的数组
-   * @param {string} app 需要删除的字符
-   * @return {Array} 返回新数组
-   */
-  Method.fn.delEle = function (arr, app) {
-    if (arr && (app || app === 0)) {
-      let index = arr.indexOf(app);
-      if (index >= 0) {
-        arr.splice(index, 1);
-      }
-      return arr;
-    }
-    throws(0, 'delEle', arr ? 'app' : 'arr');
-  };
-
-  /**
-   * 删除数组中某个元素(通过下标查找)
-   * @method remEle
-   * @for Method
-   * @param {Array} arr 需要操作的数组
-   * @param {Array} ind 需要删除的下标
-   * @return {Array} 返回新数组
-   */
-  Method.fn.remEle = function (arr, ind) {
-    if (arr && (ind || ind === 0)) {
-      for (let i = 0; i < arr.length; i++) {
-        let I = arr.indexOf(arr[i]);
-        if (ind === I) {
-          arr.splice(I, 1);
-        }
-      }
-      return arr;
-    }
-    throws(0, 'remEle', arr ? 'ind' : 'arr');
-  };
-
-  /**
-   * 判断数组是否包含某个元素
-   * @method conArr
-   * @for Method
-   * @param {Array} arr 需要操作的数组
-   * @param {string} ele 需要查找的元素
-   * @return {boolean} 是否包含
-   */
-  Method.fn.conArr = function (arr, ele) {
-    if (arr && ele) {
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i] === ele) {
-          return true;
-        }
-      }
-      return false;
-    }
-    throws(0, 'conArr', arr ? 'ele' : 'arr');
-  };
-
-  /**
-   * 数组filter(搜索功能)
-   * @method filArr
-   * @for Method
-   * @param {Array} arr 需要操作的数组
-   * @param {string} que 需要查找的元素
-   * @return {Array} 包含que的数组
-   */
-  Method.fn.filArr = function (arr, que) {
-    if (arr && que) {
-      return arr.filter(function (el) {
-        return el.toLowerCase().indexOf(que.toLowerCase()) > -1;
-      });
-    }
-    throws(0, 'filArr', arr ? 'que' : 'arr');
   };
 
   /**
