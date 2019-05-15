@@ -1,23 +1,10 @@
 # kxui
 
-Personal family components
+个人常用组件
 
-What is a family? Because they have a common father, and unity.
+## 安装
 
-## Open source
-
-kxui is open source software released under an
-[MIT license](https://github.com/Lkx2217/kxui/blob/master/LICENSE).
-
-## Thank
-
-Thanks to [layui](https://github.com/sentsin/layui/) for introducing the idea, so that I can better manage my project with it.
-
-In this way, I can unify my project to facilitate management and use.
-
-## Installation
-
-The easiest way to install kxui is with [`npm`][npm].
+安装最简单的方法是使用 [`npm`][npm].
 
 [npm]: https://www.npmjs.com/
 
@@ -25,8 +12,8 @@ The easiest way to install kxui is with [`npm`][npm].
 npm install kxui
 ```
 
-You can download my package directly and use it in a traditional way.
+也可以直接下载软件包并以传统方式来引用它
 
-## about
+## 关于
 
-You can visit my [personal website](http://www.kxui.org/) to see how it works.
+你可以访问我的 [个人网站](http://www.kxui.org/) 来了解它的工作原理
