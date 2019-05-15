@@ -4,7 +4,7 @@
 
 ## 安装
 
-安装最简单的方法是使用 [`npm`][npm].
+安装最简单的方法是使用 [`npm`][npm]
 
 [npm]: https://www.npmjs.com/
 
