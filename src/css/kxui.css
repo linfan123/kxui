@@ -1,9 +1,9 @@
 /**
  * method kxui
- * version 1.3.6
+ * version 1.3.7
  * author Lkx
  * create time 2018.05.31
- * update time 2019.05.10
+ * update time 2019.05.15
  * website http://www.kxui.org
  */
 

@@ -57,6 +57,9 @@
  * @method utf8 字符串转换为UTF-8编码
  * @method deepCopy 对象深拷贝
  * @method copyText 复制文本到剪贴板
+ * @method setStyle 设置元素样式(行内样式)
+ * @method getStyle 获取元素样式
+ * @method delSpace 字符串/对象去空格，对一个对象中每个值进行安全检测， 去空格操作
  */
 
 (function (win) {
@@ -1273,6 +1276,80 @@
     }
     throws(0, 'copyText', 'text');
   };
+
+  /**
+   * 设置元素样式(行内样式)
+   * @method setStyle
+   * @for Method
+   * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
+   * @param {object} sty 需要设置的样式对象
+   * @return {boolean} 是否成功
+   */
+  Method.fn.setStyle = function (dom, sty) {
+    if (dom && sty) {
+      if (typeof sty === 'object') {
+        dom = this.getDom(dom);
+        for (let i in sty) {
+          dom.style[i] = sty[i];
+        }
+        return true;
+      }
+      throws(2, 'setStyle');
+    }
+    throws(0, 'setStyle', dom ? 'sty' : 'dom');
+  };
+
+  /**
+   * 获取元素样式
+   * @method getStyle
+   * @for Method
+   * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
+   * @param {string} arr 需要获取的样式名称
+   * @return {string/boolean} 是否成功及正确的样式值
+   */
+  Method.fn.getStyle = function (dom, arr) {
+    if (dom && arr) {
+      dom = this.getDom(dom);
+      if (dom.currentStyle) {
+        return dom.currentStyle[arr];
+      } else if (window.getComputedStyle) {
+        return document.defaultView.getComputedStyle(dom, null)[arr];
+      }
+      return false;
+    }
+    throws(0, 'getStyle', dom ? 'arr' : 'dom');
+  };
+
+  /**
+   * 字符串/对象去空格，对一个对象中每个值进行安全检测， 去空格操作
+   * @method delSpace
+   * @for Method
+   * @param {string/object} ope 需要操作的字符串/对象
+   * @return {string/object} 返回去掉空格的字符串/对象
+   */
+  Method.fn.delSpace = function (ope) {
+    if (ope) {
+      if (typeof ope === 'string') {
+        return ope.replace(/[ ]/g, '');
+      }
+      for (prop in ope) {
+        if (typeof ope[prop] === 'object' && Array.isArray(ope[prop])) {
+          var list = ope[prop];
+          for (var i = 0; i < list.length; i++) {
+            list[i] = this.delSpace(list[i]);
+          }
+        } else if (typeof ope[prop] === 'object' && (ope[prop]) instanceof Object) {
+          ope[prop] = this.delSpace(ope[prop]);
+        } else if (typeof ope[prop] === 'string') {
+          if (prop !== 'FormMeta') {
+            ope[prop] = ope[prop].replace(/[ ]/g, '');
+          }
+        }
+      }
+      return ope;
+    }
+    throws(0, 'delSpace', 'ope');
+  }
 
   /**
    * 控制台错误/警告
