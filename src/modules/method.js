@@ -1409,7 +1409,7 @@
 
   /**
    * 图片自适应裁剪
-   * @method enter
+   * @method imgLoad
    * @for Method
    * @param {string} box 图片盒子，节点名称/class值/id值/属性名称/原生dom对象/jquery对象
    * @param {string} img 图片标签，节点名称/class值/id值/属性名称/原生dom对象/jquery对象
