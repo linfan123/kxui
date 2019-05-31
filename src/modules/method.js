@@ -1358,7 +1358,7 @@
       return ope;
     }
     throws(0, 'delSpace', 'ope');
-  }
+  };
 
   /**
    * HTML标签替换
@@ -1380,7 +1380,7 @@
       return false;
     }
     throws(0, 'repLabel', 'str');
-  }
+  };
 
   /**
    * 键盘回车事件
@@ -1405,7 +1405,7 @@
     } else {
       throws(0, 'enter', dom ? 'callback' : 'dom');
     }
-  }
+  };
 
   /**
    * 图片自适应裁剪
@@ -1462,7 +1462,7 @@
     } else {
       throws(0, 'imgLoad', box ? 'img' : 'box');
     }
-  }
+  };
 
   /**
    * 控制台错误/警告
@@ -1479,11 +1479,11 @@
       2: '方法 {' + name + '} 不支持此数据类型',
     };
     console.warn('kxui-' + kxui.version + '： 模块 {method} ' + nums[num] + '。');
-  }
+  };
 
   // 根据引入方式暴露对象
   kxui.method = new Method();
   if (isExports) {
     kxui.method = module.exports = new Method();
-  }
+  };
 })(window);
