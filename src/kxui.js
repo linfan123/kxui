@@ -282,8 +282,8 @@
    * 开发常用操作方法，可根据需要调用不同的模块，提高开发效率
    */
   let Kxui = function () {
-    this.version = '1.3.7';
-    this.updateTime = '2019.05.15';
+    this.version = '1.3.8';
+    this.updateTime = '2019.05.31';
   };
 
   /**

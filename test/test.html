@@ -7,15 +7,25 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>kxui | test</title>
   <script src="kxui.js"></script>
+  <style>
+    .div {
+      height: 100px;
+      border: 1px solid #CCC;
+    }
+  </style>
 </head>
 
-<body></body>
+<body>
+  <input type="text" class="input">
+</body>
 
 <script>
   kxui.use(['method', 'countdown', 'drop'], function () {
-    const method = kxui.method;
+    const m = kxui.method;
     const countdown = kxui.countdown;
     const drop = kxui.drop;
+    let a = ['1', '2', '3', '3', '4', '4', '4', '5']
+    console.log(m.filArr(a, '3'))
   });
 </script>
 

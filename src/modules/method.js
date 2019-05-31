@@ -60,6 +60,8 @@
  * @method setStyle 设置元素样式(行内样式)
  * @method getStyle 获取元素样式
  * @method delSpace 字符串/对象去空格，对一个对象中每个值进行安全检测， 去空格操作
+ * @method repLabel HTML标签替换
+ * @method enter 键盘回车事件
  */
 
 (function (win) {
@@ -468,10 +470,9 @@
           localStorage.setItem(key + ' (method.time)', timestamp);
         }
         return true;
-      } else {
-        throws(2, 'setCache');
-        return false;
       }
+      throws(2, 'setCache');
+      return false;
     }
     throws(0, 'setCache', key ? 'val' : 'key');
   };
@@ -518,15 +519,21 @@
    * @for Method
    * @param {string} key 设置cookie名称
    * @param {string} val 设置cookie内容
-   * @param {number} tim 设置cookie有效时间，单位 1000/1s
+   * @param {number} tim 设置cookie有效时间，单位 1/1天
    * @return {boolean} 返回设置动作布尔值
    */
   Method.fn.setCookie = function (key, val, tim) {
     if (key && val) {
-      let oDate = new Date();
-      oDate.setDate(oDate.getDate() + tim);
-      document.cookie = key + '=' + val + ';expires=' + oDate;
-      return true;
+      if (typeof val !== 'function') {
+        val = (typeof val === 'object' ? JSON.stringify(val) : val);
+        let oDate = new Date();
+        let seconds = parseInt(tim);
+        oDate.setDate(oDate.getDate() + seconds);
+        document.cookie = key + '=' + val + ';expires=' + oDate;
+        return true;
+      }
+      throws(2, 'setCookie');
+      return false;
     }
     throws(0, 'setCookie', key ? 'val' : 'key');
   };
@@ -544,7 +551,7 @@
       for (let i = 0; i < arr.length; i++) {
         let arr2 = arr[i].split('=');
         if (arr2[0] === key) {
-          return arr2[1];
+          return JSON.parse(arr2[1]);
         }
       }
       return false;
@@ -1295,6 +1302,7 @@
         return true;
       }
       throws(2, 'setStyle');
+      return false;
     }
     throws(0, 'setStyle', dom ? 'sty' : 'dom');
   };
@@ -1334,8 +1342,8 @@
       }
       for (prop in ope) {
         if (typeof ope[prop] === 'object' && Array.isArray(ope[prop])) {
-          var list = ope[prop];
-          for (var i = 0; i < list.length; i++) {
+          let list = ope[prop];
+          for (let i = 0; i < list.length; i++) {
             list[i] = this.delSpace(list[i]);
           }
         } else if (typeof ope[prop] === 'object' && (ope[prop]) instanceof Object) {
@@ -1349,6 +1357,53 @@
       return ope;
     }
     throws(0, 'delSpace', 'ope');
+  }
+
+  /**
+   * HTML标签替换
+   * @method repLabel
+   * @for Method
+   * @param {string} str 完整的HTML标签
+   * @return {string} 返回字符串HTML标签
+   */
+  Method.fn.repLabel = function (str) {
+    if (str) {
+      if (typeof str === 'string') {
+        let ret = str;
+        while (ret.indexOf(">") >= 0 || ret.indexOf("<") >= 0) {
+          ret = ret.replace("<", "&lt;").replace(">", "&gt;");
+        }
+        return ret;
+      }
+      throws(2, 'repLabel');
+      return false;
+    }
+    throws(0, 'repLabel', 'str');
+  }
+
+  /**
+   * 键盘回车事件
+   * @method enter
+   * @for Method
+   * @param {string} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
+   * @param {function} callback 按下后的回调方法
+   */
+  Method.fn.enter = function (dom, callback) {
+    if (dom && callback) {
+      dom = this.getDom(dom);
+      dom.onkeydown = function (event) {
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        if (e && e.keyCode === 13) {
+          if (typeof callback === 'function') {
+            callback();
+          } else {
+            throws(2, 'enter');
+          }
+        }
+      };
+    } else {
+      throws(0, 'enter', dom ? 'callback' : 'dom');
+    }
   }
 
   /**
