@@ -62,6 +62,7 @@
  * @method delSpace 字符串/对象去空格，对一个对象中每个值进行安全检测， 去空格操作
  * @method repLabel HTML标签替换
  * @method enter 键盘回车事件
+ * @method imgLoad 图片自适应裁剪
  */
 
 (function (win) {
@@ -770,7 +771,7 @@
   /**
    * 获取节点(转为原生dom节点)
    * @method getDom
-   * @for Method/hasClass/addClass/delClass/atrDom/copyText
+   * @for Method/hasClass/addClass/delClass/atrDom/copyText/enter/imgLoad
    * @param {string/object} dom 节点名称/class值/id值/属性名称/原生dom对象/jquery对象
    * @param {boolean} top 是否获取最顶层节点(默认为false，查看IFrame当前层)
    * @return {object} 节点对象
@@ -1392,7 +1393,7 @@
     if (dom && callback) {
       dom = this.getDom(dom);
       dom.onkeydown = function (event) {
-        var e = event || window.event || arguments.callee.caller.arguments[0];
+        let e = event || window.event || arguments.callee.caller.arguments[0];
         if (e && e.keyCode === 13) {
           if (typeof callback === 'function') {
             callback();
@@ -1403,6 +1404,63 @@
       };
     } else {
       throws(0, 'enter', dom ? 'callback' : 'dom');
+    }
+  }
+
+  /**
+   * 图片自适应裁剪
+   * @method enter
+   * @for Method
+   * @param {string} box 图片盒子，节点名称/class值/id值/属性名称/原生dom对象/jquery对象
+   * @param {string} img 图片标签，节点名称/class值/id值/属性名称/原生dom对象/jquery对象
+   */
+  Method.fn.imgLoad = function (box, img) {
+    if (box && img) {
+      let getContainer = this.getDom(box);
+      let getIMG = this.getDom(img);
+      let fw = getContainer.offsetWidth - (2 * getContainer.clientLeft);
+      let fh = getContainer.offsetHeight - (2 * getContainer.clientTop);
+      let iw = getIMG.width;
+      let ih = getIMG.height;
+      let m = iw / fw;
+      let n = ih / fh;
+      let getDistance;
+      let getDistance2;
+      if (m >= 1 && n <= 1) {
+        iw = Math.ceil(iw / n);
+        ih = Math.ceil(ih / n);
+        getIMG.width = iw;
+        getIMG.height = ih;
+      } else if (m <= 1 && n >= 1) {
+        iw = Math.ceil(iw / m);
+        ih = Math.ceil(ih / m);
+        getIMG.width = iw;
+        getIMG.height = ih;
+      } else if (m >= 1 && n >= 1) {
+        getMAX = Math.min(m, n);
+        iw = Math.ceil(iw / getMAX);
+        ih = Math.ceil(ih / getMAX);
+        getIMG.width = iw;
+        getIMG.height = ih;
+      }
+
+      if (fh > getIMG.height) {
+        getDistance = Math.floor((fh - getIMG.height) / 2);
+        getIMG.style.marginTop = getDistance.toString() + "px";
+      } else {
+        getDistance = Math.floor((getIMG.height - fh) / 2);
+        getIMG.style.marginTop = "-" + getDistance.toString() + "px";
+      }
+
+      if (fw > getIMG.width) {
+        getDistance2 = Math.floor((fw - getIMG.width) / 2);
+        getIMG.style.marginLeft = getDistance2.toString() + "px";
+      } else {
+        getDistance2 = Math.floor((getIMG.width - fw) / 2);
+        getIMG.style.marginLeft = "-" + getDistance2.toString() + "px";
+      }
+    } else {
+      throws(0, 'imgLoad', box ? 'img' : 'box');
     }
   }
 

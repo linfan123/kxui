@@ -9,14 +9,19 @@
   <script src="kxui.js"></script>
   <style>
     .div {
-      height: 100px;
-      border: 1px solid #CCC;
+      width: 300px;
+      height: 600px;
+      border: 10px solid red;
+      overflow: hidden;
     }
   </style>
 </head>
 
 <body>
-  <input type="text" class="input">
+  <div class="div">
+    <img src="./1.png" class="img">
+  </div>
+  <!-- <input type="text" class="input"> -->
 </body>
 
 <script>
@@ -25,7 +30,10 @@
     const countdown = kxui.countdown;
     const drop = kxui.drop;
     let a = ['1', '2', '3', '3', '4', '4', '4', '5']
-    console.log(m.filArr(a, '3'))
+    m.setCookie('ddddddddddd',{
+      'a': 1
+    })
+    console.log(m.getCookie('ddddddddddd'))
   });
 </script>
 
